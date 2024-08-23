@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Teams | Athlet Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        #teams-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        #teams-list div {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        #teams-list h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        #teams-list p {
+            margin: 0.5rem 0;
+            color: #666;
+        }
+
+        button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Athlet Arena</h1>
+    </header>
+
+    <main>
+        <h2>Teams List</h2>
+        <div id="teams-list"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Athlet Arena</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Fetch teams
+        function fetchTeams() {
+            db.collection("teams").get().then((querySnapshot) => {
+                let teamsList = document.getElementById('teams-list');
+                teamsList.innerHTML = ''; // Clear previous content
+
+                querySnapshot.forEach((doc) => {
+                    let team = doc.data();
+                    let teamElement = document.createElement('div');
+                    teamElement.innerHTML = `
+                        <h3>${team.teamname}</h3>
+                        <p>Coach: ${team.coachname}</p>
+                        <p>Players: ${team.players.join(', ')}</p>
+                        <button onclick="updateTeam('${doc.id}')">Update</button>
+                        <button onclick="deleteTeam('${doc.id}')">Delete</button>
+                    `;
+                    teamsList.appendChild(teamElement);
+                });
+            }).catch((error) => {
+                console.error("Error fetching teams: ", error);
+            });
+        }
+
+        fetchTeams(); // Call function to load teams
+
+        // Update team
+        function updateTeam(id) {
+            let newTeamName = prompt("Enter new team name:");
+            if (newTeamName) {
+                db.collection("teams").doc(id).update({
+                    teamname: newTeamName
+                }).then(() => {
+                    alert("Team updated successfully");
+                    fetchTeams(); // Refresh the list
+                }).catch((error) => {
+                    console.error("Error updating team: ", error);
+                });
+            }
+        }
+
+        // Delete team
+        function deleteTeam(id) {
+            if (confirm("Are you sure you want to delete this team?")) {
+                db.collection("teams").doc(id).delete().then(() => {
+                    alert("Team deleted successfully");
+                    fetchTeams(); // Refresh the list
+                }).catch((error) => {
+                    console.error("Error deleting team: ", error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

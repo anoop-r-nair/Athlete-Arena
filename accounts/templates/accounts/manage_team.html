@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>team | Athlet Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header, footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 150px); /* Adjust height based on header/footer */
+            padding: 1rem;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 1rem;
+            font-size: 16px;
+            color: #ff0000;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 1rem;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Athlet Arena</h1>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Create Teams</h2>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="coachname">Coach Name</label>
+                    <input type="text" id="coachname" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="players">Player Names (comma-separated)</label>
+                    <input type="text" id="players" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="teamname">Team Name</label>
+                    <input type="text" id="teamname" required aria-required="true">
+                </div>
+                <button type="submit">Create</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Athlet Arena</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Ensure the user is authenticated
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+                // Proceed with Firestore operation
+                document.getElementById("signup-form").addEventListener("submit", create);
+            } else {
+                console.log("User is not authenticated");
+                // Redirect to login or show an error message
+                alert("You must be logged in to create a team.");
+                window.location.href = '/login';  // Redirect to login page
+            }
+        });
+
+        // Create team function
+        function create(event) {
+            event.preventDefault();  // Prevent the default form submission behavior
+
+            var coachname = document.getElementById("coachname").value;
+            var players = document.getElementById("players").value.split(',');
+            var teamname = document.getElementById("teamname").value;
+
+            console.log("Attempting to create team:", { coachname, players, teamname });
+
+            // Disable the form to prevent multiple submissions
+            document.getElementById("signup-form").querySelector("button").disabled = true;
+
+            db.collection("teams").add({
+                coachname: coachname,
+                players: players,
+                teamname: teamname,
+            })
+            .then(() => {
+                console.log("Team successfully created");
+                alert("Team Created successfully");
+                document.getElementById("message").innerHTML = "Team Created successfully";
+                window.location.href = '/accounts/teams';  // Adjust URL to match your routing
+            })
+            .catch((error) => {
+                console.error("Error writing document to Firestore: ", error);
+                alert("Error storing details in Firestore: " + error.message);
+                document.getElementById("message").innerHTML = "Error storing details in Firestore: " + error.message;
+            })
+            .finally(() => {
+                // Re-enable the form button
+                document.getElementById("signup-form").querySelector("button").disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
