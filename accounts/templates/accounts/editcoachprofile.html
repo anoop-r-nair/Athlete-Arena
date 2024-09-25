@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
+    <title>Edit Profile</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,10 +65,23 @@
             text-align: center;
             color: #777;
         }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .resume-link {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .resume-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <h1></h1>
+    <h1>Edit Profile</h1>
     <table>
         <thead>
             <tr>
@@ -76,6 +89,8 @@
                 <th>Name</th>
                 <th>Address</th>
                 <th>Phone</th>
+                <th>Profile Picture</th>
+                <th>Resume</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -88,6 +103,20 @@
                         <td>{{ coach.address }}</td>
                         <td>{{ coach.phone }}</td>
                         <td>
+                            {% if coach.profilePicture %}
+                                <img src="{{ coach.profilePicture }}" alt="Profile Picture" class="profile-pic">
+                            {% else %}
+                                No picture
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if coach.resume %}
+                                <a href="{{ coach.resume }}" class="resume-link" target="_blank">View Resume</a>
+                            {% else %}
+                                No resume
+                            {% endif %}
+                        </td>
+                        <td>
                             <a href="{% url 'update_coach_by_email' email=coach.email %}">Update</a>
                             <form action="{% url 'delete_coach_by_email' email=coach.email %}" method="post">
                                 {% csrf_token %}
@@ -98,7 +127,7 @@
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="5" class="no-data">No coaches found.</td>
+                    <td colspan="7" class="no-data">No coaches found.</td>
                 </tr>
             {% endif %}
         </tbody>

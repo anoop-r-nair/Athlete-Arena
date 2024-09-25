@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Coach Dashboard | Athlet Arena</title>
+    <title>player Dashboard | Athlet Arena</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -118,18 +118,16 @@
 <body>
 
 <div class="header">
-    <h1>Coach Dashboard | Athlet Arena</h1>
+    <h1>Player Dashboard | Athlet Arena</h1>
 </div>
 
 <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
         <ul>
-            <li> <a href="{% url 'signupcoach' %}" class="btn">profile</a></li>
-            <!-- <li> <a href="{% url 'editcoachprofile' %}" class="btn">Edit profile</a></li> -->
-            <!-- <li> <a href="{% url 'manage_schedules' %}" class="btn">manage schedules</a></li> -->
-            <li> <a href="{% url 'updates' %}" class="btn">Updates</a></li>
+            <li> <a href="{% url 'playerprofile' %}" class="btn">profile</a></li>
             
+                      
             <!-- <li>Settings</li> -->
         </ul>
     </div>
@@ -154,19 +152,19 @@
         <!-- Dashboard Features -->
         <div class="dashboard-container">
             <div class="module">
-                <h2>Team</h2>
-                <a href="{% url 'viewteamcoach' %}" class="btn">View Team</a>
+                <h2>Updates</h2>
+                <a href="{% url 'viewupdates' %}" class="btn">View Updates</a>
             </div>
             <div class="module">
-                <h2>Plan Practice</h2>
-                <a href="{% url 'manage_schedules' %}" class="btn">Plan a New Practice</a>
+                <h2>Schedules</h2>
+                <a href="{% url 'viewschedules' %}" class="btn">View Schedules</a>
             </div>
             <div class="module">
                 <h2>Workouts</h2>
-                <a href="{% url 'viewworkouts' %}" class="btn">View Workouts</a>
+                <a href="{% url 'workouts' %}" class="btn">Log Workouts</a>
             </div>
             <div class="module">
-                <h2>Communicate with players</h2>
+                <h2>Communicate with coach</h2>
                 <a href="{% url 'communicate_with_players' %}" class="btn">Communicate Now</a>
             </div>
         </div>
