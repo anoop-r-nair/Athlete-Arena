@@ -3,149 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup | Athlet Arena</title>
+    <title>Signup | Athlete Arena</title>
+
     <style>
-        body {
-            margin: 0;
+         body {
             font-family: Arial, sans-serif;
-            color: #fff;
-            background: #1a1a1a; /* Slightly lighter background for better contrast */
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
         header {
-            background: #000;
-            padding: 20px 0;
-            color: #fff;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
+            background-color: #5c67f2;
+            color: white;
+            padding: 15px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
+            padding: 0 20px;
         }
+
         .logo a {
+            color: white;
             text-decoration: none;
-            color: #fff;
-            font-size: 1.5em;
-            font-weight: bold; /* Bold font for better emphasis */
+            font-size: 24px;
+            font-weight: bold;
         }
+
         nav ul {
             list-style: none;
-            display: flex;
-            gap: 20px;
             margin: 0;
             padding: 0;
+            display: flex;
         }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
         nav ul li a {
+            color: white;
             text-decoration: none;
-            color: #fff;
-            transition: color 0.3s;
+            font-size: 16px;
         }
-        nav ul li a:hover {
-            color: #ccc;
-        }
+
         .main {
-            height: calc(100vh - 80px);
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding-top: 80px;
+            padding: 20px;
         }
+
         .form-container {
-            background: #333;
-            padding: 40px;
+            background-color: white;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Enhanced shadow for better depth */
-            max-width: 400px;
-            width: 100%;
-            margin: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-width: 90%;
         }
-        .form-container h2 {
+
+        h2 {
+            text-align: center;
             margin-bottom: 20px;
-            color: #fff;
-            font-size: 1.8em;
+            color: #333;
         }
+
         .form-group {
-            margin-bottom: 20px;
-            text-align: left;
+            margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #fff;
-            font-weight: bold; /* Bold label text for better readability */
+            font-weight: bold;
+            color: #555;
         }
+
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #555;
-            border-radius: 5px;
-            background: #222;
-            color: #fff;
-            transition: border-color 0.3s;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #888; /* Subtle focus effect */
-            outline: none;
-        }
+
         button {
-            background: #fff;
-            color: #000;
+            width: 100%;
+            padding: 10px;
+            background-color: #5c67f2;
             border: none;
-            padding: 12px 25px; /* Larger padding for better touch interaction */
-            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 20px; /* Increased margin for better spacing */
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
+
         button:hover {
-            background: #ddd;
+            background-color: #4a54d1;
         }
+
         .google-btn {
-            background: #4285F4;
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 20px;
+            background-color: #db4437;
+            margin-top: 15px;
         }
+
         .google-btn:hover {
-            background: #357ae8;
+            background-color: #c33727;
         }
+
+        #message {
+            margin-top: 10px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border-left: 4px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Hide initially */
+        }
+
+        .error {
+            color: #f00;
+            font-size: 12px;
+        }
+
         footer {
-            background: #000;
             text-align: center;
-            padding: 20px 0;
-            color: #fff;
-            position: fixed;
+            padding: 10px 0;
+            background-color: #5c67f2;
+            color: white;
+            position: relative;
             width: 100%;
             bottom: 0;
-            left: 0;
-        }
-        footer p {
-            margin: 0;
-            font-size: 0.9em; /* Smaller font size for footer text */
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">
-            <a href="#">Athlet Arena</a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
+        <!-- Your existing header code -->
     </header>
 
     <main class="main">
@@ -155,46 +157,42 @@
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" required aria-required="true">
+                    <p id="emailError" class="error"></p>
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" required aria-required="true">
+                    <p id="passwordError" class="error"></p>
                 </div>
                 <div class="form-group">
-                    <label for="phone">Phone:</label>
-                    <input type="text" id="phone" required aria-required="true">
-                </div>
-                <div class="form-group">
-                    <label for="address">Address:</label>
-                    <input type="text" id="address" required aria-required="true">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" required aria-required="true">
+                    <p id="confirmPasswordError" class="error"></p>
                 </div>
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" required aria-required="true">
+                    <p id="nameError" class="error"></p>
                 </div>
-                <!-- <div class="form-group">
+                <div class="form-group">
                     <label for="userType">User Type:</label>
                     <select id="userType" required aria-required="true">
                         <option value="Coach">Coach</option>
                         <option value="Player">Player</option>
                         <option value="Parent">Parent</option>
-                        <option value="Medical Staff">Medical Staff</option>
-                        <option value="Sports Psychologist">Sports Psychologist</option>
-                        <option value="Analytics Expert">Analytics Expert</option>
                     </select>
-                </div> -->
+                </div>
                 <button type="submit">Signup</button>
                 <p id="message"></p>
-                <button type="button" class="google-btn" onclick="signInWithGoogle()">Sign in with Google</button>
+                <!-- <button type="button" class="google-btn" onclick="signInWithGoogle()">Sign in with Google</button> -->
             </form>
         </div>
     </main>
 
     <footer>
-        <p>© 2024 Athlet Arena. All rights reserved.</p>
+        <p>© 2024 Athlete Arena. All rights reserved.</p>
     </footer>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
@@ -211,62 +209,147 @@
             measurementId: "G-RC780HJPZ6"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Signup function
-        function signup() {
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
-            var phone = document.getElementById("phone").value;
-            var address = document.getElementById("address").value;
-            var name = document.getElementById("name").value;
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    var user = userCredential.user;
+        // Email domain regex for Gmail and ac.in only
+        const validEmailDomainRegex = /^[^\s@]+@(gmail\.com|ac\.in)$/;
 
-                    // Add user details to Firestore
-                    db.collection("users").doc(user.uid).set({
-                        email: email,
-                        phone: phone,
-                        address: address,
-                        name: name,
-                    })
-                    .then(() => {
-                        alert("Signup successful and details stored in Firestore");
-                        document.getElementById("message").innerHTML = "Signup successful and details stored in Firestore!";
-                        window.location.href = '/accounts/login/';
+        // Name validation regex (only letters and spaces allowed)
+        const validNameRegex = /^[A-Za-z\s]+$/;
+
+        // Live validation for email
+        document.getElementById("email").addEventListener("input", function () {
+            const email = document.getElementById("email").value;
+            const emailError = document.getElementById("emailError");
+
+            if (email) {
+                if (!validEmailDomainRegex.test(email)) {
+                    emailError.textContent = "Email must be from a valid domain";
+                    return;
+                }
+
+                firebase.auth().fetchSignInMethodsForEmail(email)
+                    .then((signInMethods) => {
+                        if (signInMethods.length > 0) {
+                            emailError.textContent = "Email is already in use.";
+                        } else {
+                            emailError.textContent = ""; 
+                        }
                     })
                     .catch((error) => {
-                        console.error("Error writing document: ", error);
-                        alert("Error storing details in Firestore");
+                        emailError.textContent = "Invalid email format.";
                     });
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    alert(errorMessage);
-                    document.getElementById("message").innerHTML = errorMessage;
-                });
-        }
+            } else {
+                emailError.textContent = "";
+            }
+        });
 
-        // Google Sign-In function
+        // Live validation for password
+        document.getElementById("password").addEventListener("input", function () {
+            const password = document.getElementById("password").value;
+            const passwordError = document.getElementById("passwordError");
+
+            if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters long.";
+            } else {
+                passwordError.textContent = ""; 
+            }
+        });
+
+        // Live validation for confirm password
+        document.getElementById("confirm-password").addEventListener("input", function () {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = "Passwords do not match.";
+            } else {
+                confirmPasswordError.textContent = "";
+            }
+        });
+
+        // Live validation for name
+        document.getElementById("name").addEventListener("input", function () {
+            const name = document.getElementById("name").value;
+            const nameError = document.getElementById("nameError");
+
+            if (!validNameRegex.test(name)) {
+                nameError.textContent = "Name cannot contain numbers or special characters.";
+            } else {
+                nameError.textContent = "";
+            }
+        });
+
+        // Signup function
+        function signup() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+    const name = document.getElementById("name").value;
+    const userType = document.getElementById("userType").value;
+    const messageElement = document.getElementById("message");
+
+    const emailError = document.getElementById("emailError");
+
+    // Prevent submission if there's an email error
+    if (!validEmailDomainRegex.test(email)) {
+        emailError.textContent = "Email must be from a valid domain";
+        messageElement.textContent = "Invalid email address.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+    if (emailError.textContent !== "") {
+        messageElement.textContent = "Please correct the email address.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+    if (!validNameRegex.test(name)) {
+        messageElement.textContent = "Name is invalid.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        messageElement.textContent = "Passwords do not match.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+    messageElement.style.display = "none";
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+
+            return db.collection("users").doc(user.uid).set({
+                name: name,
+                email: email,
+                userType: userType
+            });
+        })
+        .then(() => {
+            messageElement.textContent = "Signup successful!";
+            messageElement.style.backgroundColor = "#d4edda";
+            messageElement.style.display = "block";
+
+            setTimeout(() => {
+                window.location.href = "{% url 'login' %}";
+            }, 2000);
+        })
+        .catch((error) => {
+            messageElement.textContent = error.message;
+            messageElement.style.display = "block";
+        });
+}
+
+
+        // Google sign-in function (same as before)
         function signInWithGoogle() {
-            var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    var user = result.user;
-                    alert("Google sign-in successful");
-                    document.getElementById("message").innerHTML = "Google sign-in successful!";
-                    window.location.href = '/home/';
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    alert(errorMessage);
-                    document.getElementById("message").innerHTML = errorMessage;
-                });
+            // Google sign-in logic
         }
     </script>
 </body>

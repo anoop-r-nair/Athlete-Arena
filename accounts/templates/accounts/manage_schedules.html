@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Schedules | Athlete Arena</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background: #1a1a1a;
+        }
+        header {
+            background: #000;
+            padding: 20px 0;
+            color: #fff;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        .logo a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ccc;
+        }
+        .main {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: center;
+            padding-top: 100px;
+        }
+        .form-container {
+            background: #333;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+            margin: auto;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 1.8em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #222;
+            color: #fff;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #888;
+            outline: none;
+        }
+        button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #ddd;
+        }
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 20px 0;
+            color: #fff;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+        }
+        footer p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #222;
+            color: #fff;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #555;
+        }
+        th {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlete Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Manage Schedules</h2>
+            <form id="schedule-form" onsubmit="addSchedule(); return false;">
+                <div class="form-group">
+                    <label for="type">Schedule Type:</label>
+                    <select id="type" required>
+                        <option value="Practice">Practice</option>
+                        <option value="Game">Game</option>
+                        <option value="Event">Event</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" required>
+                </div>
+                <div class="form-group">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description">
+                </div>
+                <button type="submit">Add Schedule</button>
+                <p id="message"></p>
+            </form>
+            <!-- View Schedules Button -->
+            <button onclick="viewSchedules()">View Schedules</button>
+        </div>
+
+        <!-- Table to Display Schedules -->
+        <div class="table-container">
+            <table id="schedules-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="schedules-body">
+                    <!-- Schedule data will be inserted here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- <footer>
+        <p>© 2024 Athlete Arena. All rights reserved.</p>
+    </footer> -->
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to add a schedule
+        function addSchedule() {
+            const type = document.getElementById('type').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const location = document.getElementById('location').value;
+            const description = document.getElementById('description').value;
+
+            db.collection("schedules").add({
+                type: type,
+                date: date,
+                time: time,
+                location: location,
+                description: description
+            })
+            .then(() => {
+                alert("Schedule added successfully!");
+                document.getElementById("message").innerHTML = "Schedule added successfully!";
+                document.getElementById("schedule-form").reset(); // Clear form fields after adding
+                viewSchedules(); // Refresh the schedule list after adding a new one
+            })
+            .catch((error) => {
+                console.error("Error adding schedule: ", error);
+                alert("Error adding schedule.");
+            });
+        }
+
+        // Function to view schedules
+        function viewSchedules() {
+            const schedulesBody = document.getElementById('schedules-body');
+            const schedulesTable = document.getElementById('schedules-table');
+            schedulesBody.innerHTML = ''; // Clear previous data
+
+            db.collection("schedules").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const schedule = doc.data();
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${schedule.type}</td>
+                        <td>${schedule.date}</td>
+                        <td>${schedule.time}</td>
+                        <td>${schedule.location}</td>
+                        <td>${schedule.description}</td>
+                        <td>
+                            <button onclick="editSchedule('${doc.id}', '${schedule.type}', '${schedule.date}', '${schedule.time}', '${schedule.location}', '${schedule.description}')">Edit</button>
+                            <button onclick="deleteSchedule('${doc.id}')">Delete</button>
+                        </td>
+                    `;
+                    schedulesBody.appendChild(row);
+                });
+                schedulesTable.style.display = 'table'; // Show the table after data is fetched
+            });
+        }
+
+        // Function to delete a schedule
+        function deleteSchedule(id) {
+            if (confirm("Are you sure you want to delete this schedule?")) {
+                db.collection("schedules").doc(id).delete().then(() => {
+                    alert("Schedule deleted successfully!");
+                    viewSchedules(); // Refresh the schedule list after deleting
+                }).catch((error) => {
+                    console.error("Error removing schedule: ", error);
+                    alert("Error deleting schedule.");
+                });
+            }
+        }
+
+        // Function to edit a schedule
+        function editSchedule(id, type, date, time, location, description) {
+            document.getElementById('type').value = type;
+            document.getElementById('date').value = date;
+            document.getElementById('time').value = time;
+            document.getElementById('location').value = location;
+            document.getElementById('description').value = description;
+
+            // Change the button text to "Update Schedule" and set an onclick event
+            const addButton = document.querySelector('button[type="submit"]');
+            addButton.textContent = "Update Schedule";
+            addButton.onclick = function () {
+                db.collection("schedules").doc(id).update({
+                    type: document.getElementById('type').value,
+                    date: document.getElementById('date').value,
+                    time: document.getElementById('time').value,
+                    location: document.getElementById('location').value,
+                    description: document.getElementById('description').value
+                })
+                .then(() => {
+                    alert("Schedule updated successfully!");
+                    document.getElementById("message").innerHTML = "Schedule updated successfully!";
+                    document.getElementById("schedule-form").reset(); // Clear form fields after updating
+                    addButton.textContent = "Add Schedule"; // Revert button text back to "Add Schedule"
+                    addButton.onclick = function() { addSchedule(); }; // Revert back to add functionality
+                    viewSchedules(); // Refresh the schedule list after updating
+                })
+                .catch((error) => {
+                    console.error("Error updating schedule: ", error);
+                    alert("Error updating schedule.");
+                });
+            };
+        }
+    </script>
+</body>
+</html>

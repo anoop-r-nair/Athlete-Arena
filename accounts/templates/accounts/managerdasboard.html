@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .sidebar h4 {
+            color: #fff;
+            margin-bottom: 30px;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: #495057;
+            border-radius: 4px;
+        }
+
+        /* Main content */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #343a40;
+            margin-bottom: 30px;
+        }
+        .navbar .navbar-brand {
+            color: #fff;
+        }
+        .navbar .navbar-brand:hover {
+            color: #adb5bd;
+        }
+
+        /* Dashboard content */
+        h2 {
+            margin-bottom: 30px;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 18px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-body .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .card-body .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="d-flex">
+    <nav class="sidebar flex-column p-3">
+        <h4>Manager Dashboard</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'manage_team' %}">Create Team</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin_dashboard' %}">Manage Players and coaches</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manage_schedules' %}">Schedules</a>
+            </li>
+            <li class="nav-item"></li>
+                <a class="nav-link" href="{% url 'payment' %}">payment</a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="#">Reports</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Settings</a>
+            </li> -->
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="content w-100">
+        <!-- Top navbar -->
+        <nav class="navbar navbar-dark">
+            <a class="navbar-brand" href="#">Dashboard</a>
+        </nav>
+
+        <!-- Dashboard content -->
+        <div class="container-fluid">
+            <h2>Welcome, Manager!</h2>
+            <div class="row">
+                <!-- Card 1 -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Team</div>
+                        <div class="card-body">
+                            <a href="{% url 'teamupdate' %}" class="btn btn-primary">View Teams</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <!-- <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Players</div>
+                        <div class="card-body">
+                            <a href="#" class="btn btn-primary">View Players</a>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Card 3 -->
+                <!-- <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Coaches</div>
+                        <div class="card-body">
+                            <a href="{% url 'coaches' %}" class="btn btn-primary">Manage Coaches</a>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+            <!-- More dashboard content here -->
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
