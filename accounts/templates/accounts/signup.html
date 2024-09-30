@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup | Athlete Arena</title>
 
+<<<<<<< HEAD
     <style>
          body {
+=======
+    <!-- Internal CSS -->
+    <style>
+        body {
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
             font-family: Arial, sans-serif;
             background-color: #f0f2f5;
             margin: 0;
@@ -147,7 +153,20 @@
 </head>
 <body>
     <header>
+<<<<<<< HEAD
         <!-- Your existing header code -->
+=======
+        <div class="logo">
+            <a href="#">Athlete Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
     </header>
 
     <main class="main">
@@ -212,12 +231,18 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+<<<<<<< HEAD
         // Email domain regex for Gmail and ac.in only
         const validEmailDomainRegex = /^[^\s@]+@(gmail\.com|ac\.in)$/;
 
         // Name validation regex (only letters and spaces allowed)
         const validNameRegex = /^[A-Za-z\s]+$/;
 
+=======
+        // Regular expression to allow only .in, .info, .net, or .com domains
+        const validEmailDomainRegex = /^[^\s@]+@[^\s@]+\.(in|info|net|com)$/;
+
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
         // Live validation for email
         document.getElementById("email").addEventListener("input", function () {
             const email = document.getElementById("email").value;
@@ -225,23 +250,39 @@
 
             if (email) {
                 if (!validEmailDomainRegex.test(email)) {
+<<<<<<< HEAD
                     emailError.textContent = "Email must be from a valid domain";
                     return;
                 }
 
+=======
+                    emailError.textContent = "Email must be from a valid domain (.in, .info, .net, .com).";
+                    return;
+                }
+
+                // Check if the email is already registered in Firebase
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
                 firebase.auth().fetchSignInMethodsForEmail(email)
                     .then((signInMethods) => {
                         if (signInMethods.length > 0) {
                             emailError.textContent = "Email is already in use.";
                         } else {
+<<<<<<< HEAD
                             emailError.textContent = ""; 
+=======
+                            emailError.textContent = ""; // Clear error if valid
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
                         }
                     })
                     .catch((error) => {
                         emailError.textContent = "Invalid email format.";
                     });
             } else {
+<<<<<<< HEAD
                 emailError.textContent = "";
+=======
+                emailError.textContent = ""; // Clear error if no email is entered
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
             }
         });
 
@@ -253,7 +294,11 @@
             if (password.length < 8) {
                 passwordError.textContent = "Password must be at least 8 characters long.";
             } else {
+<<<<<<< HEAD
                 passwordError.textContent = ""; 
+=======
+                passwordError.textContent = ""; // Clear error if valid
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
             }
         });
 
@@ -266,6 +311,7 @@
             if (password !== confirmPassword) {
                 confirmPasswordError.textContent = "Passwords do not match.";
             } else {
+<<<<<<< HEAD
                 confirmPasswordError.textContent = "";
             }
         });
@@ -279,6 +325,9 @@
                 nameError.textContent = "Name cannot contain numbers or special characters.";
             } else {
                 nameError.textContent = "";
+=======
+                confirmPasswordError.textContent = ""; // Clear error if valid
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
             }
         });
 
@@ -291,6 +340,7 @@
     const userType = document.getElementById("userType").value;
     const messageElement = document.getElementById("message");
 
+<<<<<<< HEAD
     const emailError = document.getElementById("emailError");
 
     // Prevent submission if there's an email error
@@ -313,18 +363,32 @@
         return;
     }
 
+=======
+    // Check if passwords match
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
     if (password !== confirmPassword) {
         messageElement.textContent = "Passwords do not match.";
         messageElement.style.display = "block";
         return;
     }
 
+<<<<<<< HEAD
     messageElement.style.display = "none";
 
+=======
+    // Clear previous messages
+    messageElement.style.display = "none";
+
+    // Firebase signup with email and password
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             const user = userCredential.user;
 
+<<<<<<< HEAD
+=======
+            // Save additional user details to Firestore
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
             return db.collection("users").doc(user.uid).set({
                 name: name,
                 email: email,
@@ -334,11 +398,21 @@
         .then(() => {
             messageElement.textContent = "Signup successful!";
             messageElement.style.backgroundColor = "#d4edda";
+<<<<<<< HEAD
             messageElement.style.display = "block";
 
             setTimeout(() => {
                 window.location.href = "{% url 'login' %}";
             }, 2000);
+=======
+            messageElement.style.borderLeft = "4px solid #c3e6cb";
+            messageElement.style.display = "block";
+
+            // Redirect to the login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = "{% url 'login' %}"; // Replace with your login URL
+            }, 2000); // 2 seconds delay
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
         })
         .catch((error) => {
             messageElement.textContent = error.message;
@@ -346,10 +420,44 @@
         });
 }
 
+<<<<<<< HEAD
 
         // Google sign-in function (same as before)
         function signInWithGoogle() {
             // Google sign-in logic
+=======
+        // Google sign-in function
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+
+                    // Check if user exists in Firestore
+                    const userRef = db.collection("users").doc(user.uid);
+                    userRef.get().then((docSnapshot) => {
+                        if (!docSnapshot.exists) {
+                            // If user does not exist, save user info to Firestore
+                            return userRef.set({
+                                name: user.displayName,
+                                email: user.email,
+                                userType: "Player" // Default user type for Google sign-in
+                            });
+                        }
+                    });
+                })
+                .then(() => {
+                    messageElement.textContent = "Google sign-in successful!";
+                    messageElement.style.backgroundColor = "#d4edda";
+                    messageElement.style.borderLeft = "4px solid #c3e6cb";
+                    messageElement.style.display = "block";
+                })
+                .catch((error) => {
+                    messageElement.textContent = error.message;
+                    messageElement.style.display = "block";
+                });
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
         }
     </script>
 </body>

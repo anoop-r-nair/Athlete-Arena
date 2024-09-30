@@ -54,6 +54,7 @@ urlpatterns = [
     path('managerdasboard/',views.managerdasboard, name='managerdasboard'), 
     path('teamupdate/',views.teamupdate, name='teamupdate'),
     path('viewteamcoach/',views.viewteamcoach, name='viewteamcoach'),
+<<<<<<< HEAD
     path('logout/', views.logout_view, name='logout'),
     path('lineups/',views.lineups, name='lineups'),
     path('payment/',views.payment, name='payment'),
@@ -63,6 +64,8 @@ urlpatterns = [
     path('markattendance/',views.markattendance, name='markattendance'),
     path('viewattendance/',views.viewattendance, name='viewattendance'),
 
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 ]
 

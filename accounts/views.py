@@ -533,7 +533,12 @@ def manage_schedules(request):
 def coach_dashboard(request):
     return render(request, 'accounts/coach_dashboard.html')
 
+<<<<<<< HEAD
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+=======
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 def player_dashboard(request):
     return render(request, 'accounts/player_dashboard.html')
@@ -635,6 +640,7 @@ def managerdasboard(request):
 def edit_coach_profile(request):
      return render(request, 'accounts/edit_coach_profile.html')
 
+<<<<<<< HEAD
 # def logout_view(request):
 #     # Log out the user and clear the session
 #     logout(request)
@@ -646,6 +652,9 @@ def logout_view(request):
     request.session.delete()
     logout(request)
     return redirect('login')
+=======
+
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 
 def parents(request):
@@ -711,6 +720,7 @@ def editcoachprofile(request):
         return render(request, 'accounts/editcoachprofile.html',  {'coaches': []})    
     
 
+<<<<<<< HEAD
 # def login(request):
 #     if request.method == 'POST':
 #         email = request.POST.get('email')
@@ -752,6 +762,49 @@ def editcoachprofile(request):
 #             return redirect('login')
 
 #     return render(request, 'accounts/login.html')
+=======
+def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Admin login check
+        if email == 'admin@gmail.com' and password == 'admin@123':
+            return redirect('modules')  # Redirect to admin dashboard
+
+        try:
+            # Sign in the user with Firebase Authentication
+            user = auth.get_user_by_email(email)
+            
+            # Simulate Firebase Authentication sign-in process
+            # Use Firebase Client SDK for actual user authentication on the client side
+
+            # Retrieve user details from Firestore
+            user_ref = db.collection('users').document(user.uid)
+            user_data = user_ref.get().to_dict()
+            
+            if user_data is None:
+                messages.error(request, 'User not found in the database.')
+                return redirect('login')
+
+            # Check user type and redirect to appropriate dashboard
+            userType = user_data.get('userType')
+            if userType == 'Player':
+                return redirect('player_dashboard')  # Define URL for player dashboard
+            elif userType == 'Coach':
+                return redirect('coach_dashboard')  # Define URL for coach dashboard
+            elif userType == 'Admin':
+                return redirect('admin_dashboard')  # Define URL for admin dashboard
+            else:
+                messages.error(request, 'User type not recognized.')
+                return redirect('login')
+
+        except Exception as e:
+            messages.error(request, f"Login error: {str(e)}")
+            return redirect('login')
+
+    return render(request, 'accounts/login.html')
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 def send_message(request):
     if request.method == 'POST':
@@ -775,8 +828,12 @@ def get_messages(request, user_id):
     messages = db.collection('messages').where('receiver_id', '==', user_id).stream()
     message_list = [{'sender_id': message.get('sender_id'), 'message': message.get('message'), 'timestamp': message.get('timestamp')} for message in messages]
 
+<<<<<<< HEAD
     return JsonResponse({'messages': message_list})    
 
+=======
+    return JsonResponse({'messages': message_list})  
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 
 
