@@ -1,9 +1,10 @@
+from datetime import datetime, timezone
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
 import firebase_admin
-from firebase_admin import auth, credentials, firestore
+from firebase_admin import auth, credentials, firestore, storage
 import os
 
 # Initialize Firebase Admin SDK
@@ -14,97 +15,109 @@ if not firebase_admin._apps:
 db = firestore.client()
 
 # Home view
-def home(request):
-    return render(request, 'accounts/home.html')
+def index(request):
+    return render(request, 'accounts/index.html')
 
 # Signup view
 def signup(request):
-    # if request.method == 'POST':
-    #     email = request.POST.get('email')
-    #     password = request.POST.get('password')
-    #     address = request.POST.get('address')
-    #     phone = request.POST.get('phone')
-    #     name = request.POST.get('name')
-    #      # The user's role
-    #     try:
-    #         # Create a new user in Firebase Authentication
-    #         user = auth.create_user(email=email, password=password)
+    if request.method == 'POST':
+        # Get form data
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')  # Ensure passwords match
+        phone = request.POST.get('phone')
+        name = request.POST.get('name')
+        userType = request.POST.get('userType')  # Ensure to get 'userType' from the form
+
+        # Check if passwords match
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'accounts/signup.html')
+
+        try:
+            # Create a new user in Firebase Authentication
+            user = auth.create_user(email=email, password=password)
             
-    #         # Save the user's details in Firestore
-    #         user_ref = db.collection('users').document(user.uid)
-    #         user_ref.set({
-    #             'email': email,
-    #             'uid': user.uid,
-    #             'address': address,
-    #             'phone': phone,
-    #             'name': name,
-    #         })
-    #         messages.success(request, 'User created successfully')
-    #         return redirect('login')
-    #     except Exception as e:
-    #         messages.error(request, str(e))
+            # Save the user's details in Firestore
+            user_ref = db.collection('users').document(user.uid)
+            user_ref.set({
+                'email': email,
+                'userType': userType,
+                'phone': phone,
+                'name': name,
+            })
+
+            messages.success(request, 'User created successfully.')
+            return redirect('login')
+
+        except Exception as e:
+            # Log the error (optional)
+            print(f"Error creating user: {str(e)}")
+            messages.error(request, f"An error occurred: {str(e)}")
+            return render(request, 'accounts/signup.html')
+
     return render(request, 'accounts/signup.html')
 
 def signupcoach(request):
-    # if request.method == 'POST':
-    #     email = request.POST.get('email')
-    #     password = request.POST.get('password')
-    #     address = request.POST.get('address')
-    #     phone = request.POST.get('phone')
-    #     name = request.POST.get('name')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        name = request.POST.get('name')
         
-    #     try:
-    #         # Create a new user in Firebase Authentication
-    #         user = auth.create_user(email=email, password=password)
+        try:
+            # Create a new user in Firebase Authentication
+            user = auth.create_user(email=email, password=password)
             
-    #         # Save the user's details in Firestore with 'uid' as document ID
-    #         user_ref = db.collection('coaches').document(user.uid)
-    #         user_ref.set({
-    #             'email': email,
-    #             'uid': user.uid,  # Store uid
-    #             'address': address,
-    #             'phone': phone,
-    #             'name': name,
-    #         })
-    #         messages.success(request, 'Coach created successfully')
-    #         return redirect('login')  # Ensure 'login' is a valid URL name
-    #     except Exception as e:
-    #         # Log the exception (optional)
-    #         print(f"Error creating coach: {e}")
-    #         messages.error(request, f"Error: {str(e)}")
-    #         return redirect('signupcoach')  # Redirect back to signup on error
-    # else:
+            # Save the user's details in Firestore with 'uid' as document ID
+            user_ref = db.collection('coaches').document(user.uid)
+            user_ref.set({
+                'email': email,
+                'uid': user.uid,  # Store uid
+                'address': address,
+                'phone': phone,
+                'name': name,
+            })
+            messages.success(request, 'Coach created successfully')
+            return redirect('login')  # Ensure 'login' is a valid URL name
+        except Exception as e:
+            # Log the exception (optional)
+            print(f"Error creating coach: {e}")
+            messages.error(request, f"Error: {str(e)}")
+            return redirect('signupcoach')  # Redirect back to signup on error
+    else:
         return render(request, 'accounts/signupcoach.html')
     
 def signupparent(request):
-    # if request.method == 'POST':
-    #     email = request.POST.get('email')
-    #     password = request.POST.get('password')
-    #     address = request.POST.get('address')
-    #     phone = request.POST.get('phone')
-    #     name = request.POST.get('name')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        name = request.POST.get('name')
         
-    #     try:
-    #         # Create a new user in Firebase Authentication
-    #         user = auth.create_user(email=email, password=password)
+        try:
+            # Create a new user in Firebase Authentication
+            user = auth.create_user(email=email, password=password)
             
-    #         # Save the user's details in Firestore with 'uid' as document ID
-    #         user_ref = db.collection('parent').document(user.uid)
-    #         user_ref.set({
-    #             'email': email,
-    #             'uid': user.uid,  # Store uid
-    #             'address': address,
-    #             'phone': phone,
-    #             'name': name,
-    #         })
-    #         messages.success(request, 'Coach created successfully')
-    #         return redirect('login')  # Ensure 'login' is a valid URL name
-    #     except Exception as e:
-    #         # Log the exception (optional)
-    #         print(f"Error creating coach: {e}")
-    #         messages.error(request, f"Error: {str(e)}")
-    #         return redirect('signupparent')  # Redirect back to signup on error
-    # else:
+            # Save the user's details in Firestore with 'uid' as document ID
+            user_ref = db.collection('parent').document(user.uid)
+            user_ref.set({
+                'email': email,
+                'uid': user.uid,  # Store uid
+                'address': address,
+                'phone': phone,
+                'name': name,
+            })
+            messages.success(request, 'Coach created successfully')
+            return redirect('login')  # Ensure 'login' is a valid URL name
+        except Exception as e:
+            # Log the exception (optional)
+            print(f"Error creating coach: {e}")
+            messages.error(request, f"Error: {str(e)}")
+            return redirect('signupparent')  # Redirect back to signup on error
+    else:
         return render(request, 'accounts/signupparent.html')    
 
 # Login view
@@ -143,23 +156,23 @@ def admin_dashboard(request):
     return render(request, 'accounts/admin_dashboard.html', {'users': users})
 
 def create(request):
-    # if request.method == 'POST':
-    #     coachname = request.POST.get('coachname')
-    #     players = request.POST.get('players').split(',')
-    #     teamname = request.POST.get('teamname')
+    if request.method == 'POST':
+        coachname = request.POST.get('coachname')
+        players = request.POST.get('players').split(',')
+        teamname = request.POST.get('teamname')
 
-    #     try:
-    #         # Save the team details in Firestore
-    #         team_ref = db.collection('teams').document()
-    #         team_ref.set({
-    #             'coachname': coachname,
-    #             'players': players,
-    #             'teamname': teamname,
-    #         })
-    #         messages.success(request, 'Team created successfully')
-    #         return redirect('manage_team')  # Replace with the actual URL name for managing teams
-    #     except Exception as e:
-    #         messages.error(request, f"Error creating team: {str(e)}")
+        try:
+            # Save the team details in Firestore
+            team_ref = db.collection('teams').document()
+            team_ref.set({
+                'coachname': coachname,
+                'players': players,
+                'teamname': teamname,
+            })
+            messages.success(request, 'Team created successfully')
+            return redirect('manage_team')  # Replace with the actual URL name for managing teams
+        except Exception as e:
+            messages.error(request, f"Error creating team: {str(e)}")
 
     return render(request, 'accounts/manage_team.html')
 
@@ -238,16 +251,16 @@ def update_user(request, email):
         
         if request.method == 'POST':
             name = request.POST.get('name')
-            address = request.POST.get('address')
-            phone = request.POST.get('phone')
+            email= request.POST.get('email')
+            userType = request.POST.get('userType')
             users = request.POST.get('users')
             
             # Update user details in Firestore
             if user_doc:
                 doc_reference.update({
                     'name': name,
-                    'address': address,
-                    'phone': phone,
+                    'email': email,
+                    'userType': userType,
                     'users': users,
                 })
                 messages.success(request, 'User updated successfully')
@@ -292,17 +305,41 @@ def update_coach_by_email(request, email):
         address = request.POST.get('address')
         phone = request.POST.get('phone')
 
-        # Update the Firestore document
-        coach_ref.update({
+        # Get the uploaded files, if any
+        profile_picture = request.FILES.get('profilePicture')
+        resume = request.FILES.get('resume')
+
+        # Create a dictionary for fields to update
+        updated_data = {
             'name': name,
             'address': address,
             'phone': phone,
-        })
+        }
+
+        # If profile picture was uploaded, upload to Firebase storage
+        if profile_picture:
+            # Assuming you have Firebase storage configured
+            bucket = storage.bucket()
+            blob = bucket.blob(f'coaches/{email}/profile_picture.jpg')
+            blob.upload_from_file(profile_picture)
+            # Get the public URL for the uploaded profile picture
+            updated_data['profilePicture'] = blob.public_url
+
+        # If resume was uploaded, upload to Firebase storage
+        if resume:
+            blob = bucket.blob(f'coaches/{email}/resume.pdf')
+            blob.upload_from_file(resume)
+            updated_data['resume'] = blob.public_url
+
+        # Update the Firestore document with new data
+        coach_ref.update(updated_data)
+
         return redirect('coaches')  # Redirect back to the coaches list
 
     # For GET request, display the current coach data
     coach = coach_ref.get().to_dict()
     return render(request, 'accounts/update_coach.html', {'coach': coach})
+
 
 def delete_coach_by_email(request, email):
     coaches_ref = db.collection('coaches')
@@ -356,94 +393,141 @@ def delete_parent_by_email(request, email):
 
 
 @staff_member_required
-# def manage_teams(request):
-#     try:
-#         # Retrieve all coaches
-#         coaches_ref = db.collection('coaches')
-#         coaches_docs = coaches_ref.stream()
-#         coaches = [{'email': doc.id, **doc.to_dict()} for doc in coaches_docs]
+def manage_teams(request):
+    try:
+        # Retrieve all coaches
+        coaches_ref = db.collection('coaches')
+        coaches_docs = coaches_ref.stream()
+        coaches = [{'email': doc.id, **doc.to_dict()} for doc in coaches_docs]
 
-#         # Retrieve all players
-#         players_ref = db.collection('users').where('role', '==', 'player')
-#         players_docs = players_ref.stream()
-#         players = [{'email': doc.id, **doc.to_dict()} for doc in players_docs]
+        # Retrieve all players
+        players_ref = db.collection('users').where('role', '==', 'player')
+        players_docs = players_ref.stream()
+        players = [{'email': doc.id, **doc.to_dict()} for doc in players_docs]
 
-#         # Retrieve all teams
-#         teams_ref = db.collection('teams')
-#         teams_docs = teams_ref.stream()
-#         teams = [{'id': doc.id, **doc.to_dict()} for doc in teams_docs]
+        # Retrieve all teams
+        teams_ref = db.collection('teams')
+        teams_docs = teams_ref.stream()
+        teams = [{'id': doc.id, **doc.to_dict()} for doc in teams_docs]
 
-#         return render(request, 'manage_team.html', {
-#             'coaches': coaches,
-#             'players': players,
-#             'teams': teams,
-#         })
-#     except Exception as e:
-#         messages.error(request, f'Error retrieving data: {e}')
-#         return redirect('manage_team')
+        return render(request, 'manage_team.html', {
+            'coaches': coaches,
+            'players': players,
+            'teams': teams,
+        })
+    except Exception as e:
+        messages.error(request, f'Error retrieving data: {e}')
+        return redirect('manage_team')
 
-# @staff_member_required
-# def edit_team_by_email(request, coach_email):
-#     teams_ref = db.collection('teams')
-#     team_query = teams_ref.where('coach_email', '==', coach_email).stream()
-#     team_doc = next(team_query, None)
+@staff_member_required
+def edit_team_by_email(request, coach_email):
+    teams_ref = db.collection('teams')
+    team_query = teams_ref.where('coach_email', '==', coach_email).stream()
+    team_doc = next(team_query, None)
 
-#     if not team_doc:
-#         messages.error(request, 'Team not found')
-#         return redirect('manage_teams')
+    if not team_doc:
+        messages.error(request, 'Team not found')
+        return redirect('manage_teams')
 
-#     team = team_doc.to_dict()
+    team = team_doc.to_dict()
 
-#     users_ref = db.collection('users')
-#     users = [doc.to_dict() for doc in users_ref.stream()]
-#     coaches = [user for user in users if user.get('role') == 'coach']
-#     players = [user for user in users if user.get('role') == 'player']
+    users_ref = db.collection('users')
+    users = [doc.to_dict() for doc in users_ref.stream()]
+    coaches = [user for user in users if user.get('role') == 'coach']
+    players = [user for user in users if user.get('role') == 'player']
 
-#     if request.method == 'POST':
-#         team_name = request.POST.get('team_name')
-#         new_coach_email = request.POST.get('coach_email')
-#         player_emails = request.POST.getlist('player_emails')
+    if request.method == 'POST':
+        team_name = request.POST.get('team_name')
+        new_coach_email = request.POST.get('coach_email')
+        player_emails = request.POST.getlist('player_emails')
 
-#         team_doc.reference.update({
-#             'team_name': team_name,
-#             'coach_email': new_coach_email,
-#             'players': player_emails,
-#         })
+        team_doc.reference.update({
+            'team_name': team_name,
+            'coach_email': new_coach_email,
+            'players': player_emails,
+        })
 
-#         messages.success(request, 'Team updated successfully')
-#         return redirect('manage_teams')
+        messages.success(request, 'Team updated successfully')
+        return redirect('manage_teams')
 
-#     return render(request, 'accounts/edit_team.html', {
-#         'team': team,
-#         'coaches': coaches,
-#         'players': players,
-#     })
+    return render(request, 'accounts/edit_team.html', {
+        'team': team,
+        'coaches': coaches,
+        'players': players,
+    })
 
 
-# @staff_member_required
-# def delete_team_by_email(request, coach_email):
-#     try:
-#         # Find the team document where the coach_email matches
-#         teams_ref = db.collection('teams')
-#         team_query = teams_ref.where('coach_email', '==', coach_email).stream()
-#         team_doc = next(team_query, None)
+@staff_member_required
+def delete_team_by_email(request, coach_email):
+    try:
+        # Find the team document where the coach_email matches
+        teams_ref = db.collection('teams')
+        team_query = teams_ref.where('coach_email', '==', coach_email).stream()
+        team_doc = next(team_query, None)
 
-#         if not team_doc:
-#             messages.error(request, 'Team not found')
-#             return redirect('manage_teams')
+        if not team_doc:
+            messages.error(request, 'Team not found')
+            return redirect('manage_teams')
 
-#         # Delete the team document
-#         team_doc.reference.delete()
-#         messages.success(request, 'Team deleted successfully')
-#     except Exception as e:
-#         messages.error(request, str(e))
+        # Delete the team document
+        team_doc.reference.delete()
+        messages.success(request, 'Team deleted successfully')
+    except Exception as e:
+        messages.error(request, str(e))
 
-#     return redirect('manage_teams')
+    return redirect('manage_teams')
 
+def manage_schedules(request):
+    if request.method == 'POST':
+        schedule_type = request.POST.get('schedule_type')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        location = request.POST.get('location')
+
+        try:
+            schedule_data = {
+                'schedule_type': schedule_type,
+                'title': title,
+                'description': description,
+                'start_time': start_time,
+                'end_time': end_time,
+                'location': location,
+                'created_at': timezone.now(),
+                'updated_at': timezone.now(),
+            }
+
+            # Add the schedule to Firestore
+            db.collection('schedules').add(schedule_data)
+            
+            # Print success message if saved successfully
+            messages.success(request, 'Schedule successfully saved.')
+
+            return redirect('manage_schedules')
+
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('manage_schedules')
+
+    try:
+        # Fetch schedules from Firestore
+        schedules_ref = db.collection('schedules')
+        schedules = schedules_ref.stream()
+        schedule_list = [schedule.to_dict() for schedule in schedules]
+
+        return render(request, 'manage_schedules.html', {'schedules': schedule_list})
+    
+    except Exception as e:
+        messages.error(request, f'An error occurred while fetching schedules: {str(e)}')
+        return render(request, 'manage_schedules.html', {'schedules': []})
 
 # Role-specific dashboard views
 def coach_dashboard(request):
     return render(request, 'accounts/coach_dashboard.html')
+
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
 
 def player_dashboard(request):
     return render(request, 'accounts/player_dashboard.html')
@@ -466,9 +550,77 @@ def schedules(request):
 
 def teams(request):
     return render(request, 'accounts/teams.html')
+def teamupdate(request):
+    return render(request, 'accounts/teamupdate.html')
+def viewteamcoach(request):
+    return render(request, 'accounts/viewteamcoach.html')
+
 
 def players(request):
     return render(request, 'accounts/players.html')
+
+def manage_schedules(request):
+    # Your logic here
+    return render(request, 'accounts/manage_schedules.html')
+
+def communicate_with_players(request):
+    # Your logic here
+    return render(request, 'accounts/communicate_with_players.html')
+
+def workouts(request):
+    return render(request, 'accounts/workouts.html') 
+
+def viewworkouts(request):
+    return render(request, 'accounts/viewworkouts.html') 
+
+def viewschedules(request):
+    return render(request, 'accounts/viewschedules.html') 
+
+def viewupdates(request):
+    return render(request, 'accounts/viewupdates.html') 
+
+def updates(request):
+    return render(request, 'accounts/updates.html') 
+
+def coachprofile(request):
+    return render(request, 'accounts/coachprofile.html') 
+def managerdasboard(request):
+    return render(request, 'accounts/managerdasboard.html')
+
+
+# def edit_coach_profile(request, email):
+#     # Reference to the coach document in Firestore
+#     coach_ref = db.collection('coaches').document(email)
+    
+#     if request.method == 'POST':
+#         # Get updated data from the form
+#         updated_name = request.POST.get('name')
+#         updated_address = request.POST.get('address')
+#         updated_phone = request.POST.get('phone')
+
+#         # Update the coach's data in Firestore
+#         coach_ref.update({
+#             'name': updated_name,
+#             'address': updated_address,
+#             'phone': updated_phone
+#         })
+        
+#         return redirect('view_profile')  # Redirect to the desired page after update
+
+#     # Get the current coach data
+#     coach = coach_ref.get()
+    
+#     if coach.exists:
+#         coach_data = coach.to_dict()
+#         return render(request, 'edit_coach_profile.html', {'coach': coach_data})
+#     else:
+#         return render(request, 'edit_coach_profile.html', {'error': 'Coach not found'})
+
+def edit_coach_profile(request):
+     return render(request, 'accounts/edit_coach_profile.html')
+
+
+
 
 def parents(request):
     parents_ref = db.collection('parents')
@@ -499,6 +651,86 @@ def coaches(request):
     except Exception as e:
         messages.error(request, f"An error occurred: {str(e)}")
         return render(request, 'accounts/coaches.html', {'coaches': []})
+    
+def editcoachprofile(request):
+    try:
+        # Fetch all coaches from Firestore
+        coaches_ref = db.collection('coaches')
+        coaches = [doc.to_dict() for doc in coaches_ref.stream()]
+        print(coaches)  # For debugging: Print the coaches data
+        return render(request, 'accounts/editcoachprofile.html', {'coaches': coaches})
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}")
+        return render(request, 'accounts/editcoachprofile.html',  {'coaches': []})    
+    
+
+def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Admin login check
+        if email == 'admin@gmail.com' and password == 'admin@123':
+            return redirect('modules')  # Redirect to admin dashboard
+
+        try:
+            # Sign in the user with Firebase Authentication
+            user = auth.get_user_by_email(email)
+            
+            # Simulate Firebase Authentication sign-in process
+            # Use Firebase Client SDK for actual user authentication on the client side
+
+            # Retrieve user details from Firestore
+            user_ref = db.collection('users').document(user.uid)
+            user_data = user_ref.get().to_dict()
+            
+            if user_data is None:
+                messages.error(request, 'User not found in the database.')
+                return redirect('login')
+
+            # Check user type and redirect to appropriate dashboard
+            userType = user_data.get('userType')
+            if userType == 'Player':
+                return redirect('player_dashboard')  # Define URL for player dashboard
+            elif userType == 'Coach':
+                return redirect('coach_dashboard')  # Define URL for coach dashboard
+            elif userType == 'Admin':
+                return redirect('admin_dashboard')  # Define URL for admin dashboard
+            else:
+                messages.error(request, 'User type not recognized.')
+                return redirect('login')
+
+        except Exception as e:
+            messages.error(request, f"Login error: {str(e)}")
+            return redirect('login')
+
+    return render(request, 'accounts/login.html')
+
+def send_message(request):
+    if request.method == 'POST':
+        sender_id = request.POST.get('sender_id')
+        receiver_id = request.POST.get('receiver_id')
+        message_content = request.POST.get('message')
+
+        # Add message to Firestore
+        message_data = {
+            'sender_id': sender_id,
+            'receiver_id': receiver_id,
+            'message': message_content,
+            'timestamp': datetime.datetime.now()
+        }
+        db.collection('messages').add(message_data)
+
+        return JsonResponse({'status': 'Message sent successfully'})
+
+def get_messages(request, user_id):
+    # Fetch messages from Firestore for the given user_id
+    messages = db.collection('messages').where('receiver_id', '==', user_id).stream()
+    message_list = [{'sender_id': message.get('sender_id'), 'message': message.get('message'), 'timestamp': message.get('timestamp')} for message in messages]
+
+    return JsonResponse({'messages': message_list})  
+
+
 
 
 

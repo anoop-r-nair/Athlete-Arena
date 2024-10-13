@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Coach Profile | Athlet Arena</title>
+    <title>Add player Profile | Athlet Arena</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -126,7 +126,7 @@
 
     <main class="main">
         <div class="form-container">
-            <h2>Add Coach Profile</h2>
+            <h2>Add player Profile</h2>
             <form id="add-profile-form" onsubmit="addProfile(); return false;">
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -144,24 +144,21 @@
                     <label for="name">Name:</label>
                     <input type="text" id="name" required aria-required="true">
                 </div>
-                <div class="form-group">
-                    <label for="profile-pic">Profile Picture:</label>
-                    <input type="file" id="profile-pic" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label for="resume">Resume (PDF):</label>
-                    <input type="file" id="resume" accept=".pdf" required>
-                </div>
                 <button type="submit">Add Profile</button>
+                <!-- <a href="/accounts/login/" class="button-link">Back to Login</a> -->
                 <p id="message"></p>
             </form>
         </div>
     </main>
+
+    <footer>
+        <p>© 2024 Athlet Arena. All rights reserved.</p>
+    </footer>
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
 
     <script>
         // Firebase configuration
@@ -178,7 +175,6 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         // Add Profile function
         function addProfile() {
@@ -186,50 +182,31 @@
             var phone = document.getElementById("phone").value;
             var address = document.getElementById("address").value;
             var name = document.getElementById("name").value;
-            var profilePic = document.getElementById("profile-pic").files[0];
-            var resume = document.getElementById("resume").files[0];
-            var messageElement = document.getElementById("message");
-
+        
             // Phone number validation
             var phonePattern = /^[0-9]{10}$/;
             if (!phonePattern.test(phone)) {
-                messageElement.innerHTML = "Phone number must be exactly 10 digits long.";
+                document.getElementById("message").innerHTML = "Phone number must be exactly 10 digits long.";
                 return;
             }
 
-            // Upload profile picture
-            var profilePicRef = storage.ref('profile_pictures/' + profilePic.name);
-            var resumeRef = storage.ref('resumes/' + resume.name);
-
-            // Upload profile picture and resume in parallel
-            Promise.all([profilePicRef.put(profilePic), resumeRef.put(resume)])
-                .then((uploads) => {
-                    return Promise.all([uploads[0].ref.getDownloadURL(), uploads[1].ref.getDownloadURL()]);
-                })
-                .then((downloadURLs) => {
-                    var profilePicUrl = downloadURLs[0];
-                    var resumeUrl = downloadURLs[1];
-
-                    // Add coach details to Firestore
-                    return db.collection("coaches").add({
-                        email: email,
-                        phone: phone,
-                        address: address,
-                        name: name,
-                        profilePicture: profilePicUrl,
-                        resume: resumeUrl,
-                    });
-                })
-                .then(() => {
-                    alert("Profile added successfully to Firestore with files!");
-                    messageElement.innerHTML = "Profile added successfully!";
-                    window.location.href = '/accounts/coach_dashboard/';
-                })
-                .catch((error) => {
-                    console.error("Error adding document: ", error);
-                    alert("Error adding profile");
-                    messageElement.innerHTML = "Error adding profile.";
-                });
+            // Add coach details to Firestore
+            db.collection("players").add({
+                email: email,
+                phone: phone,
+                address: address,
+                name: name,
+            })
+            .then(() => {
+                alert("Profile added successfully to Firestore");
+                document.getElementById("message").innerHTML = "Profile added successfully to Firestore!";
+                window.location.href = '/accounts/player_dashboard/';
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                alert("Error adding profile");
+                document.getElementById("message").innerHTML = "Error adding profile.";
+            });
         }
     </script>
 </body>

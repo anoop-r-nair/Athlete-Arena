@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat between Players and Coaches</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background-color: #004aad;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            height: 400px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .sent {
+            background-color: #d4eaff;
+            align-self: flex-end;
+        }
+
+        .received {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover {
+            background-color: #003780;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">Chat with Players and Coaches</div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<!-- Firebase Configuration -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Global variables for user info
+    let currentUser = null;
+
+    // Listen for changes in user authentication state
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            currentUser = user;
+            loadMessages();
+        } else {
+            currentUser = null;
+            alert('Please log in to use the chat feature.');
+            // Redirect to login page or show login form
+        }
+    });
+
+    // Load messages from Firestore
+    function loadMessages() {
+        db.collection('messages').orderBy('timestamp')
+            .onSnapshot(snapshot => {
+                const chatMessages = document.getElementById('chat-messages');
+                chatMessages.innerHTML = ''; // Clear the chat
+
+                snapshot.forEach(doc => {
+                    const message = doc.data();
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+
+                    if (message.sender === currentUser.email) {
+                        messageElement.classList.add('sent');
+                    } else {
+                        messageElement.classList.add('received');
+                    }
+
+                    messageElement.textContent = `${message.sender}: ${message.text}`;
+                    chatMessages.appendChild(messageElement);
+                });
+
+                // Scroll to the bottom of the chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
+    }
+
+    // Send message to Firestore
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const messageText = messageInput.value.trim();
+
+        if (messageText !== '') {
+            db.collection('messages').add({
+                text: messageText,
+                sender: currentUser.email,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                messageInput.value = ''; // Clear the input field
+            }).catch(error => {
+                console.error('Error sending message: ', error);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

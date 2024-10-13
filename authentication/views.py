@@ -12,8 +12,8 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-def home(request):
-    return render(request, 'accounts/home.html')
+def index(request):
+    return render(request, 'accounts/index.html')
 
 def signup(request):
     if request.method == 'POST':

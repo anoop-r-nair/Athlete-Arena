@@ -31,7 +31,8 @@
             color: #333;
             font-weight: bold;
         }
-        input[type="text"] {
+        input[type="text"],
+        input[type="file"] {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -51,12 +52,27 @@
         button:hover {
             background-color: #4cae4c;
         }
+        .current-img, .current-resume {
+            margin-bottom: 20px;
+        }
+        .current-img img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+        }
+        .current-resume a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .current-resume a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Update Coach</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="{{ coach.name }}" required>
@@ -66,6 +82,26 @@
         
             <label for="phone">Phone:</label>
             <input type="text" id="phone" name="phone" value="{{ coach.phone }}" required>
+
+            <!-- Profile Picture -->
+            <label for="profilePicture">Profile Picture:</label>
+            <input type="file" id="profilePicture" name="profilePicture">
+
+            <!-- Display current profile picture -->
+            <div class="current-img">
+                <p>Current Profile Picture:</p>
+                <img src="{{ coach.profilePicture }}" alt="Profile Picture">
+            </div>
+        
+            <!-- Resume -->
+            <label for="resume">Resume:</label>
+            <input type="file" id="resume" name="resume">
+        
+            <!-- Display current resume link -->
+            <div class="current-resume">
+                <p>Current Resume:</p>
+                <a href="{{ coach.resume }}" target="_blank">View Resume</a>
+            </div>
         
             <button type="submit">Update Coach</button>
         </form>
