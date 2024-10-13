@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Add Player Profile | Athlet Arena</title>
+=======
+    <title>Add player Profile | Athlet Arena</title>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -126,7 +130,11 @@
 
     <main class="main">
         <div class="form-container">
+<<<<<<< HEAD
             <h2>Add Player Profile</h2>
+=======
+            <h2>Add player Profile</h2>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
             <form id="add-profile-form" onsubmit="addProfile(); return false;">
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -144,11 +152,16 @@
                     <label for="name">Name:</label>
                     <input type="text" id="name" required aria-required="true">
                 </div>
+<<<<<<< HEAD
                 <div class="form-group">
                     <label for="profileImage">Profile Image:</label>
                     <input type="file" id="profileImage" accept="image/*" required aria-required="true">
                 </div>
                 <button type="submit">Add Profile</button>
+=======
+                <button type="submit">Add Profile</button>
+                <!-- <a href="/accounts/login/" class="button-link">Back to Login</a> -->
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
                 <p id="message"></p>
             </form>
         </div>
@@ -162,7 +175,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<<<<<<< HEAD
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+=======
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
 
     <script>
         // Firebase configuration
@@ -179,7 +195,10 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+<<<<<<< HEAD
         const storage = firebase.storage();
+=======
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
 
         // Add Profile function
         function addProfile() {
@@ -187,6 +206,7 @@
             var phone = document.getElementById("phone").value;
             var address = document.getElementById("address").value;
             var name = document.getElementById("name").value;
+<<<<<<< HEAD
             var profileImage = document.getElementById("profileImage").files[0]; // Get the file object
 
             // Phone number validation (Indian format)
@@ -245,6 +265,33 @@
             } else {
                 document.getElementById("message").innerHTML = "Please upload a profile image.";
             }
+=======
+        
+            // Phone number validation
+            var phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("message").innerHTML = "Phone number must be exactly 10 digits long.";
+                return;
+            }
+
+            // Add coach details to Firestore
+            db.collection("players").add({
+                email: email,
+                phone: phone,
+                address: address,
+                name: name,
+            })
+            .then(() => {
+                alert("Profile added successfully to Firestore");
+                document.getElementById("message").innerHTML = "Profile added successfully to Firestore!";
+                window.location.href = '/accounts/player_dashboard/';
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                alert("Error adding profile");
+                document.getElementById("message").innerHTML = "Error adding profile.";
+            });
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         }
     </script>
 </body>

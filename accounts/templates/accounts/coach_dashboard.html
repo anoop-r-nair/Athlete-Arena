@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach Dashboard | Athlet Arena</title>
     <style>
         /* General body styling */
@@ -10,18 +9,27 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
+<<<<<<< HEAD
             padding: 20px;
         }
 
         /* Header styling */
         .header {
             background-color: #4CAF50;
+=======
+            padding: 0;
+        }
+
+        .header {
+            background-color: #004aad;
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
             color: white;
             padding: 20px;
             text-align: center;
             position: relative; /* Changed to relative */
         }
 
+<<<<<<< HEAD
         .header a {
             color: white;
             text-decoration: none;
@@ -43,6 +51,28 @@
             background-color: #333;
             padding: 20px;
             height: 100vh;
+=======
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+
+        .sidebar {
+            width: 20%;
+            background-color: #e9ecef;
+            padding: 20px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .content {
+            width: 75%;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         }
 
         .sidebar ul {
@@ -51,6 +81,7 @@
         }
 
         .sidebar ul li {
+<<<<<<< HEAD
             margin: 15px 0;
         }
 
@@ -142,20 +173,100 @@
             .module {
                 width: 90%;
             }
+=======
+            padding: 10px 0;
+            margin: 10px 0;
+            background-color: #004aad;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #003780;
+        }
+
+        .coach-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .coach-info div {
+            flex: 1;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            background-color: #f7f9fc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .module {
+            flex: 1 1 calc(33% - 20px);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .module h2 {
+            margin-bottom: 20px;
+            color: #004aad;
+        }
+
+        .btn {
+            background-color: #004aad;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            background-color: #003780;
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         }
     </style>
 </head>
 <body>
 
 <div class="header">
+<<<<<<< HEAD
     <h1>COACH DASHBOARD</h1>
     <a href="{% url 'addcoachprofile' %}">ADD PROFILE</a> <!-- This will now be properly placed -->
+=======
+    <h1>Coach Dashboard | Athlet Arena</h1>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    <a href="{% url 'logout' %}">Logout</a>
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
 </div>
 
 <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
         <ul>
+<<<<<<< HEAD
             <!-- <li><a href="{% url 'addcoachprofile' %}">ADD PROFILE</a></li> -->
             <li><a href="{% url 'lineups' %}">SET LINEUP</a></li>
             <li><a href="{% url 'updates1' %}">ADD UPDATES</a></li>
@@ -163,6 +274,29 @@
             <li><a href="{% url 'giveassessment' %}">ADD ASSESSMENT</a></li>
             <li><a href="{% url 'viewassessment' %}">EVALUATE PLAYER ASSESSMENT</a></li>
             <li><a href="{% url 'viewprofile' %}">VIEW PLAYER PROFILES</a></li>
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            <!-- <li> <a href="{% url 'signupcoach' %}" class="btn">profile</a></li> -->
+            <!-- <li> <a href="{% url 'editcoachprofile' %}" class="btn">Edit profile</a></li> -->
+            <li> <a href="{% url 'lineups' %}" class="btn">Lineup</a></li>
+            <li> <a href="{% url 'updates' %}" class="btn">Updates</a></li>
+            <li> <a href="{% url 'attendance' %}" class="btn">Attendance</a></li>
+
+=======
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            <li> <a href="{% url 'signupcoach' %}" class="btn">profile</a></li>
+            <!-- <li> <a href="{% url 'editcoachprofile' %}" class="btn">Edit profile</a></li> -->
+            <!-- <li> <a href="{% url 'manage_schedules' %}" class="btn">manage schedules</a></li> -->
+            <li> <a href="{% url 'updates' %}" class="btn">Updates</a></li>
+<<<<<<< HEAD
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            
+            <!-- <li>Settings</li> -->
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         </ul>
     </div>
 
@@ -170,6 +304,7 @@
     <div class="content">
         <h2>Welcome {{ coach_email }}</h2>
 
+<<<<<<< HEAD
         <!-- Dashboard Features -->
         <div class="dashboard-container">
             <div class="module">
@@ -187,6 +322,38 @@
             <div class="module">
                 <h2>COMMUNICATE WITH PLAYER</h2>
                 <a href="{% url 'communicate_with_players' %}" class="btn">COMMUNICATE NOW</a>
+=======
+
+        <!-- Coach Information -->
+        <!-- <div class="coach-info">
+            <div>
+                <h3>Coach ID:</h3>
+                <p>12345</p>
+            </div>
+            <div>
+                <h3>Team:</h3>
+                <p>Team A</p>
+            </div>
+        </div> -->
+
+        <!-- Dashboard Features -->
+        <div class="dashboard-container">
+            <div class="module">
+                <h2>Team</h2>
+                <a href="{% url 'viewteamcoach' %}" class="btn">View Team</a>
+            </div>
+            <div class="module">
+                <h2>Plan Practice</h2>
+                <a href="{% url 'manage_schedules' %}" class="btn">Plan a New Practice</a>
+            </div>
+            <div class="module">
+                <h2>Workouts</h2>
+                <a href="{% url 'viewworkouts' %}" class="btn">View Workouts</a>
+            </div>
+            <div class="module">
+                <h2>Communicate with players</h2>
+                <a href="{% url 'communicate_with_players' %}" class="btn">Communicate Now</a>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
             </div>
         </div>
     </div>

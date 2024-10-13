@@ -54,6 +54,12 @@ urlpatterns = [
     path('managerdasboard/',views.managerdasboard, name='managerdasboard'), 
     path('teamupdate/',views.teamupdate, name='teamupdate'),
     path('viewteamcoach/',views.viewteamcoach, name='viewteamcoach'),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
     path('logout/', views.logout_view, name='logout'),
     path('lineups/',views.lineups, name='lineups'),
     path('payment/',views.payment, name='payment'),
@@ -62,6 +68,7 @@ urlpatterns = [
     path('session/',views.session, name='session'),
     path('markattendance/',views.markattendance, name='markattendance'),
     path('viewattendance/',views.viewattendance, name='viewattendance'),
+<<<<<<< HEAD
     path('fanpage/',views.fanpage, name='fanpage'),
     path('schedulefans/',views.schedulefans, name='schedulefans'),
     path('viewprofile/',views.viewprofile, name='viewprofile'),
@@ -78,6 +85,12 @@ urlpatterns = [
 
 
 
+=======
+
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
 
 ]
 

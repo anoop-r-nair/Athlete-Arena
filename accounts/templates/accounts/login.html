@@ -255,7 +255,11 @@
                 })
                 .catch((error) => {
                     var errorMessage = error.message;
+<<<<<<< HEAD
                     document.getElementById("message").innerHTML ='incorrect password.';
+=======
+                    document.getElementById("message").innerHTML = errorMessage;
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
                     document.getElementById("message").style.display = "block";
                 });
         }

@@ -12,8 +12,23 @@
 #     firebase_admin.initialize_app(cred)
 # db = firestore.client()
 
+<<<<<<< HEAD
 # def index(request):
 #     return render(request, 'accounts/index.html')
+=======
+<<<<<<< HEAD
+def index(request):
+    return render(request, 'accounts/index.html')
+=======
+<<<<<<< HEAD
+# def index(request):
+#     return render(request, 'accounts/index.html')
+=======
+def index(request):
+    return render(request, 'accounts/index.html')
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
 
 # def signup(request):
 #     if request.method == 'POST':

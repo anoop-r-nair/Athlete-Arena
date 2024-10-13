@@ -5,8 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup | Athlete Arena</title>
 
+<<<<<<< HEAD
     <style>
          body {
+=======
+<<<<<<< HEAD
+    <!-- Internal CSS -->
+    <style>
+        body {
+=======
+<<<<<<< HEAD
+    <style>
+         body {
+=======
+    <!-- Internal CSS -->
+    <style>
+        body {
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
             font-family: Arial, sans-serif;
             background-color: #f0f2f5;
             margin: 0;
@@ -147,7 +164,24 @@
 </head>
 <body>
     <header>
+<<<<<<< HEAD
         <!-- Your existing header code -->
+=======
+<<<<<<< HEAD
+        <!-- Your existing header code -->
+=======
+        <div class="logo">
+            <a href="#">Athlete Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
     </header>
 
     <main class="main">
@@ -179,7 +213,11 @@
                     <select id="userType" required aria-required="true">
                         <!-- <option value="Coach">Coach</option> -->
                         <option value="Player">Player</option>
+<<<<<<< HEAD
                         <!-- <option value="Parent">Parent</option> -->
+=======
+                        <option value="Parent">Parent</option>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
                     </select>
                 </div>
                 <button type="submit">Signup</button>
@@ -212,12 +250,33 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+<<<<<<< HEAD
         // Email domain regex for Gmail and ac.in only
         const validEmailDomainRegex = /^[^\s@]+@(gmail\.com|ac\.in)$/;
 
         // Name validation regex (only letters and spaces allowed)
         const validNameRegex = /^[A-Za-z\s]+$/;
 
+=======
+<<<<<<< HEAD
+        // Regular expression to allow only .in, .info, .net, or .com domains
+        const validEmailDomainRegex = /^[^\s@]+@[^\s@]+\.(in|info|net|com)$/;
+
+=======
+<<<<<<< HEAD
+        // Email domain regex for Gmail and ac.in only
+        const validEmailDomainRegex = /^[^\s@]+@(gmail\.com|ac\.in)$/;
+
+        // Name validation regex (only letters and spaces allowed)
+        const validNameRegex = /^[A-Za-z\s]+$/;
+
+=======
+        // Regular expression to allow only .in, .info, .net, or .com domains
+        const validEmailDomainRegex = /^[^\s@]+@[^\s@]+\.(in|info|net|com)$/;
+
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         // Live validation for email
         document.getElementById("email").addEventListener("input", function () {
             const email = document.getElementById("email").value;
@@ -225,22 +284,55 @@
 
             if (email) {
                 if (!validEmailDomainRegex.test(email)) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
                     emailError.textContent = "Email must be from a valid domain";
                     return;
                 }
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+                    emailError.textContent = "Email must be from a valid domain (.in, .info, .net, .com).";
+                    return;
+                }
+
+                // Check if the email is already registered in Firebase
+<<<<<<< HEAD
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
                 firebase.auth().fetchSignInMethodsForEmail(email)
                     .then((signInMethods) => {
                         if (signInMethods.length > 0) {
                             emailError.textContent = "Email is already in use.";
                         } else {
+<<<<<<< HEAD
                             emailError.textContent = ""; 
+=======
+<<<<<<< HEAD
+                            emailError.textContent = ""; // Clear error if valid
+=======
+<<<<<<< HEAD
+                            emailError.textContent = ""; 
+=======
+                            emailError.textContent = ""; // Clear error if valid
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
                         }
                     })
                     .catch((error) => {
                         emailError.textContent = "Invalid email format.";
                     });
             } else {
+<<<<<<< HEAD
                 emailError.textContent = "";
             }
         });
@@ -305,6 +397,225 @@
             messageElement.textContent = "Please correct the email address.";
             messageElement.style.display = "block";
             return;
+=======
+<<<<<<< HEAD
+                emailError.textContent = ""; // Clear error if no email is entered
+=======
+<<<<<<< HEAD
+                emailError.textContent = "";
+=======
+                emailError.textContent = ""; // Clear error if no email is entered
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            }
+        });
+
+        // Live validation for password
+        document.getElementById("password").addEventListener("input", function () {
+            const password = document.getElementById("password").value;
+            const passwordError = document.getElementById("passwordError");
+
+            if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters long.";
+            } else {
+<<<<<<< HEAD
+                passwordError.textContent = ""; // Clear error if valid
+=======
+<<<<<<< HEAD
+                passwordError.textContent = ""; 
+=======
+                passwordError.textContent = ""; // Clear error if valid
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            }
+        });
+
+        // Live validation for confirm password
+        document.getElementById("confirm-password").addEventListener("input", function () {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = "Passwords do not match.";
+            } else {
+<<<<<<< HEAD
+                confirmPasswordError.textContent = ""; // Clear error if valid
+=======
+<<<<<<< HEAD
+                confirmPasswordError.textContent = "";
+            }
+        });
+
+        // Live validation for name
+        document.getElementById("name").addEventListener("input", function () {
+            const name = document.getElementById("name").value;
+            const nameError = document.getElementById("nameError");
+
+            if (!validNameRegex.test(name)) {
+                nameError.textContent = "Name cannot contain numbers or special characters.";
+            } else {
+                nameError.textContent = "";
+=======
+                confirmPasswordError.textContent = ""; // Clear error if valid
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            }
+        });
+
+        // Signup function
+        function signup() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+    const name = document.getElementById("name").value;
+    const userType = document.getElementById("userType").value;
+    const messageElement = document.getElementById("message");
+
+<<<<<<< HEAD
+    // Check if passwords match
+=======
+<<<<<<< HEAD
+    const emailError = document.getElementById("emailError");
+
+    // Prevent submission if there's an email error
+    if (!validEmailDomainRegex.test(email)) {
+        emailError.textContent = "Email must be from a valid domain";
+        messageElement.textContent = "Invalid email address.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+    if (emailError.textContent !== "") {
+        messageElement.textContent = "Please correct the email address.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+    if (!validNameRegex.test(name)) {
+        messageElement.textContent = "Name is invalid.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+=======
+    // Check if passwords match
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+    if (password !== confirmPassword) {
+        messageElement.textContent = "Passwords do not match.";
+        messageElement.style.display = "block";
+        return;
+    }
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    messageElement.style.display = "none";
+
+=======
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+    // Clear previous messages
+    messageElement.style.display = "none";
+
+    // Firebase signup with email and password
+<<<<<<< HEAD
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+
+<<<<<<< HEAD
+            // Save additional user details to Firestore
+=======
+<<<<<<< HEAD
+=======
+            // Save additional user details to Firestore
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            return db.collection("users").doc(user.uid).set({
+                name: name,
+                email: email,
+                userType: userType
+            });
+        })
+        .then(() => {
+            messageElement.textContent = "Signup successful!";
+            messageElement.style.backgroundColor = "#d4edda";
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            messageElement.style.display = "block";
+
+            setTimeout(() => {
+                window.location.href = "{% url 'login' %}";
+            }, 2000);
+=======
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            messageElement.style.borderLeft = "4px solid #c3e6cb";
+            messageElement.style.display = "block";
+
+            // Redirect to the login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = "{% url 'login' %}"; // Replace with your login URL
+            }, 2000); // 2 seconds delay
+<<<<<<< HEAD
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+        })
+        .catch((error) => {
+            messageElement.textContent = error.message;
+            messageElement.style.display = "block";
+        });
+}
+
+<<<<<<< HEAD
+        // Google sign-in function
+        function signInWithGoogle() {
+=======
+<<<<<<< HEAD
+
+        // Google sign-in function (same as before)
+        function signInWithGoogle() {
+            // Google sign-in logic
+=======
+        // Google sign-in function
+        function signInWithGoogle() {
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+            const provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+
+                    // Check if user exists in Firestore
+                    const userRef = db.collection("users").doc(user.uid);
+                    userRef.get().then((docSnapshot) => {
+                        if (!docSnapshot.exists) {
+                            // If user does not exist, save user info to Firestore
+                            return userRef.set({
+                                name: user.displayName,
+                                email: user.email,
+                                userType: "Player" // Default user type for Google sign-in
+                            });
+                        }
+                    });
+                })
+                .then(() => {
+                    messageElement.textContent = "Google sign-in successful!";
+                    messageElement.style.backgroundColor = "#d4edda";
+                    messageElement.style.borderLeft = "4px solid #c3e6cb";
+                    messageElement.style.display = "block";
+                })
+                .catch((error) => {
+                    messageElement.textContent = error.message;
+                    messageElement.style.display = "block";
+                });
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         }
 
         if (!validNameRegex.test(name)) {
