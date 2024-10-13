@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+
+        .lineup-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 600px;
+        }
+
+        .lineup-field {
+            position: relative;
+            background-color: #4CAF50;
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .player {
+            position: absolute;
+            background-color: red;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .gk { top: 85%; left: 43%; }
+        .cb1 { top: 65%; left: 30%; }
+        .cb2 { top: 65%; left: 55%; }
+        .lb { top: 65%; left: 15%; }
+        .rb { top: 65%; left: 70%; }
+        .dm1 { top: 50%; left: 35%; }
+        .dm2 { top: 50%; left: 50%; }
+        .cam { top: 30%; left: 42%; }
+        .lam { top: 30%; left: 25%; }
+        .ram { top: 30%; left: 60%; }
+        .cf { top: 10%; left: 42%; }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .save-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .save-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Football Lineup Form -->
+    <div class="lineup-section">
+        <h2>Football 4-2-3-1 Formation</h2>
+
+        <!-- Lineup Display -->
+        <div class="lineup-field">
+            <div contenteditable="true" class="player gk">GK</div>
+            <div contenteditable="true" class="player cb1">CB</div>
+            <div contenteditable="true" class="player cb2">CB</div>
+            <div contenteditable="true" class="player lb">LB</div>
+            <div contenteditable="true" class="player rb">RB</div>
+            <div contenteditable="true" class="player dm1">DM</div>
+            <div contenteditable="true" class="player dm2">DM</div>
+            <div contenteditable="true" class="player cam">CAM</div>
+            <div contenteditable="true" class="player lam">LAM</div>
+            <div contenteditable="true" class="player ram">RAM</div>
+            <div contenteditable="true" class="player cf">CF</div>
+        </div>
+
+        <button class="save-button" onclick="saveLineup()">Save Lineup</button>
+        <p id="message"></p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Ensure the user is authenticated
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+            } else {
+                console.log("User is not authenticated");
+                alert("You must be logged in to save the lineup.");
+                window.location.href = '/login';  // Redirect to login page
+            }
+        });
+
+        // Save lineup function
+        function saveLineup() {
+            var lineup = {
+                gk: document.querySelector(".gk").innerText,
+                cb1: document.querySelector(".cb1").innerText,
+                cb2: document.querySelector(".cb2").innerText,
+                lb: document.querySelector(".lb").innerText,
+                rb: document.querySelector(".rb").innerText,
+                dm1: document.querySelector(".dm1").innerText,
+                dm2: document.querySelector(".dm2").innerText,
+                cam: document.querySelector(".cam").innerText,
+                lam: document.querySelector(".lam").innerText,
+                ram: document.querySelector(".ram").innerText,
+                cf: document.querySelector(".cf").innerText
+            };
+
+            db.collection("lineups").add(lineup)
+            .then(() => {
+                console.log("Lineup successfully created");
+                document.getElementById("message").innerText = "Lineup saved successfully!";
+            })
+            .catch(error => {
+                console.error("Error saving lineup: ", error);
+                document.getElementById("message").innerText = "Error saving lineup!";
+            });
+        }
+    </script>
+
+</body>
+
+</html>

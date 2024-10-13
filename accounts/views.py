@@ -6,6 +6,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 import firebase_admin
 from firebase_admin import auth, credentials, firestore, storage
 import os
+from django.contrib.auth import logout
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required
+# from django.views.decorators.cache import cache_control
+
+
 
 # Initialize Firebase Admin SDK
 cred_path = os.path.join(os.path.dirname(__file__), 'C:/Users/Anoop/sports_team_management/sports_team_management/athletarena-firebase-adminsdk-q957f-b59ba119bd.json')
@@ -149,7 +155,7 @@ def admin_login(request):
     return render(request, 'accounts/admin_login.html')
 
 # Admin dashboard view
-@staff_member_required
+
 def admin_dashboard(request):
     users_ref = db.collection('users')
     users = [doc.to_dict() for doc in users_ref.stream()]
@@ -523,14 +529,34 @@ def manage_schedules(request):
         return render(request, 'manage_schedules.html', {'schedules': []})
 
 # Role-specific dashboard views
+
 def coach_dashboard(request):
     return render(request, 'accounts/coach_dashboard.html')
+
+<<<<<<< HEAD
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
+=======
+<<<<<<< HEAD
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+=======
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+
+def player_dashboard(request):
+    return render(request, 'accounts/player_dashboard.html')
 
 def playerprofile(request):
     return render(request, 'accounts/playerprofile.html')
 
-def player_dashboard(request):
-    return render(request, 'accounts/player_dashboard.html')
+def lineups(request):
+    users_ref = db.collection('users')
+    users = [doc.to_dict() for doc in users_ref.stream()]
+    return render(request, 'accounts/lineups.html', {'users': users})
+
+
 
 def medical_staff_dashboard(request):
     return render(request, 'accounts/medical_staff_dashboard.html')
@@ -619,7 +645,25 @@ def managerdasboard(request):
 def edit_coach_profile(request):
      return render(request, 'accounts/edit_coach_profile.html')
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+# def logout_view(request):
+#     # Log out the user and clear the session
+#     logout(request)
+#     request.session.flush()
+#     # Redirect to login page or any other page
+#     return redirect('index')
+
+def logout_view(request):  
+    request.session.delete()
+    logout(request)
+    return redirect('login')
+=======
+
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
 
 
 def parents(request):
@@ -637,6 +681,27 @@ def parents(request):
 def manage_team(request):
     # Your logic here
     return render(request, 'accounts/manage_team.html') 
+
+def viewlineups(request):
+    return render(request, 'accounts/viewlineups.html') 
+
+
+def attendance(request):
+    return render(request, 'accounts/attendance.html')
+
+def markattendance(request):
+    return render(request, 'accounts/markattendance.html')
+
+def viewattendance(request):
+    return render(request, 'accounts/viewattendance.html')
+
+
+def session(request):
+    return render(request, 'accounts/session.html')
+
+def payment(request):
+    return render(request, 'accounts/payment.html')
+
 
 def login(request):
     return render(request, 'accounts/login.html')
@@ -664,6 +729,52 @@ def editcoachprofile(request):
         return render(request, 'accounts/editcoachprofile.html',  {'coaches': []})    
     
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+# def login(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+
+#         # Admin login check
+#         if email == 'admin@gmail.com' and password == 'admin@123':
+#             return redirect('modules')  # Redirect to admin dashboard
+
+#         try:
+#             # Sign in the user with Firebase Authentication
+#             user = auth.get_user_by_email(email)
+            
+#             # Simulate Firebase Authentication sign-in process
+#             # Use Firebase Client SDK for actual user authentication on the client side
+
+#             # Retrieve user details from Firestore
+#             user_ref = db.collection('users').document(user.uid)
+#             user_data = user_ref.get().to_dict()
+            
+#             if user_data is None:
+#                 messages.error(request, 'User not found in the database.')
+#                 return redirect('login')
+
+#             # Check user type and redirect to appropriate dashboard
+#             userType = user_data.get('userType')
+#             if userType == 'Player':
+#                 return redirect('player_dashboard')  # Define URL for player dashboard
+#             elif userType == 'Coach':
+#                 return redirect('coach_dashboard')  # Define URL for coach dashboard
+#             elif userType == 'Admin':
+#                 return redirect('admin_dashboard')  # Define URL for admin dashboard
+#             else:
+#                 messages.error(request, 'User type not recognized.')
+#                 return redirect('login')
+
+#         except Exception as e:
+#             messages.error(request, f"Login error: {str(e)}")
+#             return redirect('login')
+
+#     return render(request, 'accounts/login.html')
+=======
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
 def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -705,6 +816,10 @@ def login(request):
             return redirect('login')
 
     return render(request, 'accounts/login.html')
+<<<<<<< HEAD
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
 
 def send_message(request):
     if request.method == 'POST':
@@ -728,7 +843,16 @@ def get_messages(request, user_id):
     messages = db.collection('messages').where('receiver_id', '==', user_id).stream()
     message_list = [{'sender_id': message.get('sender_id'), 'message': message.get('message'), 'timestamp': message.get('timestamp')} for message in messages]
 
+<<<<<<< HEAD
     return JsonResponse({'messages': message_list})  
+=======
+<<<<<<< HEAD
+    return JsonResponse({'messages': message_list})    
+
+=======
+    return JsonResponse({'messages': message_list})  
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
 
 
 

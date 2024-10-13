@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Coach Dashboard | Athlet Arena</title>
+    <title>Attendance | Athlet Arena</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -117,80 +117,21 @@
 </head>
 <body>
 
-<div class="header">
-    <h1>Coach Dashboard | Athlet Arena</h1>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    <a href="{% url 'logout' %}">Logout</a>
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
-</div>
 
-<div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <ul>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            <!-- <li> <a href="{% url 'signupcoach' %}" class="btn">profile</a></li> -->
-            <!-- <li> <a href="{% url 'editcoachprofile' %}" class="btn">Edit profile</a></li> -->
-            <li> <a href="{% url 'lineups' %}" class="btn">Lineup</a></li>
-            <li> <a href="{% url 'updates' %}" class="btn">Updates</a></li>
-            <li> <a href="{% url 'attendance' %}" class="btn">Attendance</a></li>
 
-=======
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
-            <li> <a href="{% url 'signupcoach' %}" class="btn">profile</a></li>
-            <!-- <li> <a href="{% url 'editcoachprofile' %}" class="btn">Edit profile</a></li> -->
-            <!-- <li> <a href="{% url 'manage_schedules' %}" class="btn">manage schedules</a></li> -->
-            <li> <a href="{% url 'updates' %}" class="btn">Updates</a></li>
-<<<<<<< HEAD
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
-            
-            <!-- <li>Settings</li> -->
-        </ul>
-    </div>
 
     <!-- Main Content -->
-    <div class="content">
-        <h2>Welcome {{ coach_email }}</h2>
 
-
-        <!-- Coach Information -->
-        <!-- <div class="coach-info">
-            <div>
-                <h3>Coach ID:</h3>
-                <p>12345</p>
-            </div>
-            <div>
-                <h3>Team:</h3>
-                <p>Team A</p>
-            </div>
-        </div> -->
-
-        <!-- Dashboard Features -->
         <div class="dashboard-container">
             <div class="module">
-                <h2>Team</h2>
-                <a href="{% url 'viewteamcoach' %}" class="btn">View Team</a>
+                <h2>Session</h2>
+                <a href="{% url 'session' %}" class="btn">create session</a>
             </div>
             <div class="module">
-                <h2>Plan Practice</h2>
-                <a href="{% url 'manage_schedules' %}" class="btn">Plan a New Practice</a>
+                <h2>Attendance</h2>
+                <a href="{% url 'markattendance' %}" class="btn">Mark Attendance</a>
             </div>
-            <div class="module">
-                <h2>Workouts</h2>
-                <a href="{% url 'viewworkouts' %}" class="btn">View Workouts</a>
-            </div>
-            <div class="module">
-                <h2>Communicate with players</h2>
-                <a href="{% url 'communicate_with_players' %}" class="btn">Communicate Now</a>
-            </div>
+           
         </div>
     </div>
 </div>

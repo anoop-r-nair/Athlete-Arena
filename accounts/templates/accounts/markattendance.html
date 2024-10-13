@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            text-align: center;
+            color: green;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        td {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mark Attendance for a Session</h1>
+
+    <form id="attendance-form">
+        <label for="sessionSelect">Select Session</label>
+        <select id="sessionSelect" required>
+            <option value="" disabled selected>Select a session</option>
+            <!-- Sessions will be populated here from Firestore -->
+        </select>
+
+        <button type="submit">Submit Attendance</button>
+        <p id="message"></p>
+    </form>
+
+    <h2>Players Attendance</h2>
+    <table id="playersTable">
+        <thead>
+            <tr>
+                <th>Player Name</th>
+                <th>Present</th>
+                <th>Absent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Players will be populated here dynamically -->
+        </tbody>
+    </table>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Ensure the user is authenticated
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+                populateSessions();
+                populatePlayers();
+                document.getElementById("attendance-form").addEventListener("submit", submitAttendance);
+            } else {
+                console.log("User is not authenticated");
+                alert("You must be logged in to mark attendance.");
+                window.location.href = '/login';  // Redirect to login page
+            }
+        });
+
+        // Populate available sessions from Firestore
+        function populateSessions() {
+            db.collection("sessions").get().then((querySnapshot) => {
+                const sessionSelect = document.getElementById("sessionSelect");
+                querySnapshot.forEach((doc) => {
+                    const option = document.createElement("option");
+                    option.value = doc.id;  // Session document ID
+                    option.textContent = `${doc.data().sessionType} - ${doc.data().sessionDate}`;
+                    sessionSelect.appendChild(option);
+                });
+            });
+        }
+
+        // Populate the list of players for attendance
+        function populatePlayers() {
+            // Assuming we have a collection "players" with each player's name
+            db.collection("players").get().then((querySnapshot) => {
+                const tbody = document.querySelector("#playersTable tbody");
+                querySnapshot.forEach((doc) => {
+                    const tr = document.createElement("tr");
+
+                    const playerNameTd = document.createElement("td");
+                    playerNameTd.textContent = doc.data().name;
+
+                    const presentTd = document.createElement("td");
+                    const presentInput = document.createElement("input");
+                    presentInput.type = "radio";
+                    presentInput.name = `attendance-${doc.id}`;
+                    presentInput.value = "present";
+                    presentTd.appendChild(presentInput);
+
+                    const absentTd = document.createElement("td");
+                    const absentInput = document.createElement("input");
+                    absentInput.type = "radio";
+                    absentInput.name = `attendance-${doc.id}`;
+                    absentInput.value = "absent";
+                    absentTd.appendChild(absentInput);
+
+                    tr.appendChild(playerNameTd);
+                    tr.appendChild(presentTd);
+                    tr.appendChild(absentTd);
+
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        // Submit the attendance for the selected session
+        function submitAttendance(event) {
+            event.preventDefault();
+            const sessionId = document.getElementById("sessionSelect").value;
+            if (!sessionId) {
+                alert("Please select a session.");
+                return;
+            }
+
+            const attendanceData = {};
+            document.querySelectorAll("#playersTable tbody tr").forEach((row) => {
+                const playerId = row.querySelector("input[name^='attendance-']").name.split("-")[1];
+                const attendanceStatus = row.querySelector(`input[name='attendance-${playerId}']:checked`);
+                if (attendanceStatus) {
+                    attendanceData[playerId] = attendanceStatus.value;
+                }
+            });
+
+            db.collection("sessions").doc(sessionId).update({
+                attendance: attendanceData
+            })
+            .then(() => {
+                alert("Attendance submitted successfully!");
+                document.getElementById("message").textContent = "Attendance submitted successfully!";
+            })
+            .catch((error) => {
+                console.error("Error submitting attendance: ", error);
+                document.getElementById("message").textContent = "Error submitting attendance: " + error.message;
+            });
+        }
+    </script>
+
+</body>
+</html>
