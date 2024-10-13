@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Assessment Session</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            text-align: center;
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Create Assessment Session</h1>
+
+    <main class="main">
+        <!-- Assessment Creation Form -->
+        <div class="form-container">
+            <form id="assessment-form">
+                <div class="form-group">
+                    <label for="assessmentDate">Assessment Date</label>
+                    <input type="date" id="assessmentDate" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="assessmentDay">Day of the Week</label>
+                    <select id="assessmentDay" required aria-required="true">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assessmentType">Assessment Type</label>
+                    <select id="assessmentType" required aria-required="true">
+                        <option value="Performance">Performance</option>
+                        <option value="Skill">Skill</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="Mental">Mental</option>
+                        <option value="Teamwork">Teamwork</option>
+                        <option value="Strategy">Strategy</option>
+                        <option value="Endurance">Endurance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assessmentDescription">Description</label>
+                    <input type="text" id="assessmentDescription" placeholder="Enter a brief description" required>
+                </div>
+                
+                <button type="submit">Create Assessment</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Ensure the user is authenticated
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+                // Proceed with Firestore operation
+                document.getElementById("assessment-form").addEventListener("submit", createAssessment);
+            } else {
+                console.log("User is not authenticated");
+                alert("You must be logged in to create an assessment session.");
+                window.location.href = '/login';  // Redirect to login page
+            }
+        });
+
+        // Set the minimum date to today for the date input
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("assessmentDate").setAttribute("min", today);
+
+        // Create assessment function
+        function createAssessment(event) {
+            event.preventDefault();
+
+            var assessmentDate = document.getElementById("assessmentDate").value;
+            var assessmentDay = document.getElementById("assessmentDay").value;
+            var assessmentType = document.getElementById("assessmentType").value;
+            var assessmentDescription = document.getElementById("assessmentDescription").value;
+            
+            if (assessmentDate && assessmentDay && assessmentType && assessmentDescription) {
+                db.collection("assessments").add({
+                    assessmentDate: assessmentDate,
+                    assessmentDay: assessmentDay,
+                    assessmentType: assessmentType,
+                    assessmentDescription: assessmentDescription
+                })
+                .then(() => {
+                    console.log("Assessment successfully created");
+                    alert("Assessment Created successfully");
+                    document.getElementById("message").innerHTML = "Assessment Created successfully";
+                })
+                .catch((error) => {
+                    console.error("Error creating assessment: ", error);
+                    document.getElementById("message").innerHTML = "Error creating assessment: " + error.message;
+                });
+            }
+        }
+    </script>
+</body>
+</html>

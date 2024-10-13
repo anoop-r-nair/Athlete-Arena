@@ -160,35 +160,37 @@
             <img src="{% static 'images/logo.png' %}" alt="Sports Team Management Logo">
             <span>ATHLETE ARENA</span>
         </div>
-        <nav>
+        <!-- <nav>
             <ul>
-                <li><a href="{% url 'signupcoach' %}">Coach</a></li>
-                <li><a href="{% url 'signup' %}">Player</a></li>
-                <li><a href="{% url 'signupparent' %}">Parent</a></li>
+                <li><a href="{% url 'login' %}">Coach</a></li>
+                <li><a href="{% url 'login' %}">Player</a></li>
+                <li><a href="{% url 'login' %}">Parent</a></li>
                 <li><a href="{% url 'medical_staff_dashboard' %}">Medical Staff</a></li>
                 <li><a href="{% url 'sports_psychologist_dashboard' %}">Sports Psychologist</a></li>
                 <li><a href="{% url 'analytics_expert_dashboard' %}">Analytics Expert</a></li>
             </ul>
-        </nav>
+        </nav> -->
         <div class="auth-buttons">
             <a href="{% url 'login' %}" class="login">Login</a>
+            <a href="{% url 'signup' %}" class="login">signup</a>
         </div>
     </header>
     <main>
-        <a href="{% url 'signupcoach' %}" class="card">
+        <a href="{% url 'login' %}" class="card">
             <i class="fas fa-user-tie"></i>
             <h3>Coach</h3>
             <p>Manage your team, training sessions, and player performance.</p>
         </a>
-        <a href="{% url 'signup' %}" class="card">
+        <a href="{% url 'login' %}" class="card">
             <i class="fas fa-futbol"></i>
             <h3>Player</h3>
             <p>Track your progress and communicate with your coach.</p>
         </a>
-        <a href="{% url 'signupparent' %}" class="card">
+        <a href="{% url 'fanpage' %}" class="card">
             <i class="fas fa-user-friends"></i>
-            <h3>Parent</h3>
-            <p>Stay informed about your child's sports activities.</p>
+            <h3>Fan page</h3>
+            <p>wait for the stats.</p>
+            <!-- <p>Stay informed about your child's sports activities.</p> -->
         </a>
         <a href="{% url 'medical_staff_dashboard' %}" class="card">
             <i class="fas fa-user-md"></i>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Information</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Container for the cards - vertical layout */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the cards vertically */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Styling for individual modules (cards) */
+        .module {
+            background-color: white;
+            width: 300px;
+            margin: 20px 0; /* Add space between cards vertically */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            text-align: center;
+        }
+
+        /* Module heading */
+        .module h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Hover effect to make the cards interactive */
+        .module:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Styling for buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Button hover effect */
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive layout for smaller screens */
+        @media (max-width: 768px) {
+            .module {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Announcement Box -->
+        <div class="module">
+            <h2>ANNOUNCEMENT</h2>
+            <a href="{% url 'announcement' %}" class="btn">ADD ANNOUNCEMENT</a>
+        </div>
+
+        <!-- Practice Change Box -->
+        <div class="module">
+            <h2>PRACTICE CHANGE</h2>
+            <a href="{% url 'practicechange' %}" class="btn">CHANGE</a>
+        </div>
+
+        <!-- Game Result Box -->
+        <div class="module">
+            <h2>GAME RESULT</h2>
+            <a href="{% url 'gameresult' %}" class="btn">RESULT</a>
+        </div>
+    </div>
+
+</body>
+</html>

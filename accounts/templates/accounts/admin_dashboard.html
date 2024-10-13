@@ -76,8 +76,7 @@
             <tr>
                 <th>Email</th>
                 <th>Name</th>
-                <th>Address</th>
-                <th>Phone</th>
+                <th>userType</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -86,8 +85,8 @@
                 <tr>
                     <td>{{ user.email }}</td>
                     <td>{{ user.name }}</td>
-                    <td>{{ user.address }}</td>
-                    <td>{{ user.phone }}</td>
+                    <td>{{ user.userType }}</td>
+                    
                     <td class="action-buttons">
                         <a href="{% url 'update_user' user.email %}">Update</a>
                         <form action="{% url 'delete_user' user.email %}" method="post" style="display:inline;">

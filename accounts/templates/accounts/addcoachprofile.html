@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coach Profile | Athlet Arena</title>
+    <style>
+        /* (Your existing CSS styles) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+        #message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlet Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Add Coach Profile</h2>
+            <form id="add-profile-form" onsubmit="addProfile(); return false;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="experience">Experience (Years):</label>
+                    <input type="number" id="experience" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="profileImage">Profile Image:</label>
+                    <input type="file" id="profileImage" accept="image/*" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="resume">Upload Resume:</label>
+                    <input type="file" id="resume" accept=".pdf,.doc,.docx" required aria-required="true">
+                </div>
+                <button type="submit">Add Profile</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+    <!-- 
+        <footer>
+            <p>© 2024 Athlet Arena. All rights reserved.</p>
+        </footer> -->
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Add Profile function
+        function addProfile() {
+            var email = document.getElementById("email").value.trim();
+            var phone = document.getElementById("phone").value.trim();
+            var address = document.getElementById("address").value.trim();
+            var name = document.getElementById("name").value.trim();
+            var experience = document.getElementById("experience").value;
+            var profileImage = document.getElementById("profileImage").files[0];
+            var resume = document.getElementById("resume").files[0];
+            var messageElement = document.getElementById("message");
+
+            // Clear previous messages
+            messageElement.style.color = "red";
+            messageElement.innerHTML = "";
+
+            // Basic validation
+            if (!email || !phone || !address || !name || !experience || !profileImage || !resume) {
+                messageElement.innerHTML = "Please fill in all the fields.";
+                return;
+            }
+
+            // Phone number validation (Indian format)
+            var phonePattern = /^[6-9]\d{9}$/;
+            if (!phonePattern.test(phone)) {
+                messageElement.innerHTML = "Phone number must be a valid Indian number (10 digits, starting with 6-9).";
+                return;
+            }
+
+            // Name validation (letters and spaces only)
+            var namePattern = /^[A-Za-z\s]+$/;
+            if (!namePattern.test(name)) {
+                messageElement.innerHTML = "Name must contain only letters and spaces.";
+                return;
+            }
+
+            // Profile Image Validation
+            if (profileImage) {
+                var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+                if (!validImageTypes.includes(profileImage.type)) {
+                    messageElement.innerHTML = "Profile Image must be a valid image file (JPEG, PNG, GIF, BMP, WebP).";
+                    return;
+                }
+
+                // Optional: Check file size (e.g., max 5MB)
+                var maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+                if (profileImage.size > maxSizeInBytes) {
+                    messageElement.innerHTML = "Profile Image size should not exceed 5MB.";
+                    return;
+                }
+            }
+
+            // Resume Validation
+            if (resume) {
+                var validResumeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!validResumeTypes.includes(resume.type)) {
+                    messageElement.innerHTML = "Resume must be a valid file type (PDF, DOC, DOCX).";
+                    return;
+                }
+
+                // Optional: Check file size (e.g., max 10MB)
+                var maxResumeSizeInBytes = 10 * 1024 * 1024; // 10MB
+                if (resume.size > maxResumeSizeInBytes) {
+                    messageElement.innerHTML = "Resume size should not exceed 10MB.";
+                    return;
+                }
+            }
+
+            // Show loading message
+            messageElement.style.color = "black";
+            messageElement.innerHTML = "Uploading profile. Please wait...";
+
+            // Create storage references for the image and resume
+            var profileImageRef = storage.ref('profileImages/' + Date.now() + '_' + profileImage.name);
+            var resumeRef = storage.ref('resumes/' + Date.now() + '_' + resume.name);
+
+            // Upload profile image
+            var uploadProfileImageTask = profileImageRef.put(profileImage);
+            uploadProfileImageTask.on('state_changed', 
+                function(snapshot) {
+                    // Optional: Implement progress indicator
+                }, 
+                function(error) {
+                    console.error("Error uploading image: ", error);
+                    messageElement.style.color = "red";
+                    messageElement.innerHTML = "Error uploading profile image.";
+                }, 
+                function() {
+                    uploadProfileImageTask.snapshot.ref.getDownloadURL().then(function(profileImageURL) {
+                        // Upload resume
+                        var uploadResumeTask = resumeRef.put(resume);
+                        uploadResumeTask.on('state_changed', 
+                            function(snapshot) {
+                                // Optional: Implement progress indicator
+                            }, 
+                            function(error) {
+                                console.error("Error uploading resume: ", error);
+                                messageElement.style.color = "red";
+                                messageElement.innerHTML = "Error uploading resume.";
+                            }, 
+                            function() {
+                                uploadResumeTask.snapshot.ref.getDownloadURL().then(function(resumeURL) {
+                                    // Add profile details to Firestore
+                                    db.collection("coaches").add({
+                                        email: email,
+                                        phone: phone,
+                                        address: address,
+                                        name: name,
+                                        experience: parseInt(experience),
+                                        profileImageUrl: profileImageURL,
+                                        resumeUrl: resumeURL,
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    })
+                                    .then(() => {
+                                        alert("Profile added successfully with image and resume!");
+                                        messageElement.style.color = "green";
+                                        messageElement.innerHTML = "Profile added successfully with image and resume!";
+                                        document.getElementById("add-profile-form").reset(); // Reset the form
+                                        window.location.href = '/accounts/coach_dashboard/';
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error adding document: ", error);
+                                        messageElement.style.color = "red";
+                                        messageElement.innerHTML = "Error adding profile: " + error.message;
+                                    });
+                                });
+                            }
+                        );
+                    });
+                }
+            );
+        }
+    </script>
+</body>
+</html>

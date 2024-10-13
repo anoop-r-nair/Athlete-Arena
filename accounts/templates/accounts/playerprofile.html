@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Player Profile | Athlet Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+        #message {
+            color: red;
+            margin-top: 10px;
+        }
+        .button-link {
+            display: inline-block;
+            padding: 12px 45px;
+            border-radius: 20px;
+            border: 1px solid #FF4B2B;
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 80ms ease-in;
+        }
+
+        .button-link:active {
+            transform: scale(0.95);
+        }
+        .button-link:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlet Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Add Player Profile</h2>
+            <form id="add-profile-form" onsubmit="addProfile(); return false;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="profileImage">Profile Image:</label>
+                    <input type="file" id="profileImage" accept="image/*" required aria-required="true">
+                </div>
+                <button type="submit">Add Profile</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Athlet Arena. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Add Profile function
+        function addProfile() {
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var name = document.getElementById("name").value;
+            var profileImage = document.getElementById("profileImage").files[0]; // Get the file object
+
+            // Phone number validation (Indian format)
+            var phonePattern = /^[6-9]\d{9}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("message").innerHTML = "Phone number must be a valid Indian number (10 digits, starting with 6-9).";
+                return;
+            }
+
+            // Name validation (letters only)
+            var namePattern = /^[A-Za-z\s]+$/;
+            if (!namePattern.test(name)) {
+                document.getElementById("message").innerHTML = "Name must contain only letters.";
+                return;
+            }
+
+            if (profileImage) {
+                // Create a storage reference for the image
+                var storageRef = storage.ref('profileImages/' + profileImage.name);
+
+                // Upload the image to Firebase Storage
+                var uploadTask = storageRef.put(profileImage);
+
+                uploadTask.on('state_changed', 
+                    function(snapshot) {
+                        // Optional: You can show progress of the upload here
+                    }, 
+                    function(error) {
+                        console.error("Error uploading image: ", error);
+                        document.getElementById("message").innerHTML = "Error uploading image.";
+                    }, 
+                    function() {
+                        // Image upload completed, now get the download URL
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                            // Add profile details along with the image URL to Firestore
+                            db.collection("players").add({
+                                email: email,
+                                phone: phone,
+                                address: address,
+                                name: name,
+                                profileImageUrl: downloadURL // Save the image URL
+                            })
+                            .then(() => {
+                                alert("Profile added successfully with image!");
+                                document.getElementById("message").innerHTML = "Profile added successfully with image!";
+                                window.location.href = '/accounts/player_dashboard/';
+                            })
+                            .catch((error) => {
+                                console.error("Error adding document: ", error);
+                                alert("Error adding profile.");
+                                document.getElementById("message").innerHTML = "Error adding profile.";
+                            });
+                        });
+                    }
+                );
+            } else {
+                document.getElementById("message").innerHTML = "Please upload a profile image.";
+            }
+        }
+    </script>
+</body>
+</html>
