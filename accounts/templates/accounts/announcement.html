@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Announcements & Results | Athlete Arena</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        h1, h2 {
+            margin: 20px 0;
+        }
+
+        main {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Athlete Arena</h1>
+    </header>
+
+    <main>
+        <h2>Add Team Announcement</h2>
+        <form id="announcement-form" onsubmit="addAnnouncement(); return false;">
+            <label for="announcement-title">Title:</label>
+            <input type="text" id="announcement-title" required>
+            <label for="announcement-date">Date:</label>
+            <input type="date" id="announcement-date" required>
+            <label for="announcement-details">Details:</label>
+            <textarea id="announcement-details" rows="4" required></textarea>
+            <button type="submit">Add Announcement</button>
+        </form>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to set the min date to today
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("announcement-date").setAttribute("min", today);
+        }
+
+        // Call the setMinDate function on page load
+        window.onload = setMinDate;
+
+        // Function to add a team announcement
+        function addAnnouncement() {
+            const title = document.getElementById('announcement-title').value;
+            const date = document.getElementById('announcement-date').value;
+            const details = document.getElementById('announcement-details').value;
+
+            db.collection("announcements").add({
+                title: title,
+                date: date,
+                details: details
+            })
+            .then(() => {
+                alert("Announcement added successfully!");
+                document.getElementById("announcement-form").reset();
+                setMinDate(); // Reset min date to today after submission
+            })
+            .catch((error) => {
+                console.error("Error adding announcement: ", error);
+                alert("Failed to add announcement. Check console for details.");
+            });
+        }
+    </script>
+</body>
+</html>

@@ -254,8 +254,9 @@
                     });
                 })
                 .catch((error) => {
-                    var errorMessage = error.message;
-                    document.getElementById("message").innerHTML = errorMessage;
+                    // var errorMessage = error.message;
+                    document.getElementById("message").innerHTML ='incorrect password.';
+                    // document.getElementById("message").innerHTML = errorMessage;
                     document.getElementById("message").style.display = "block";
                 });
         }

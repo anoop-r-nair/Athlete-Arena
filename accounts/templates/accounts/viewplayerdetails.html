@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Approval | Athlet Arena</title>
+    <style>
+        /* Existing styles... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            /* background: linear-gradient(120deg, #00bfa5, #00695c); */
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            /* background-color: #004d40; */
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .form-container, .player-list-container {
+            /* background-color: #fff; */
+            padding: 40px;
+            border-radius: 8px;
+            /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); */
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem;
+        }
+
+        .form-container h2, .player-list-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            /* color: #004d40; */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            /* color: #004d40; */
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #00bfa5;
+            box-shadow: 0 0 4px rgba(0, 191, 165, 0.5);
+        }
+
+        .form-group.flex-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #004d40;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #00332a;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #004d40;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header, .form-container {
+                padding: 10px;
+            }
+
+            .form-container {
+                width: 90%;
+            }
+
+            nav ul li {
+                margin-left: 10px;
+            }
+
+            .logo a {
+                font-size: 1.2rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #004d40;
+            color: #fff;
+        }
+
+        a {
+            color: #00bfa5;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Player Approval</h2>
+    </header>
+
+    <main class="player-list-container">
+        <h2>All Player Profiles</h2>
+
+        <table id="player-list" border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Position</th>
+                    <th>Experience</th>
+                    <th>Captaincy</th>
+                    <th>Matches Played</th>
+                    <th>Goals Scored</th>
+                    <th>Profile Image</th>
+                    <th>Resume</th>
+                    <th>Certificate</th>
+                    <th>Approve</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Player rows will be inserted here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-firestore.js"></script>
+
+    <script>
+         const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function fetchPlayerProfiles() {
+            const playerList = document.getElementById("player-list").getElementsByTagName("tbody")[0];
+
+            db.collection("players").get()
+            .then((querySnapshot) => {
+                playerList.innerHTML = "";  // Clear existing rows
+
+                querySnapshot.forEach((doc) => {
+                    const player = doc.data();
+                    const playerId = doc.id;
+
+                    // Create a new row
+                    const row = playerList.insertRow();
+
+                    // Add player details to the row
+                    row.innerHTML = `
+                        <td>${player.name}</td>
+                        <td>${player.email}</td>
+                        <td>${player.phone}</td>
+                        <td>${player.position}</td>
+                        <td>${player.experience} years</td>
+                        <td>${player.captaincy ? 'Yes' : 'No'}</td>
+                        <td>${player.matchesPlayed}</td>
+                        <td>${player.goalsScored}</td>
+                        <td><a href="${player.profileImage}" target="_blank">View Image</a></td>
+                        <td><a href="${player.resume}" target="_blank">View Resume</a></td>
+                        <td><a href="${player.certificate}" target="_blank">View Certificate</a></td>
+                        <td>
+                            ${player.approved ? 'Approved' : `<button onclick="approvePlayer('${playerId}')">Approve</button>`}
+                        </td>
+                    `;
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching player profiles: ", error);
+            });
+        }
+
+        function approvePlayer(playerId) {
+            db.collection("players").doc(playerId).update({
+                approved: true
+            })
+            .then(() => {
+                alert("Player approved successfully!");
+                fetchPlayerProfiles();  // Refresh the player list
+            })
+            .catch((error) => {
+                console.error("Error approving player: ", error);
+            });
+        }
+
+        window.onload = fetchPlayerProfiles;
+    </script>
+</body>
+</html>

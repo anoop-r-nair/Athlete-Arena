@@ -533,12 +533,17 @@ def manage_schedules(request):
 def coach_dashboard(request):
     return render(request, 'accounts/coach_dashboard.html')
 
-<<<<<<< HEAD
+
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-=======
+
 def playerprofile(request):
     return render(request, 'accounts/playerprofile.html')
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
+
 
 def player_dashboard(request):
     return render(request, 'accounts/player_dashboard.html')
@@ -552,6 +557,75 @@ def lineups(request):
     return render(request, 'accounts/lineups.html', {'users': users})
 
 
+def registration(request):
+    return render(request, 'accounts/registration.html')
+
+def managecoachprofile(request):
+    return render(request, 'accounts/managecoachprofile.html')
+
+
+def team_players(request):
+    return render(request, 'accounts/team_players.html')
+
+
+
+
+
+def approvedcoaches(request):
+    return render(request, 'accounts/approvedcoaches.html')
+
+def approvedplayers(request):
+    return render(request, 'accounts/approvedplayers.html')
+
+
+def viewplayerdetails(request):
+    return render(request, 'accounts/viewplayerdetails.html')
+
+
+
+def fanpage(request):
+    return render(request, 'accounts/fanpage.html')
+
+def playerdevelopment(request):
+    return render(request, 'accounts/playerdevelopment.html')
+
+def fanviewprofile(request):
+    return render(request, 'accounts/fanviewprofile.html')
+
+def viewassessment(request):
+    return render(request, 'accounts/viewassessment.html')
+
+
+def practicechange(request):
+    return render(request, 'accounts/practicechange.html')
+
+
+def gameresult(request):
+    return render(request, 'accounts/gameresult.html')
+
+
+def announcement(request):
+    return render(request, 'accounts/announcement.html')
+
+
+def fanviewresult(request):
+    return render(request, 'accounts/fanviewresult.html')
+
+def addcoachprofile(request):
+    return render(request, 'accounts/addcoachprofile.html')
+
+def updates1(request):
+    return render(request, 'accounts/updates1.html')
+
+
+def schedulefans(request):
+    return render(request, 'accounts/schedulefans.html')
+
+def viewprofile(request):
+    return render(request, 'accounts/viewprofile.html')
+
+def giveassessment(request):
+    return render(request, 'accounts/giveassessment.html')
 
 def medical_staff_dashboard(request):
     return render(request, 'accounts/medical_staff_dashboard.html')
@@ -640,7 +714,7 @@ def managerdasboard(request):
 def edit_coach_profile(request):
      return render(request, 'accounts/edit_coach_profile.html')
 
-<<<<<<< HEAD
+
 # def logout_view(request):
 #     # Log out the user and clear the session
 #     logout(request)
@@ -652,9 +726,6 @@ def logout_view(request):
     request.session.delete()
     logout(request)
     return redirect('login')
-=======
-
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 
 def parents(request):
@@ -720,7 +791,6 @@ def editcoachprofile(request):
         return render(request, 'accounts/editcoachprofile.html',  {'coaches': []})    
     
 
-<<<<<<< HEAD
 # def login(request):
 #     if request.method == 'POST':
 #         email = request.POST.get('email')
@@ -762,7 +832,7 @@ def editcoachprofile(request):
 #             return redirect('login')
 
 #     return render(request, 'accounts/login.html')
-=======
+
 def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -804,7 +874,6 @@ def login(request):
             return redirect('login')
 
     return render(request, 'accounts/login.html')
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
 
 def send_message(request):
     if request.method == 'POST':
@@ -828,12 +897,17 @@ def get_messages(request, user_id):
     messages = db.collection('messages').where('receiver_id', '==', user_id).stream()
     message_list = [{'sender_id': message.get('sender_id'), 'message': message.get('message'), 'timestamp': message.get('timestamp')} for message in messages]
 
-<<<<<<< HEAD
+
     return JsonResponse({'messages': message_list})    
 
-=======
+
     return JsonResponse({'messages': message_list})  
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
+    return JsonResponse({'messages': message_list})    
+
+
+    return JsonResponse({'messages': message_list})  
+
 
 
 

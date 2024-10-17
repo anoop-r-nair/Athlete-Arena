@@ -94,10 +94,19 @@
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
+            margin-right: 10px;
         }
 
         button:hover {
             background-color: #00332a;
+        }
+
+        .edit-button {
+            background-color: #0288d1;
+        }
+
+        .edit-button:hover {
+            background-color: #01579b;
         }
 
         hr {
@@ -167,7 +176,6 @@
                 querySnapshot.forEach((doc) => {
                     const coachData = doc.data();
                     const coachId = doc.id;
-                    const approved = coachData.approved ? 'Approved' : 'Not Approved';
 
                     const coachCard = `
                         <div class="coach-card">
@@ -178,8 +186,8 @@
                             <p><strong>Experience:</strong> ${coachData.experience} years</p>
                             <p><strong>Resume:</strong> <a href="${coachData.resumeUrl}" target="_blank">View Resume</a></p>
                             <p><strong>Certificate:</strong> <a href="${coachData.certificateUrl}" target="_blank">View Certificate</a></p>
-                            <p><strong>Status:</strong> ${approved}</p>
-                            ${!coachData.approved ? `<button onclick="approveCoach('${coachId}')">Approve</button>` : ''}
+                            <button class="edit-button" onclick="updateCoach('${coachId}', '${coachData.name}', '${coachData.email}', '${coachData.phone}', '${coachData.address}', '${coachData.experience}')">Edit</button>
+                            <button onclick="deleteCoach('${coachId}')">Delete</button>
                         </div>
                         <hr>
                     `;
@@ -191,16 +199,43 @@
             });
         }
 
-        // Function to approve the coach
-        function approveCoach(coachId) {
+        // Function to delete a coach
+       // Function to delete a coach
+function deleteCoach(coachId) {
+    if (confirm("Are you sure you want to delete this coach?")) {
+        db.collection("coaches").doc(coachId).delete()
+        .then(() => {
+            alert("Coach deleted successfully!");
+            fetchCoaches();  // Refresh the coach list
+        })
+        .catch((error) => {
+            console.error("Error deleting coach:", error); // Log the error
+            alert("Error deleting coach: " + error.message); // Alert the user with the error message
+        });
+    }
+}
+
+
+        // Function to update a coach's details
+        function updateCoach(coachId, name, email, phone, address, experience) {
+            const updatedName = prompt("Update Coach Name:", name);
+            const updatedEmail = prompt("Update Coach Email:", email);
+            const updatedPhone = prompt("Update Coach Phone:", phone);
+            const updatedAddress = prompt("Update Coach Address:", address);
+            const updatedExperience = prompt("Update Coach Experience (years):", experience);
+
             db.collection("coaches").doc(coachId).update({
-                approved: true
+                name: updatedName,
+                email: updatedEmail,
+                phone: updatedPhone,
+                address: updatedAddress,
+                experience: updatedExperience
             }).then(() => {
-                alert("Coach approved successfully!");
+                alert("Coach details updated successfully!");
                 fetchCoaches();  // Refresh the coach list
             }).catch((error) => {
-                console.error("Error approving coach: ", error);
-                alert("Error approving coach.");
+                console.error("Error updating coach: ", error);
+                alert("Error updating coach.");
             });
         }
 

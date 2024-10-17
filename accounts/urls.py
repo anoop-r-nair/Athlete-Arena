@@ -54,7 +54,7 @@ urlpatterns = [
     path('managerdasboard/',views.managerdasboard, name='managerdasboard'), 
     path('teamupdate/',views.teamupdate, name='teamupdate'),
     path('viewteamcoach/',views.viewteamcoach, name='viewteamcoach'),
-<<<<<<< HEAD
+
     path('logout/', views.logout_view, name='logout'),
     path('lineups/',views.lineups, name='lineups'),
     path('payment/',views.payment, name='payment'),
@@ -63,9 +63,27 @@ urlpatterns = [
     path('session/',views.session, name='session'),
     path('markattendance/',views.markattendance, name='markattendance'),
     path('viewattendance/',views.viewattendance, name='viewattendance'),
+    path('fanpage/',views.fanpage, name='fanpage'),
+    path('schedulefans/',views.schedulefans, name='schedulefans'),
+    path('viewprofile/',views.viewprofile, name='viewprofile'),
+    path('playerdevelopment/',views.playerdevelopment, name='playerdevelopment'),
+    path('giveassessment/',views.giveassessment, name='giveassessment'),
+    path('viewassessment/',views.viewassessment, name='viewassessment'),
+    path('fanviewprofile/',views.fanviewprofile, name='fanviewprofile'),
+    path('fanviewresult/',views.fanviewresult, name='fanviewresult'),
+    path('addcoachprofile/',views.addcoachprofile, name='addcoachprofile'),
+    path('updates1/',views.updates1, name='updates1'),
+    path('practicechange/',views.practicechange, name='practicechange'),
+    path('gameresult/',views.gameresult, name='gameresult'),
+    path('announcement/',views.announcement, name='announcement'),
+    path('registration/',views.registration, name='registration'),
+    path('viewplayerdetails/',views.viewplayerdetails, name='viewplayerdetails'),
+    path('approvedcoaches/',views.approvedcoaches, name='approvedcoaches'),
+    path('approvedplayers/',views.approvedplayers, name='approvedplayers'),
+    path('managecoachprofile/',views.managecoachprofile, name='managecoachprofile'),
+    path('team_players/',views.team_players, name='team_players'),
 
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
 
 ]
 

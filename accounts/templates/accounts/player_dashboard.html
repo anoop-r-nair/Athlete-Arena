@@ -118,10 +118,16 @@
 <body>
 
 <div class="header">
-<<<<<<< HEAD
+
     <a href="{% url 'logout' %}">Logout</a>
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
+
+
+
+    <a href="{% url 'logout' %}">Logout</a>
+
+
+
     <h1>Player Dashboard | Athlet Arena</h1>
 </div>
 
@@ -129,13 +135,24 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <ul>
-            <li> <a href="{% url 'playerprofile' %}" class="btn">profile</a></li>
-<<<<<<< HEAD
-            <li> <a href="{% url 'viewlineups' %}" class="btn">view lineups</a></li>
-            <li> <a href="{% url 'viewattendance' %}" class="btn">view attendance</a></li>
 
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+            <li> <a href="{% url 'playerprofile' %}" class="btn">ADD PROFILE</a></li>
+            <li> <a href="{% url 'viewlineups' %}" class="btn">VIEW LINEUPS</a></li>
+            <li> <a href="{% url 'viewattendance' %}" class="btn">VIEW ATTENDANCE</a></li>
+            <!-- <li> <a href="{% url 'viewprofile' %}" class="btn">EDIT PLAYER PROFILE</a></li> -->
+            <li> <a href="{% url 'playerdevelopment' %}" class="btn">LOG ASSESSMENT</a></li>
+
+
+
+            <!-- <li> <a href="{% url 'playerprofile' %}" class="btn">profile</a></li>
+
+
+
+            <li> <a href="{% url 'viewlineups' %}" class="btn">view lineups</a></li>
+            <li> <a href="{% url 'viewattendance' %}" class="btn">view attendance</a></li> -->
+
+
+
             
                       
             <!-- <li>Settings</li> -->
@@ -162,7 +179,23 @@
         <!-- Dashboard Features -->
         <div class="dashboard-container">
             <div class="module">
-                <h2>Updates</h2>
+
+                <h2>UPDATES</h2>
+                <a href="{% url 'viewupdates' %}" class="btn">VIEW UPDATES</a>
+            </div>
+            <div class="module">
+                <h2>SCHEDULES</h2>
+                <a href="{% url 'viewschedules' %}" class="btn">VIEW SCHEDULES</a>
+            </div>
+            <div class="module">
+                <h2>WORKOUTS</h2>
+                <a href="{% url 'workouts' %}" class="btn">LOG WORKOUTS</a>
+            </div>
+            <div class="module">
+                <h2>COMMUNICATE WITH COACH</h2>
+                <a href="{% url 'communicate_with_players' %}" class="btn">COMMUNICATE NOW</a>
+
+                <!-- <h2>Updates</h2>
                 <a href="{% url 'viewupdates' %}" class="btn">View Updates</a>
             </div>
             <div class="module">
@@ -176,7 +209,8 @@
             <div class="module">
                 <h2>Communicate with coach</h2>
                 <a href="{% url 'communicate_with_players' %}" class="btn">Communicate Now</a>
-            </div>
+
+            </div> -->
         </div>
     </div>
 </div>

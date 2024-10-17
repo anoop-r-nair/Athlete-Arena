@@ -87,38 +87,41 @@
     <nav class="sidebar flex-column p-3">
         <h4>Manager Dashboard</h4>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="{% url 'manage_team' %}">Create Team</a>
-            </li>
-            <li class="nav-item">
-<<<<<<< HEAD
-                <a class="nav-link" href="{% url 'admin_dashboard' %}">Manage Players and coaches</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'manage_schedules' %}">Schedules</a>
-            </li>
+        <li class="nav-item"></li>
+        <a class="nav-link" href="{% url 'payment' %}">ASSIGN COACH</a>
+        </li>
+        <ul class="nav flex-column">
             <li class="nav-item"></li>
-                <a class="nav-link" href="{% url 'payment' %}">payment</a>
+            <a class="nav-link" href="{% url 'approvedcoaches' %}">APPROVED COACHES</a>
             </li>
+
+            <ul class="nav flex-column">
+                <li class="nav-item"></li>
+                <a class="nav-link" href="{% url 'approvedplayers' %}">APPROVED PLAYERS</a>
+                </li>
+                <ul class="nav flex-column">
+                    <li class="nav-item"></li>
+                    <a class="nav-link" href="{% url 'manage_team' %}">CREATE TEAM</a>
+                    </li>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"></li>
+                        <a class="nav-link" href="{% url 'team_players' %}">CREATE TEAMS</a>
+                        </li>
+       
             <!-- <li class="nav-item">
-=======
-                <a class="nav-link" href="#">Manage Players</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Schedules</a>
-            </li>
-            <li class="nav-item">
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
-                <a class="nav-link" href="#">Reports</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
-<<<<<<< HEAD
+                <a class="nav-link" href="{% url 'admin_dashboard' %}">MANAGE PLAYERS AND COACHES</a>
             </li> -->
-=======
+        <li class="nav-item"></li>
+            <a class="nav-link" href="{% url 'manage_schedules' %}">SCHEDULES</a>
+        </li>
+            <li class="nav-item"></li>
+            <a class="nav-link" href="{% url 'schedulefans' %}">SET SCHEDULES FOR FANS</a>
+        </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'payment' %}">PAYMENT</a>
             </li>
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
-        </ul>
+            
+
     </nav>
 
     <!-- Main content -->
@@ -133,6 +136,8 @@
             <h2>Welcome, Manager!</h2>
             <div class="row">
                 <!-- Card 1 -->
+                
+
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header">Team</div>
@@ -143,39 +148,45 @@
                 </div>
 
                 <!-- Card 2 -->
-<<<<<<< HEAD
-                <!-- <div class="col-md-4">
-=======
+
                 <div class="col-md-4">
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
                     <div class="card">
                         <div class="card-header">Players</div>
                         <div class="card-body">
-                            <a href="#" class="btn btn-primary">View Players</a>
+                            <a href="{% url 'viewprofile' %}" class="btn btn-primary">manage players</a>
+                            <a href="{% url 'viewplayerdetails' %}" class="btn btn-primary">View details</a>
                         </div>
                     </div>
-<<<<<<< HEAD
-                </div> -->
+
+                </div> 
+                
+                <div class="card">
+                    <div class="card-header">coaches</div>
+                    <div class="card-body">
+                        <a href="{% url 'managecoachprofile' %}" class="btn btn-primary">managr coaches</a>
+                        <a href="{% url 'editcoachprofile' %}" class="btn btn-primary">View coach details</a>
+                    </div>
+                </div>
+
+            </div> 
 
                 <!-- Card 3 -->
                 <!-- <div class="col-md-4">
-=======
-                </div>
 
-                <!-- Card 3 -->
                 <div class="col-md-4">
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
                     <div class="card">
                         <div class="card-header">Coaches</div>
                         <div class="card-body">
                             <a href="{% url 'coaches' %}" class="btn btn-primary">Manage Coaches</a>
                         </div>
                     </div>
-<<<<<<< HEAD
+
                 </div> -->
-=======
+
                 </div>
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+
             </div>
 
             <!-- More dashboard content here -->

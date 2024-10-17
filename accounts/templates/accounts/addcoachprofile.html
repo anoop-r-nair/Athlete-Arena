@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Player Profile | Athlet Arena</title>
+    <title>Add Coach Profile | Athlet Arena</title>
     <style>
         * {
             margin: 0;
@@ -100,16 +100,14 @@
 
         /* Add flex container to align first name and last name in one row */
         .form-group.flex-group {
-    display: flex;
-    align-items: center; /* Aligns items vertically in the center */
-    justify-content: space-between;
-    gap: 10px; /* Adjusts the gap between label and checkbox */
-}
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
 
-.form-group.flex-group label {
-    margin-right: 10px; /* Additional space on the right of the label */
-}
-
+        .form-group.flex-group input {
+            width: 25rem;
+        }
 
         button[type="submit"] {
             background-color: #004d40;
@@ -159,6 +157,10 @@
             nav ul li a {
                 font-size: 0.9rem;
             }
+
+            .form-group.flex-group input {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -178,7 +180,7 @@
 
     <main class="main">
         <div class="form-container">
-            <h2>Add Player Profile</h2>
+            <h2>Add Coach Profile</h2>
             <form id="add-profile-form" onsubmit="addProfile(); return false;">
                 <div class="form-group flex-group">
                     <div>
@@ -203,29 +205,8 @@
                     <input type="text" id="address" placeholder="Enter address" required>
                 </div>
                 <div class="form-group">
-                    <label for="formerTeam">Former Team Name:</label>
-                    <input type="text" id="formerTeam" placeholder="Enter former team name">
-                </div>
-                <div class="form-group">
-                    <label for="position">Position:</label>
-                    <input type="text" id="position" placeholder="Enter position">
-                </div>
-                <div class="form-group">
                     <label for="experience">Experience (Years):</label>
                     <input type="number" id="experience" placeholder="Years of experience" required>
-                </div>
-                <div class="form-group flex-group">
-                    <label for="captaincy" style='margin-right: 5px;'>Captaincy Experience, If any:</label>
-                    <input type="checkbox" id="captaincy" style='margin-left: 5px;'> 
-                </div>
-                
-                <div class="form-group">
-                    <label for="matchesPlayed">Matches Played:</label>
-                    <input type="number" id="matchesPlayed" placeholder="Number of matches played">
-                </div>
-                <div class="form-group">
-                    <label for="goalsScored">Goals Scored:</label>
-                    <input type="number" id="goalsScored" placeholder="Number of goals scored">
                 </div>
                 <div class="form-group">
                     <label for="profileImage">Profile Image:</label>
@@ -236,7 +217,7 @@
                     <input type="file" id="resume" accept=".pdf,.doc,.docx" required>
                 </div>
                 <div class="form-group">
-                    <label for="certificate">Upload Certificate:</label>
+                    <label for="certificate">Upload certificate:</label>
                     <input type="file" id="certificate" accept=".pdf,.doc,.docx" required>
                 </div>
                 <button type="submit">Add Profile</button>
@@ -268,60 +249,136 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const storage = firebase.storage();
-
         function addProfile() {
-            var email = document.getElementById("email").value.trim();
-            var phone = document.getElementById("phone").value.trim();
-            var address = document.getElementById("address").value.trim();
-            var name = document.getElementById("firstname").value.trim() + ' ' + document.getElementById("lastname").value.trim();
-            var formerTeam = document.getElementById("formerTeam").value.trim();
-            var position = document.getElementById("position").value.trim();
-            var experience = document.getElementById("experience").value.trim();
-            var captaincy = document.getElementById("captaincy").checked ? true : false;
-            var matchesPlayed = document.getElementById("matchesPlayed").value.trim();
-            var goalsScored = document.getElementById("goalsScored").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var name = document.getElementById("firstname").value.trim() + ' ' + document.getElementById("lastname").value.trim(); // Combine first and last name
+    var experience = document.getElementById("experience").value;
+    var profileImage = document.getElementById("profileImage").files[0];
+    var resume = document.getElementById("resume").files[0];
+    var certificate = document.getElementById("certificate").files[0]; // Get the certificate file
+    var messageElement = document.getElementById("message");
 
-            var profileImage = document.getElementById("profileImage").files[0];
-            var resume = document.getElementById("resume").files[0];
-            var certificate = document.getElementById("certificate").files[0];
+    messageElement.style.color = "red";
+    messageElement.innerHTML = "";
 
-            if (profileImage && resume && certificate) {
-                var profileImageRef = storage.ref("profiles/" + profileImage.name);
-                var resumeRef = storage.ref("resumes/" + resume.name);
-                var certificateRef = storage.ref("certificates/" + certificate.name);
+    if (!email || !phone || !address || !name || !experience || !profileImage || !resume || !certificate) {
+        messageElement.innerHTML = "Please fill in all the fields.";
+        return;
+    }
 
-                Promise.all([
-                    profileImageRef.put(profileImage),
-                    resumeRef.put(resume),
-                    certificateRef.put(certificate)
-                ]).then((snapshots) => {
-                    return Promise.all(snapshots.map(snapshot => snapshot.ref.getDownloadURL()));
-                }).then((urls) => {
-                    return db.collection("players").add({
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        address: address,
-                        formerTeam: formerTeam,
-                        position: position,
-                        experience: experience,
-                        captaincy: captaincy,
-                        matchesPlayed: matchesPlayed,
-                        goalsScored: goalsScored,
-                        profileImage: urls[0],
-                        resume: urls[1],
-                        certificate: urls[2]
-                    });
-                }).then(() => {
-                    document.getElementById("message").textContent = "Profile added successfully!";
-                    document.getElementById("add-profile-form").reset();
-                }).catch((error) => {
-                    document.getElementById("message").textContent = "Error adding profile: " + error.message;
-                });
-            } else {
-                document.getElementById("message").textContent = "Please upload all required files.";
-            }
+    var phonePattern = /^[6-9]\d{9}$/;
+    if (!phonePattern.test(phone)) {
+        messageElement.innerHTML = "Phone number must be a valid Indian number (10 digits, starting with 6-9).";
+        return;
+    }
+
+    var namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(name)) {
+        messageElement.innerHTML = "Name must contain only letters and spaces.";
+        return;
+    }
+
+    // Validate Profile Image
+    if (profileImage) {
+        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+        if (!validImageTypes.includes(profileImage.type)) {
+            messageElement.innerHTML = "Profile Image must be a valid image file (JPEG, PNG, GIF, BMP, WebP).";
+            return;
         }
+
+        var maxSizeInBytes = 5 * 1024 * 1024;
+        if (profileImage.size > maxSizeInBytes) {
+            messageElement.innerHTML = "Profile Image size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    // Validate Resume
+    if (resume) {
+        var validResumeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!validResumeTypes.includes(resume.type)) {
+            messageElement.innerHTML = "Resume must be a PDF or Word document.";
+            return;
+        }
+
+        var maxResumeSizeInBytes = 5 * 1024 * 1024;
+        if (resume.size > maxResumeSizeInBytes) {
+            messageElement.innerHTML = "Resume file size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    // Validate Certificate
+    if (certificate) {
+        var validCertificateTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!validCertificateTypes.includes(certificate.type)) {
+            messageElement.innerHTML = "Certificate must be a PDF or Word document.";
+            return;
+        }
+
+        var maxCertificateSizeInBytes = 5 * 1024 * 1024;
+        if (certificate.size > maxCertificateSizeInBytes) {
+            messageElement.innerHTML = "Certificate file size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    var coachRef = db.collection("coaches").doc(email);
+
+    coachRef.get().then((docSnapshot) => {
+        if (docSnapshot.exists) {
+            messageElement.innerHTML = "A coach with this email already exists.";
+            return;
+        }
+
+        var storageRef = storage.ref();
+        var profileImageRef = storageRef.child('coach_images/' + profileImage.name);
+        var resumeRef = storageRef.child('coach_resumes/' + resume.name);
+        var certificateRef = storageRef.child('coach_certificates/' + certificate.name); // Add reference for certificate
+
+        var uploadTasks = [
+            profileImageRef.put(profileImage),
+            resumeRef.put(resume),
+            certificateRef.put(certificate) // Add certificate upload to tasks
+        ];
+
+        Promise.all(uploadTasks)
+            .then((uploadResults) => {
+                return Promise.all(uploadResults.map((uploadResult) => uploadResult.ref.getDownloadURL()));
+            })
+            .then((downloadURLs) => {
+                var profileImageUrl = downloadURLs[0];
+                var resumeUrl = downloadURLs[1];
+                var certificateUrl = downloadURLs[2]; // Get certificate URL
+
+                coachRef.set({
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    name: name,
+                    experience: parseInt(experience),
+                    profileImageUrl: profileImageUrl,
+                    resumeUrl: resumeUrl,
+                    certificateUrl: certificateUrl // Store certificate URL
+                }).then(() => {
+                    messageElement.style.color = "green";
+                    messageElement.innerHTML = "Coach profile added successfully!";
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                    messageElement.innerHTML = "Failed to add coach profile.";
+                });
+            }).catch((error) => {
+                console.error("Error uploading files: ", error);
+                messageElement.innerHTML = "Error uploading files.";
+            });
+    }).catch((error) => {
+        console.error("Error checking coach existence: ", error);
+        messageElement.innerHTML = "Error checking coach existence.";
+    });
+}
+
     </script>
 </body>
 </html>

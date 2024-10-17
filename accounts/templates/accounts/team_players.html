@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Players | Athlet Arena</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #00bfa5, #00695c);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: #004d40;
+            padding: 20px;
+            color: #fff;
+            text-align: center;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #004d40;
+            color: #fff;
+        }
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Players of Selected Team</h2>
+    </header>
+
+    <main class="team-players-container">
+        <h2>Team Players List</h2>
+
+        <table id="team-player-list" border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                    <th>Team</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Team player rows will be inserted here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-firestore.js"></script>
+
+    <script>
+      const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function fetchTeamPlayers(teamName) {
+            const playerList = document.getElementById("team-player-list").getElementsByTagName("tbody")[0];
+
+            db.collection("players").where("team", "==", teamName).get()
+            .then((querySnapshot) => {
+                playerList.innerHTML = "";  // Clear existing rows
+
+                querySnapshot.forEach((doc) => {
+                    const player = doc.data();
+
+                    // Create a new row
+                    const row = playerList.insertRow();
+
+                    // Add team player details to the row
+                    row.innerHTML = `
+                        <td>${player.name}</td>
+                        <td>${player.email}</td>
+                        <td>${player.position}</td>
+                        <td>${player.team}</td>
+                    `;
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching team players: ", error);
+            });
+        }
+
+    </script>
+</body>
+</html>

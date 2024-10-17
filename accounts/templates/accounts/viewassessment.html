@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Assessments | Athlete Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .view-video {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Athlete Arena - Coach Video Viewer</h1>
+</header>
+
+<div class="container">
+    <h2>Assessments</h2>
+    <table id="assessments-table">
+        <thead>
+            <tr>
+                <th>Assessment Date</th>
+                <th>Day of the Week</th>
+                <th>Assessment Type</th>
+                <th>Description</th>
+                <th>View Video</th> <!-- Only this column for viewing videos -->
+            </tr>
+        </thead>
+        <tbody id="assessments-body">
+            <!-- Assessment data will be inserted here dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>© 2024 Athlete Arena. All rights reserved.</p>
+</footer>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // Function to fetch and display assessment details
+    function fetchAssessments() {
+        const assessmentsBody = document.getElementById('assessments-body');
+        db.collection("assessments").get().then((querySnapshot) => {
+            assessmentsBody.innerHTML = ""; // Clear the existing table data
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const videoURL = data.videoURL ? data.videoURL : "#"; // Set the video URL if available
+
+                const row = `<tr>
+                                <td>${data.assessmentDate}</td>
+                                <td>${data.assessmentDay}</td>
+                                <td>${data.assessmentType}</td>
+                                <td>${data.assessmentDescription}</td>
+                                <td>
+                                    <a class="view-video" href="${videoURL}" target="_blank">View Video</a>
+                                </td>
+                            </tr>`;
+                assessmentsBody.innerHTML += row;
+            });
+        }).catch((error) => {
+            console.error("Error fetching assessments: ", error);
+        });
+    }
+
+    // Fetch assessments on page load
+    window.onload = fetchAssessments;
+</script>
+
+</body>
+</html>

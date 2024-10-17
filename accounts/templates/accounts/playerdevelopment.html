@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Assessments | Athlete Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            text-align: center;
+            color: green;
+            margin-top: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            width: 0;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Athlete Arena - Manage Assessments</h1>
+</header>
+
+<div class="container">
+    <h2>Assessments</h2>
+    <table id="assessments-table">
+        <thead>
+            <tr>
+                <th>Assessment Date</th>
+                <th>Day of the Week</th>
+                <th>Assessment Type</th>
+                <th>Description</th>
+                <th>Upload Video</th>
+                <th>Progress</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="assessments-body">
+            <!-- Assessment data will be inserted here dynamically -->
+        </tbody>
+    </table>
+    <p id="message"></p>
+</div>
+
+<footer>
+    <p>© 2024 Athlete Arena. All rights reserved.</p>
+</footer>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "athletarena.firebaseapp.com",
+        projectId: "athletarena",
+        storageBucket: "athletarena.appspot.com",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+        measurementId: "YOUR_MEASUREMENT_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // Function to fetch and display assessment details
+    function fetchAssessments() {
+        const assessmentsBody = document.getElementById('assessments-body');
+        db.collection("assessments").get().then((querySnapshot) => {
+            assessmentsBody.innerHTML = ""; // Clear the existing table data
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const progress = data.completed ? "Complete" : "Incomplete";
+                const progressBarWidth = data.completed ? "100%" : "0%";
+                const row = `<tr>
+                                <td>${data.assessmentDate}</td>
+                                <td>${data.assessmentDay}</td>
+                                <td>${data.assessmentType}</td>
+                                <td>${data.assessmentDescription}</td>
+                                <td>
+                                    <input type="file" onchange="uploadVideo('${doc.id}', this)">
+                                </td>
+                                <td>
+                                    <div class="progress-container">
+                                        <div class="progress-bar" style="width: ${progressBarWidth}">${progress}</div>
+                                    </div>
+                                </td>
+                                <td><button onclick="submitAssessment('${doc.id}')">Submit</button></td>
+                            </tr>`;
+                assessmentsBody.innerHTML += row;
+            });
+        }).catch((error) => {
+            console.error("Error fetching assessments: ", error);
+            document.getElementById("message").innerText = "Error fetching assessments.";
+        });
+    }
+
+    // Function to upload video
+    function uploadVideo(assessmentId, input) {
+        const file = input.files[0];
+        if (file) {
+            const storageRef = storage.ref().child(`assessments/${assessmentId}/${file.name}`);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed', (snapshot) => {
+                // Optionally, you can show progress here
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+            }, (error) => {
+                console.error("Upload error: ", error);
+            }, () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                    console.log("File available at", downloadURL);
+                    // Mark assessment as complete in Firestore
+                    db.collection("assessments").doc(assessmentId).update({
+                        completed: true
+                    }).then(() => {
+                        // Update the progress bar in the UI
+                        const progressBar = input.closest('tr').querySelector('.progress-bar');
+                        progressBar.style.width = "100%";
+                        progressBar.innerText = "Complete";
+                        fetchAssessments(); // Refresh the table to show updated progress
+                    }).catch((error) => {
+                        console.error("Error updating assessment: ", error);
+                    });
+                });
+            });
+        }
+    }
+
+    // Function to submit an assessment
+    function submitAssessment(assessmentId) {
+        db.collection("assessments").doc(assessmentId).update({
+            submitted: true
+        }).then(() => {
+            alert("Assessment submitted successfully!");
+            fetchAssessments(); // Refresh the table to show updated status
+        }).catch((error) => {
+            console.error("Error submitting assessment: ", error);
+            alert("Error submitting assessment.");
+        });
+    }
+
+    // Fetch assessments on page load
+    window.onload = fetchAssessments;
+</script>
+
+</body>
+</html>
