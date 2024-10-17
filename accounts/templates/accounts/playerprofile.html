@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Add Player Profile | Athlet Arena</title>
+=======
+<<<<<<< HEAD
+    <title>Add Player Profile | Athlet Arena</title>
+=======
+    <title>Add player Profile | Athlet Arena</title>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
     <style>
         * {
             margin: 0;
@@ -178,7 +186,15 @@
 
     <main class="main">
         <div class="form-container">
+<<<<<<< HEAD
             <h2>Add Player Profile</h2>
+=======
+<<<<<<< HEAD
+            <h2>Add Player Profile</h2>
+=======
+            <h2>Add player Profile</h2>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
             <form id="add-profile-form" onsubmit="addProfile(); return false;">
                 <div class="form-group flex-group">
                     <div>
@@ -239,7 +255,19 @@
                     <label for="certificate">Upload Certificate:</label>
                     <input type="file" id="certificate" accept=".pdf,.doc,.docx" required>
                 </div>
+<<<<<<< HEAD
+                <div class="form-group">
+                    <label for="profileImage">Profile Image:</label>
+                    <input type="file" id="profileImage" accept="image/*" required aria-required="true">
+                </div>
                 <button type="submit">Add Profile</button>
+=======
+                <button type="submit">Add Profile</button>
+<<<<<<< HEAD
+=======
+                <!-- <a href="/accounts/login/" class="button-link">Back to Login</a> -->
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
                 <p id="message"></p>
             </form>
         </div>
@@ -253,7 +281,15 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<<<<<<< HEAD
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+=======
+<<<<<<< HEAD
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+=======
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
@@ -267,9 +303,17 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+<<<<<<< HEAD
         const storage = firebase.storage();
+=======
+<<<<<<< HEAD
+        const storage = firebase.storage();
+=======
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
         function addProfile() {
+<<<<<<< HEAD
             var email = document.getElementById("email").value.trim();
             var phone = document.getElementById("phone").value.trim();
             var address = document.getElementById("address").value.trim();
@@ -321,6 +365,98 @@
             } else {
                 document.getElementById("message").textContent = "Please upload all required files.";
             }
+=======
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var name = document.getElementById("name").value;
+<<<<<<< HEAD
+            var profileImage = document.getElementById("profileImage").files[0]; // Get the file object
+
+            // Phone number validation (Indian format)
+            var phonePattern = /^[6-9]\d{9}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("message").innerHTML = "Phone number must be a valid Indian number (10 digits, starting with 6-9).";
+                return;
+            }
+
+            // Name validation (letters only)
+            var namePattern = /^[A-Za-z\s]+$/;
+            if (!namePattern.test(name)) {
+                document.getElementById("message").innerHTML = "Name must contain only letters.";
+                return;
+            }
+
+            if (profileImage) {
+                // Create a storage reference for the image
+                var storageRef = storage.ref('profileImages/' + profileImage.name);
+
+                // Upload the image to Firebase Storage
+                var uploadTask = storageRef.put(profileImage);
+
+                uploadTask.on('state_changed', 
+                    function(snapshot) {
+                        // Optional: You can show progress of the upload here
+                    }, 
+                    function(error) {
+                        console.error("Error uploading image: ", error);
+                        document.getElementById("message").innerHTML = "Error uploading image.";
+                    }, 
+                    function() {
+                        // Image upload completed, now get the download URL
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                            // Add profile details along with the image URL to Firestore
+                            db.collection("players").add({
+                                email: email,
+                                phone: phone,
+                                address: address,
+                                name: name,
+                                profileImageUrl: downloadURL // Save the image URL
+                            })
+                            .then(() => {
+                                alert("Profile added successfully with image!");
+                                document.getElementById("message").innerHTML = "Profile added successfully with image!";
+                                window.location.href = '/accounts/player_dashboard/';
+                            })
+                            .catch((error) => {
+                                console.error("Error adding document: ", error);
+                                alert("Error adding profile.");
+                                document.getElementById("message").innerHTML = "Error adding profile.";
+                            });
+                        });
+                    }
+                );
+            } else {
+                document.getElementById("message").innerHTML = "Please upload a profile image.";
+            }
+=======
+        
+            // Phone number validation
+            var phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(phone)) {
+                document.getElementById("message").innerHTML = "Phone number must be exactly 10 digits long.";
+                return;
+            }
+
+            // Add coach details to Firestore
+            db.collection("players").add({
+                email: email,
+                phone: phone,
+                address: address,
+                name: name,
+            })
+            .then(() => {
+                alert("Profile added successfully to Firestore");
+                document.getElementById("message").innerHTML = "Profile added successfully to Firestore!";
+                window.location.href = '/accounts/player_dashboard/';
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                alert("Error adding profile");
+                document.getElementById("message").innerHTML = "Error adding profile.";
+            });
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
         }
     </script>
 </body>

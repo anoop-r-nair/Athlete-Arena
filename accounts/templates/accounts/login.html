@@ -254,9 +254,18 @@
                     });
                 })
                 .catch((error) => {
+<<<<<<< HEAD
                     // var errorMessage = error.message;
                     document.getElementById("message").innerHTML ='incorrect password.';
                     // document.getElementById("message").innerHTML = errorMessage;
+=======
+                    var errorMessage = error.message;
+<<<<<<< HEAD
+                    document.getElementById("message").innerHTML ='incorrect password.';
+=======
+                    document.getElementById("message").innerHTML = errorMessage;
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
                     document.getElementById("message").style.display = "block";
                 });
         }

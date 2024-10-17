@@ -535,6 +535,7 @@ def coach_dashboard(request):
 
 
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+<<<<<<< HEAD
 
 def playerprofile(request):
     return render(request, 'accounts/playerprofile.html')
@@ -544,6 +545,21 @@ def playerprofile(request):
 def playerprofile(request):
     return render(request, 'accounts/playerprofile.html')
 
+=======
+=======
+<<<<<<< HEAD
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
+=======
+<<<<<<< HEAD
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+=======
+def playerprofile(request):
+    return render(request, 'accounts/playerprofile.html')
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
 def player_dashboard(request):
     return render(request, 'accounts/player_dashboard.html')
@@ -556,6 +572,52 @@ def lineups(request):
     users = [doc.to_dict() for doc in users_ref.stream()]
     return render(request, 'accounts/lineups.html', {'users': users})
 
+<<<<<<< HEAD
+def fanpage(request):
+    return render(request, 'accounts/fanpage.html')
+
+def playerdevelopment(request):
+    return render(request, 'accounts/playerdevelopment.html')
+
+def fanviewprofile(request):
+    return render(request, 'accounts/fanviewprofile.html')
+
+def viewassessment(request):
+    return render(request, 'accounts/viewassessment.html')
+
+
+def practicechange(request):
+    return render(request, 'accounts/practicechange.html')
+
+
+def gameresult(request):
+    return render(request, 'accounts/gameresult.html')
+
+
+def announcement(request):
+    return render(request, 'accounts/announcement.html')
+
+
+def fanviewresult(request):
+    return render(request, 'accounts/fanviewresult.html')
+
+def addcoachprofile(request):
+    return render(request, 'accounts/addcoachprofile.html')
+
+def updates1(request):
+    return render(request, 'accounts/updates1.html')
+
+
+def schedulefans(request):
+    return render(request, 'accounts/schedulefans.html')
+
+def viewprofile(request):
+    return render(request, 'accounts/viewprofile.html')
+
+def giveassessment(request):
+    return render(request, 'accounts/giveassessment.html')
+=======
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
 
 def registration(request):
     return render(request, 'accounts/registration.html')
@@ -714,7 +776,17 @@ def managerdasboard(request):
 def edit_coach_profile(request):
      return render(request, 'accounts/edit_coach_profile.html')
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+<<<<<<< HEAD
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 # def logout_view(request):
 #     # Log out the user and clear the session
 #     logout(request)
@@ -726,6 +798,16 @@ def logout_view(request):
     request.session.delete()
     logout(request)
     return redirect('login')
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
 
 def parents(request):
@@ -791,6 +873,15 @@ def editcoachprofile(request):
         return render(request, 'accounts/editcoachprofile.html',  {'coaches': []})    
     
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 # def login(request):
 #     if request.method == 'POST':
 #         email = request.POST.get('email')
@@ -832,7 +923,14 @@ def editcoachprofile(request):
 #             return redirect('login')
 
 #     return render(request, 'accounts/login.html')
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -874,6 +972,14 @@ def login(request):
             return redirect('login')
 
     return render(request, 'accounts/login.html')
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
 def send_message(request):
     if request.method == 'POST':
@@ -900,6 +1006,7 @@ def get_messages(request, user_id):
 
     return JsonResponse({'messages': message_list})    
 
+<<<<<<< HEAD
 
     return JsonResponse({'messages': message_list})  
 
@@ -908,6 +1015,20 @@ def get_messages(request, user_id):
 
     return JsonResponse({'messages': message_list})  
 
+=======
+=======
+<<<<<<< HEAD
+    return JsonResponse({'messages': message_list})  
+=======
+<<<<<<< HEAD
+    return JsonResponse({'messages': message_list})    
+
+=======
+    return JsonResponse({'messages': message_list})  
+>>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
+>>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
 
 

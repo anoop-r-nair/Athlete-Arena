@@ -133,9 +133,15 @@
         </div>
     </main>
 
+<<<<<<< HEAD
     <!-- <footer>
         <p>© 2024 Athlet Arena. All rights reserved.</p>
     </footer> -->
+=======
+    <footer>
+        <p>© 2024 Athlet Arena. All rights reserved.</p>
+    </footer>
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
@@ -174,8 +180,12 @@
                         <td>${player.email}</td>
                         <td>${player.phone}</td>
                         <td>${player.address}</td>
+<<<<<<< HEAD
                          <td><img src="${player.profileImage}" alt="Profile Image" style="width: 100px; height: auto;"></td>
 
+=======
+                        <td><img src="${player.profileImageUrl}" alt="${player.name}'s profile image"></td>
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
                         <td class="action-buttons">
                             <button class="edit-btn" onclick="editProfile('${playerId}')">Edit</button>
                             <button class="delete-btn" onclick="deleteProfile('${playerId}')">Delete</button>

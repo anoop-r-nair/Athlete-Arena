@@ -1,9 +1,15 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assign Coach | Athlete Arena</title>
+<<<<<<< HEAD
+=======
     <style>
         /* General Styles */
 body {
@@ -251,3 +257,264 @@ footer {
 
     </script>
 </body>
+</html>
+=======
+<head></head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body>
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
+    <style>
+        /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #333;
+}
+
+input[type="email"]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button[type="button"] {
+    background-color: #f44336;
+}
+
+button[type="button"]:hover {
+    background-color: #e53935;
+}
+
+/* Message Display */
+#message {
+    margin-top: 15px;
+    padding: 10px;
+    display: none;
+    font-size: 14px;
+    color: #333;
+    background-color: #d4edda;
+    border-left: 5px solid #4CAF50;
+}
+
+/* Footer */
+footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #777;
+}
+
+    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- EmailJS library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+    <!-- Initialize EmailJS with your public key -->
+    <script>
+        (function() {
+            emailjs.init("b-6-qIUOR_AGQhvgT"); // Replace with your actual EmailJS public key
+        })();
+    </script>
+    
+    <style>
+        /* Your existing CSS styles */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Assign Coach</h2>
+        <form id="assign-coach-form" onsubmit="assignCoach(); return false;">
+            <div class="form-group">
+                <label for="email">Coach Email:</label>
+                <input type="email" id="email" required aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="name">Coach Name:</label>
+                <input type="text" id="name" required aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="password">Coach Password:</label>
+                <input type="password" id="password" required aria-required="true">
+            </div>
+            <button type="submit">Assign Coach</button>
+            <button type="button" onclick="sendEmail()">Send Email</button> <!-- New Button for sending email -->
+            <p id="message"></p>
+        </form>
+    </div>
+
+<<<<<<< HEAD
+    <!-- <footer>
+        <p>© 2024 Athlete Arena. All rights reserved.</p>
+    </footer> -->
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function assignCoach() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const name = document.getElementById("name").value;
+            const messageElement = document.getElementById("message");
+
+            // Create the coach user in Firebase Authentication
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // Send email verification
+                    user.sendEmailVerification().then(() => {
+                        messageElement.textContent = "Verification email sent. Please check your inbox.";
+                        messageElement.style.backgroundColor = "#d4edda";
+                        messageElement.style.display = "block";
+
+                        const interval = setInterval(() => {
+                            user.reload().then(() => {
+                                if (user.emailVerified) {
+                                    clearInterval(interval);
+
+                                    // Save coach data to Firestore after email verification
+                                    db.collection("users").doc(user.uid).set({
+                                        name: name,
+                                        email: email,
+                                        userType: "Coach"
+                                    }).then(() => {
+                                        messageElement.textContent = "Coach assigned successfully!";
+                                        messageElement.style.backgroundColor = "#d4edda";
+                                        messageElement.style.display = "block";
+
+                                        setTimeout(() => {
+                                            window.location.href = '/accounts/managerdashboard/'; // Redirect after success
+                                        }, 2000);
+                                    }).catch((error) => {
+                                        messageElement.textContent = "Error saving coach data to Firestore.";
+                                        messageElement.style.display = "block";
+                                    });
+                                }
+                            });
+                        }, 3000); // Check every 3 seconds for verification
+                    });
+                })
+                .catch((error) => {
+                    messageElement.textContent = error.message;
+                    messageElement.style.display = "block";
+                });
+        }
+
+       // Function to send email to the coach
+       function sendEmail() {
+    const email = document.getElementById("email").value;  // Coach email entered by the user
+    const password = document.getElementById("password").value;  // Coach password
+    const name = document.getElementById("name").value;  // Coach name
+    const messageElement = document.getElementById("message");
+
+    // Template parameters for EmailJS
+    const templateParams = {
+        to_email: email,  // Make sure this matches your template in EmailJS
+        to_name: name,    // Coach's name
+        coach_password: password  // Coach password to be sent in the email
+    };
+
+    // Send email using EmailJS
+    emailjs.send("service_ya7myzl", "template_56qfrf9", templateParams)
+        .then(() => {
+            messageElement.textContent = "Email sent successfully to the coach.";
+            messageElement.style.backgroundColor = "#d4edda";
+            messageElement.style.display = "block";
+        }, (error) => {
+            messageElement.textContent = "Failed to send email: " + error.text;
+            messageElement.style.display = "block";
+        });
+}
+
+
+    </script>
+</body>
+=======
+</body>
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e

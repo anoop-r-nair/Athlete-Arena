@@ -139,6 +139,7 @@
     </header>
 
     <main>
+<<<<<<< HEAD
         <section id="overview" class="tab-content active">
             <h2>Team Overview</h2>
             <p>Welcome to the football team management system. Manage your team effectively!</p>
@@ -194,6 +195,43 @@
             <h2>Team Stats</h2>
             <p>Wins: 10 | Losses: 2 | Draws: 1</p>
         </section>
+=======
+        <a href="{% url 'login' %}" class="card">
+            <i class="fas fa-user-tie"></i>
+            <h3>Coach</h3>
+            <p>Manage your team, training sessions, and player performance.</p>
+        </a>
+        <a href="{% url 'login' %}" class="card">
+            <i class="fas fa-futbol"></i>
+            <h3>Player</h3>
+            <p>Track your progress and communicate with your coach.</p>
+        </a>
+<<<<<<< HEAD
+        <a href="{% url 'fanpage' %}" class="card">
+=======
+        <a href="{% url 'login' %}" class="card">
+>>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
+            <i class="fas fa-user-friends"></i>
+            <h3>Fan page</h3>
+            <p>wait for the stats.</p>
+            <!-- <p>Stay informed about your child's sports activities.</p> -->
+        </a>
+        <a href="{% url 'medical_staff_dashboard' %}" class="card">
+            <i class="fas fa-user-md"></i>
+            <h3>Medical Staff</h3>
+            <p>Monitor player health and injuries.</p>
+        </a>
+        <a href="{% url 'sports_psychologist_dashboard' %}" class="card">
+            <i class="fas fa-brain"></i>
+            <h3>Sports Psychologist</h3>
+            <p>Support the mental well-being of players.</p>
+        </a>
+        <a href="{% url 'analytics_expert_dashboard' %}" class="card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Analytics Expert</h3>
+            <p>Analyze performance data and improve strategies.</p>
+        </a>
+>>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
     </main>
 
     <footer>
