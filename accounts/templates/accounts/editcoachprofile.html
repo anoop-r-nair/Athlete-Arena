@@ -4,128 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach Profiles | Athlet Arena</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        * {
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(120deg, #00bfa5, #00695c);
+            background-color: #f4f4f4;
             color: #333;
-            min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            height: 100vh;
         }
 
-        header {
-            background-color: #004d40;
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            width: 200px;
             padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            height: 100%;
         }
 
-        .logo a {
-            color: #fff;
+        .sidebar a {
+            color: white;
             text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: bold;
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
+        .sidebar a:hover {
+            background-color: #34495e;
         }
 
-        nav ul li {
-            margin-left: 20px;
-        }
-
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1rem;
-        }
-
+        /* Main content */
         .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 20px;
+            flex-grow: 1; /* Allow main content to grow */
         }
 
-        .form-container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
-            width: 100%;
-            margin: 2rem;
-        }
-
-        .form-container h2 {
-            text-align: center;
+        h2 {
             margin-bottom: 20px;
-            color: #004d40;
+            font-size: 28px;
+            color: #2c3e50;
         }
 
+        /* Coach card styles */
         .coach-card {
-            background-color: #f9f9f9;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .coach-card h3 {
-            color: #004d40;
+            color: #2c3e50;
         }
 
+        .coach-card p {
+            margin: 10px 0;
+        }
+
+        /* Button styles */
         button {
-            background-color: #004d40;
-            color: #fff;
-            padding: 12px 20px;
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
         }
 
         button:hover {
-            background-color: #00332a;
+            background-color: #2980b9;
         }
 
-        hr {
-            border: 1px solid #ddd;
-        }
-
+        /* Footer */
         footer {
-            background-color: #004d40;
-            color: #fff;
             text-align: center;
-            padding: 10px;
-            font-size: 0.9rem;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Stack sidebar and main vertically */
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto; /* Adjust height for mobile */
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">
-            <a href="#">Athlet Arena</a>
+        <!-- <div class="logo" style="padding: 20px; background-color: #2c3e50; color: white;"> -->
+            <!-- <a href="#" style="color: white; text-decoration: none; font-size: 24px; font-weight: bold;">Athlet Arena</a> -->
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
     </header>
+
+    <div class="sidebar">
+       
+        <a href="index.html">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </div>
 
     <main class="main">
         <div class="form-container">
@@ -133,6 +127,11 @@
             <div id="coachProfiles"></div>
         </div>
     </main>
+
+    <!-- Footer -->
+    <!-- <footer>
+        <p>&copy; 2024 Athlet Arena. All rights reserved.</p>
+    </footer> -->
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>

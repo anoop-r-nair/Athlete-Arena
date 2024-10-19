@@ -3,389 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team | Athlet Arena</title>
+    <title>Football Team Roster</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-
-        header, footer {
-            background-color: #1f1f1f;
-            color: #f8f9fa;
-            text-align: center;
-            padding: 1.5rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 2rem;
-            letter-spacing: 1px;
-        }
-
-        footer p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        main {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 150px);
-            padding: 2rem;
-            background-color: #f8f9fa;
+            height: 100vh;
         }
-
-        .form-container, .teams-container {
+        .team-container {
             background-color: #fff;
-            padding: 2rem;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
         }
-
-        h2 {
-            margin-top: 0;
-            color: #007bff;
-            font-size: 1.8rem;
+        h1, h2 {
             text-align: center;
         }
-
-        .form-group {
-            margin-bottom: 1.2rem;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-
-        .form-group label {
-            font-size: 1rem;
-            color: #555;
-            display: block;
-            margin-bottom: 0.5rem;
+        li {
+            padding: 5px 0;
         }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
-            outline: none;
-        }
-
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 0.8rem 1.2rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
-        }
-
-        button:disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        #message {
-            margin-top: 1rem;
-            font-size: 1rem;
-            color: #dc3545;
-            text-align: center;
-        }
-
-        .teams-container table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1.5rem;
-        }
-
-        .teams-container th, .teams-container td {
-            padding: 1rem;
-            border: 1px solid #dee2e6;
-            text-align: left;
-        }
-
-        .teams-container th {
-            background-color: #007bff;
-            color: #fff;
+        .section-title {
             font-weight: bold;
-        }
-
-        .teams-container tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .teams-container td {
-            font-size: 1rem;
-        }
-
-        .teams-container button {
-            padding: 0.5rem 1rem;
-            margin: 0 0.2rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .teams-container button:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .teams-container button.edit-btn {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .teams-container button.delete-btn {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .teams-container button.edit-btn:hover {
-            background-color: #218838;
-        }
-
-        .teams-container button.delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        @media (max-width: 768px) {
-            main {
-                padding: 1rem;
-            }
-
-            .form-container, .teams-container {
-                padding: 1.5rem;
-            }
-
-            .teams-container table, .teams-container th, .teams-container td {
-                font-size: 0.9rem;
-            }
-
-            h2 {
-                font-size: 1.6rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .form-container, .teams-container {
-                padding: 1rem;
-            }
-
-            h2 {
-                font-size: 1.4rem;
-            }
-
-            button {
-                font-size: 0.9rem;
-            }
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <header>
-        
-    </header>
 
-    <main class="main">
-        <!-- Team Creation Form -->
-        <div class="form-container">
-            <h2>Create Teams</h2>
-            <form id="signup-form">
-                <div class="form-group">
-                    <label for="coachname">Coach Name</label>
-                    <input type="text" id="coachname" required aria-required="true">
-                </div>
-                <div class="form-group">
-                    <label for="players">Player Names (comma-separated)</label>
-                    <input type="text" id="players" required aria-required="true">
-                </div>
-                <div class="form-group">
-                    <label for="teamname">Team Name</label>
-                    <input type="text" id="teamname" required aria-required="true">
-                </div>
-                <button type="submit">Create</button>
-                <p id="message"></p>
-            </form>
-        </div>
+<div class="team-container">
+    <h1>Football Team</h1>
 
-        <!-- View, Edit, and Delete Teams Section -->
-        <!-- <div class="teams-container">
-            <h2>Manage Teams</h2>
-            <table id="teams-table">
-                <thead>
-                    <tr>
-                        <th>Coach Name</th>
-                        <th>Players</th>
-                        <th>Team Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="teams-body"> -->
-                    <!-- Teams will be dynamically populated here -->
-                <!-- </tbody>
-            </table>
-        </div> -->
-    </main>
+    <!-- Coach will be injected here -->
+    <h2 id="coach">Coach: Loading...</h2>
 
-    <footer>
-        <p>&copy; 2024 Athlet Arena</p>
-    </footer>
+    <!-- Starting XI -->
+    <div class="section-title">Starting XI</div>
+    <ul id="starting-xi">
+        <!-- Players will be injected here -->
+    </ul>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <!-- Substitutes -->
+    <div class="section-title">Substitutes</div>
+    <ul id="substitutes">
+        <!-- Subs will be injected here -->
+    </ul>
+</div>
 
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
-            authDomain: "athletarena.firebaseapp.com",
-            projectId: "athletarena",
-            storageBucket: "athletarena.appspot.com",
-            messagingSenderId: "1016152202031",
-            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
-            measurementId: "G-RC780HJPZ6"
-        };
+<script>
+    // Fetching data from API (Mock example)
+    const apiURL = 'https://example.com/api/team'; // Replace with your real API URL
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    async function fetchTeamData() {
+        try {
+            const response = await fetch(apiURL);
+            const data = await response.json();
 
-        // Ensure the user is authenticated
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                console.log("User is authenticated:", user);
-                // Proceed with Firestore operation
-                document.getElementById("signup-form").addEventListener("submit", create);
-                viewTeams(); // Load teams after authentication
-            } else {
-                console.log("User is not authenticated");
-                alert("You must be logged in to create a team.");
-                window.location.href = '/login';  // Redirect to login page
-            }
-        });
+            // Inject coach name
+            document.getElementById('coach').textContent = `Coach: ${data.coach}`;
 
-        // Create team function
-        function create(event) {
-            event.preventDefault();
-
-            var coachname = document.getElementById("coachname").value;
-            var players = document.getElementById("players").value.split(',');
-            var teamname = document.getElementById("teamname").value;
-
-            db.collection("teams").add({
-                coachname: coachname,
-                players: players,
-                teamname: teamname,
-            })
-            .then(() => {
-                console.log("Team successfully created");
-                alert("Team Created successfully");
-                document.getElementById("message").innerHTML = "Team Created successfully";
-                viewTeams(); // Refresh the list after adding
-            })
-            // .catch((error) => {
-            //     console.error("Error writing document to Firestore: ", error);
-            //     alert("Error storing details in Firestore: " + error.message);
-            //     document.getElementById("message").innerHTML = "Error storing details in Firestore: " + error.message;
-            // });
-        }
-
-        // View teams function
-        function viewTeams() {
-            const teamsBody = document.getElementById("teams-body");
-            teamsBody.innerHTML = ''; // Clear existing entries
-
-            db.collection("teams").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const team = doc.data();
-                    const row = document.createElement("tr");
-
-                    row.innerHTML = `
-                        <td>${team.coachname}</td>
-                        <td>${team.players.join(', ')}</td>
-                        <td>${team.teamname}</td>
-                        <td>
-                            <button onclick="editTeam('${doc.id}', '${team.coachname}', '${team.players.join(',')}', '${team.teamname}')">Edit</button>
-                            <button onclick="deleteTeam('${doc.id}')">Delete</button>
-                        </td>
-                    `;
-                    teamsBody.appendChild(row);
-                });
+            // Inject starting XI players
+            const startingXI = document.getElementById('starting-xi');
+            data.startingXI.forEach(player => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${player.position}:</strong> ${player.name}`;
+                startingXI.appendChild(li);
             });
-        }
 
-        // Delete team function
-        function deleteTeam(id) {
-            if (confirm("Are you sure you want to delete this team?")) {
-                db.collection("teams").doc(id).delete().then(() => {
-                    alert("Team deleted successfully!");
-                    viewTeams(); // Refresh the list after deleting
-                }).catch((error) => {
-                    console.error("Error removing team: ", error);
-                    alert("Error deleting team.");
-                });
-            }
-        }
-
-        // Edit team function
-        function editTeam(id, coachname, players, teamname) {
-            document.getElementById('coachname').value = coachname;
-            document.getElementById('players').value = players;
-            document.getElementById('teamname').value = teamname;
-
-            const submitButton = document.querySelector('button[type="submit"]');
-            submitButton.textContent = 'Update Team';
-
-            document.getElementById('signup-form').onsubmit = function(event) {
-                event.preventDefault();
-                updateTeam(id);
-            };
-        }
-
-        // Update team function
-        function updateTeam(id) {
-            const coachname = document.getElementById('coachname').value;
-            const players = document.getElementById('players').value.split(',');
-            const teamname = document.getElementById('teamname').value;
-
-            db.collection('teams').doc(id).update({
-                coachname: coachname,
-                players: players,
-                teamname: teamname
-            }).then(() => {
-                alert('Team updated successfully!');
-                document.querySelector('button[type="submit"]').textContent = 'Create';
-                document.getElementById('signup-form').onsubmit = create;  // Reset the form submission event
-                document.getElementById("signup-form").reset(); // Clear form
-                viewTeams(); // Refresh the list after updating
-            }).catch((error) => {
-                console.error("Error updating team: ", error);
-                alert("Error updating team.");
+            // Inject substitutes
+            const substitutes = document.getElementById('substitutes');
+            data.substitutes.forEach(player => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${player.position}:</strong> ${player.name}`;
+                substitutes.appendChild(li);
             });
+        } catch (error) {
+            console.error('Error fetching team data:', error);
         }
-    </script>
+    }
+
+    // Call the function to fetch and render team data
+    fetchTeamData();
+</script>
+
 </body>
 </html>

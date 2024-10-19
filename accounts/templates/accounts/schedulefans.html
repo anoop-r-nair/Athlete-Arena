@@ -4,164 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Schedules | Athlete Arena</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        /* General Styles */
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #fff;
-            background: #1a1a1a;
-        }
-        header {
-            background: #000;
-            padding: 20px 0;
-            color: #fff;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-        }
-        .logo a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            transition: color 0.3s;
-        }
-        nav ul li a:hover {
-            color: #ccc;
-        }
-        .main {
-            min-height: calc(100vh - 80px);
+            background-color: #f4f4f4;
+            color: #333;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            text-align: center;
-            padding-top: 100px;
+            height: 100vh;
         }
-        .form-container {
-            background: #333;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            max-width: 600px;
-            width: 100%;
-            margin: auto;
+
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            width: 200px;
+            padding: 20px;
+            height: 100%;
         }
-        .form-container h2 {
-            margin-bottom: 20px;
-            color: #fff;
-            font-size: 1.8em;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .form-group label {
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
             display: block;
-            margin-bottom: 5px;
-            color: #fff;
-            font-weight: bold;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
             padding: 10px;
-            border: 1px solid #555;
+            margin: 5px 0;
             border-radius: 5px;
-            background: #222;
-            color: #fff;
-            transition: border-color 0.3s;
         }
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #888;
-            outline: none;
+
+        .sidebar a:hover {
+            background-color: #34495e;
         }
+
+        /* Main content */
+        .main {
+            padding: 20px;
+            flex-grow: 1; /* Allow main content to grow */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+
+        /* Form and button styles */
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
         button {
-            background: #fff;
-            color: #000;
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
             border: none;
-            padding: 12px 25px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 20px;
+            margin-top: 10px;
         }
+
         button:hover {
-            background: #ddd;
+            background-color: #2980b9;
         }
-        footer {
-            background: #000;
-            text-align: center;
-            padding: 20px 0;
-            color: #fff;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-        }
-        footer p {
-            margin: 0;
-            font-size: 0.9em;
-        }
-        .table-container {
-            margin-top: 30px;
-            overflow-x: auto;
-        }
+
+        /* Table styles */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #222;
-            color: #fff;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
-            padding: 15px;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #555;
+            border-bottom: 1px solid #ccc;
         }
+
         th {
-            background: #444;
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Stack sidebar and main vertically */
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto; /* Adjust height for mobile */
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="#">Athlete Arena</a>
+    <!-- <header>
+        <div class="logo" style="padding: 20px; background-color: #2c3e50; color: white;">
+            <a href="#" style="color: white; text-decoration: none; font-size: 24px; font-weight: bold;">Athlete Arena</a>
         </div>
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    </header> -->
+
+    <div class="sidebar">
+      
+        <a href="{% url 'index' %}">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </div>
 
     <main class="main">
         <div class="form-container">
-            <h2>Manage Schedules for fans</h2>
+            <h2>Manage Schedules for Fans</h2>
             <form id="schedule-form" onsubmit="addSchedule(); return false;">
                 <div class="form-group">
                     <label for="type">Type:</label>
                     <select id="type" required>
-                        <option value="home">home</option>
-                        <option value="away">away</option>
+                        <option value="home">Home</option>
+                        <option value="away">Away</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -206,10 +184,6 @@
             </table>
         </div>
     </main>
-
-    <!-- <footer>
-        <p>© 2024 Athlete Arena. All rights reserved.</p>
-    </footer> -->
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>

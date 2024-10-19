@@ -4,186 +4,275 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Approved Coaches | Athlet Arena</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        * {
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(120deg, #00bfa5, #00695c);
+            background-color: #f4f4f4;
             color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        header {
-            background-color: #004d40;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Sidebar styling */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
         }
 
-        .logo a {
-            color: #fff;
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px;
             text-decoration: none;
-            font-size: 1.5rem;
+            display: block;
             font-weight: bold;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-        }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-
-        nav ul li a {
-            color: #fff;
+        .sidebar .nav-link:hover {
+            background-color: #2980b9;
             text-decoration: none;
-            font-size: 1rem;
         }
 
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .form-container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
-            width: 100%;
-            margin: 2rem;
-        }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #004d40;
-        }
-
-        .coach-card {
-            background-color: #f9f9f9;
+        .content {
+            margin-left: 250px;
             padding: 20px;
-            border-radius: 8px;
+            width: calc(100% - 250px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        header .logo a {
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Card styles for coach profiles */
+        .coach-card {
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .coach-card:hover {
+            transform: translateY(-10px);
         }
 
         .coach-card h3 {
-            color: #004d40;
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #2980b9;
         }
 
-        hr {
-            border: 1px solid #ddd;
+        .coach-card p {
+            margin-bottom: 8px;
         }
 
-        footer {
-            background-color: #004d40;
-            color: #fff;
+        .coach-card a {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .coach-card button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .coach-card button:hover {
+            background-color: #3498db;
+        }
+
+        /* Main content styling */
+        .main {
+            padding: 40px;
             text-align: center;
-            padding: 10px;
-            font-size: 0.9rem;
+        }
+
+        .form-container {
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        h2 {
+            margin-bottom: 40px;
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3498db;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="#">Athlet Arena</a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main class="main">
-        <div class="form-container">
-            <h2>Approved Coaches</h2>
-            <div id="approvedCoachProfiles"></div>
-        </div>
-        <button type="button" onclick="window.location.href='/accounts/payment'">
-            Assign Coach
-        </button>
-        
-    </main>
+<!-- Sidebar -->
+<div class="d-flex">
+    <nav class="sidebar flex-column">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
+    </nav>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
-    <script>
-       const firebaseConfig = {
-            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
-            authDomain: "athletarena.firebaseapp.com",
-            projectId: "athletarena",
-            storageBucket: "athletarena.appspot.com",
-            messagingSenderId: "1016152202031",
-            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
-            measurementId: "G-RC780HJPZ6"
-        };
+    <!-- Main content -->
+    <div class="content">
+        <!-- <header>
+            <div class="logo">
+                <a href="#">Athlet Arena</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header> -->
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        <main class="main">
+            <div class="form-container">
+                <h2>Approved Coaches</h2>
+                <div id="approvedCoachProfiles"></div>
+            </div>
+            <button type="button" onclick="window.location.href='/accounts/payment'">
+                Assign Coach
+            </button>
+        </main>
+    </div>
+</div>
 
-        // Function to fetch approved coaches
-        function fetchApprovedCoaches() {
-            const approvedCoachesListElement = document.getElementById('approvedCoachProfiles');
-            approvedCoachesListElement.innerHTML = ''; // Clear the current list
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+        authDomain: "athletarena.firebaseapp.com",
+        projectId: "athletarena",
+        storageBucket: "athletarena.appspot.com",
+        messagingSenderId: "1016152202031",
+        appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+        measurementId: "G-RC780HJPZ6"
+    };
 
-            db.collection("coaches").where("approved", "==", true).get().then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    approvedCoachesListElement.innerHTML = "<p>No approved coach profiles found.</p>";
-                    return;
-                }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-                querySnapshot.forEach((doc) => {
-                    const coachData = doc.data();
+    // Function to fetch approved coaches
+    function fetchApprovedCoaches() {
+        const approvedCoachesListElement = document.getElementById('approvedCoachProfiles');
+        approvedCoachesListElement.innerHTML = ''; // Clear the current list
 
-                    const approvedCoachCard = `
-                        <div class="coach-card">
-                            <h3>${coachData.name}</h3>
-                            <p><strong>Email:</strong> ${coachData.email}</p>
-                            <p><strong>Phone:</strong> ${coachData.phone}</p>
-                            <p><strong>Address:</strong> ${coachData.address}</p>
-                            <p><strong>Experience:</strong> ${coachData.experience} years</p>
-                            <p><strong>Resume:</strong> <a href="${coachData.resumeUrl}" target="_blank">View Resume</a></p>
-                            <p><strong>Certificate:</strong> <a href="${coachData.certificateUrl}" target="_blank">View Certificate</a></p>
-                            <p><strong>Profile Image:</strong> <a href="${coachData.profileImageUrl}" target="_blank">View Image</a></p>
-                        </div>
-                        <hr>
-                    `;
+        db.collection("coaches").where("approved", "==", true).get().then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                approvedCoachesListElement.innerHTML = "<p>No approved coach profiles found.</p>";
+                return;
+            }
 
-                    approvedCoachesListElement.innerHTML += approvedCoachCard;
-                });
-            }).catch((error) => {
-                console.error("Error fetching approved coaches: ", error);
-                approvedCoachesListElement.innerHTML = "<p>Error fetching approved coach profiles.</p>";
+            querySnapshot.forEach((doc) => {
+                const coachData = doc.data();
+
+                const approvedCoachCard = `
+                    <div class="coach-card">
+                        <h3>${coachData.name}</h3>
+                        <p><strong>Email:</strong> ${coachData.email}</p>
+                        <p><strong>Phone:</strong> ${coachData.phone}</p>
+                        <p><strong>Address:</strong> ${coachData.address}</p>
+                        <p><strong>Experience:</strong> ${coachData.experience} years</p>
+                        <p><strong>Resume:</strong> <a href="${coachData.resumeUrl}" target="_blank">View Resume</a></p>
+                        <p><strong>Certificate:</strong> <a href="${coachData.certificateUrl}" target="_blank">View Certificate</a></p>
+                        <p><strong>Profile Image:</strong> <a href="${coachData.profileImageUrl}" target="_blank">View Image</a></p>
+                        <button onclick="addCoachToTeam('${doc.id}', '${coachData.name}', '${coachData.email}')">Select Coach</button>
+                    </div>
+                    <hr>
+                `;
+
+                approvedCoachesListElement.innerHTML += approvedCoachCard;
             });
-        }
+        }).catch((error) => {
+            console.error("Error fetching approved coaches: ", error);
+            approvedCoachesListElement.innerHTML = "<p>Error fetching approved coach profiles.</p>";
+        });
+    }
 
-        // Fetch approved coaches when page loads
-        window.onload = function() {
-            fetchApprovedCoaches();
-        };
-        
-    </script>
+    // Function to add the selected coach to the team collection
+    function addCoachToTeam(coachId, name, email) {
+        db.collection("teams").doc(coachId).set({
+            name: name,
+            email: email,
+            role: "coach"
+        }).then(() => {
+            alert("Coach added to the team!");
+        }).catch((error) => {
+            console.error("Error adding coach to team: ", error);
+            alert("Failed to add coach to team.");
+        });
+    }
+
+    // Fetch approved coaches when page loads
+    window.onload = function() {
+        fetchApprovedCoaches();
+    };
+</script>
 </body>
 </html>

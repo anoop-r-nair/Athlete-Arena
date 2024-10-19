@@ -3,107 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Players | Athlet Arena</title>
+    <title>Team | Athlete Arena</title>
+
+    <!-- Styles and Fonts -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        /* General Styles */
         body {
-            background: linear-gradient(120deg, #00bfa5, #00695c);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
             color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
         }
-        header {
-            background-color: #004d40;
+
+        /* Sidebar styling */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+
+        .content {
+            margin-left: 250px;
             padding: 20px;
-            color: #fff;
-            text-align: center;
+            width: calc(100% - 250px);
         }
-        table {
-            width: 90%;
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        header .logo a {
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+
+        .player-list-container {
+            max-width: 90%;
             margin: 20px auto;
+        }
+
+        table {
+            width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
         th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #004d40;
-            color: #fff;
-        }
-        td {
+            padding: 12px;
             text-align: center;
         }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .action-button {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background-color: #2980b9;
+        }
+
+        button {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3498db;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #777;
+        }
+
     </style>
 </head>
 <body>
-    <header>
-        <h2>Players of Selected Team</h2>
-    </header>
 
-    <main class="team-players-container">
-        <h2>Team Players List</h2>
+<!-- Sidebar -->
+<div class="d-flex">
+    <nav class="sidebar flex-column">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
+    </nav>
 
-        <table id="team-player-list" border="1" cellpadding="10" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Position</th>
-                    <th>Team</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Team player rows will be inserted here -->
-            </tbody>
-        </table>
-    </main>
+    <!-- Main content -->
+    <div class="content">
+        <!-- <header>
+            <div class="logo">
+                <a href="#">Athlete Arena</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header> -->
 
-    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-firestore.js"></script>
+        <main class="player-list-container">
+            <h2>Selected Players for Team</h2>
 
-    <script>
-      const firebaseConfig = {
-            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
-            authDomain: "athletarena.firebaseapp.com",
-            projectId: "athletarena",
-            storageBucket: "athletarena.appspot.com",
-            messagingSenderId: "1016152202031",
-            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
-            measurementId: "G-RC780HJPZ6"
-        };
+            <table id="team-list">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Team player rows will be inserted here -->
+                </tbody>
+            </table>
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+            <button onclick="goBack()">Back to Approved Players</button>
+        </main>
 
-        function fetchTeamPlayers(teamName) {
-            const playerList = document.getElementById("team-player-list").getElementsByTagName("tbody")[0];
+        <footer>
+            <p>&copy; 2024 Athlet Arena</p>
+        </footer>
+    </div>
+</div>
 
-            db.collection("players").where("team", "==", teamName).get()
-            .then((querySnapshot) => {
-                playerList.innerHTML = "";  // Clear existing rows
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-                querySnapshot.forEach((doc) => {
-                    const player = doc.data();
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+        authDomain: "athletarena.firebaseapp.com",
+        projectId: "athletarena",
+        storageBucket: "athletarena.appspot.com",
+        messagingSenderId: "1016152202031",
+        appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+        measurementId: "G-RC780HJPZ6"
+    };
 
-                    // Create a new row
-                    const row = playerList.insertRow();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-                    // Add team player details to the row
-                    row.innerHTML = `
-                        <td>${player.name}</td>
-                        <td>${player.email}</td>
-                        <td>${player.position}</td>
-                        <td>${player.team}</td>
-                    `;
-                });
+    function fetchTeamPlayers() {
+        const teamList = document.getElementById("team-list").getElementsByTagName("tbody")[0];
+
+        db.collection("teams").get()
+        .then((querySnapshot) => {
+            teamList.innerHTML = "";  // Clear existing rows
+
+            querySnapshot.forEach((doc) => {
+                const player = doc.data();
+                const playerId = doc.id;
+
+                // Create a new row
+                const row = teamList.insertRow();
+
+                // Add team player details to the row
+                row.innerHTML = `
+                    <td>${player.name}</td>
+                    <td>${player.email}</td>
+                    <td>${player.position}</td>
+                    <td>
+                        <button class="action-button" onclick="updatePlayer('${playerId}', '${player.name}', '${player.email}', '${player.position}')">Update</button>
+                        <button class="action-button" onclick="deletePlayer('${playerId}')">Delete</button>
+                    </td>
+                `;
+            });
+        })
+        .catch((error) => {
+            console.error("Error fetching team players: ", error);
+        });
+    }
+
+    function updatePlayer(playerId, currentName, currentEmail, currentPosition) {
+        const newName = prompt("Enter new name:", currentName);
+        const newEmail = prompt("Enter new email:", currentEmail);
+        const newPosition = prompt("Enter new position:", currentPosition);
+
+        if (newName && newEmail && newPosition) {
+            db.collection("teams").doc(playerId).update({
+                name: newName,
+                email: newEmail,
+                position: newPosition
+            })
+            .then(() => {
+                alert("Player updated successfully!");
+                fetchTeamPlayers(); // Refresh the list
             })
             .catch((error) => {
-                console.error("Error fetching team players: ", error);
+                console.error("Error updating player: ", error);
+            });
+        } else {
+            alert("All fields are required for updating!");
+        }
+    }
+
+    function deletePlayer(playerId) {
+        if (confirm("Are you sure you want to delete this player?")) {
+            db.collection("teams").doc(playerId).delete()
+            .then(() => {
+                alert("Player deleted successfully!");
+                fetchTeamPlayers(); // Refresh the list
+            })
+            .catch((error) => {
+                console.error("Error deleting player: ", error);
             });
         }
+    }
 
-    </script>
+    function goBack() {
+        window.location.href = 'approved_players.html';  // Change this URL to your Approved Players page
+    }
+
+    window.onload = fetchTeamPlayers;
+</script>
 </body>
 </html>

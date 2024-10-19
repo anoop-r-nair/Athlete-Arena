@@ -6,316 +6,167 @@
     <title>Manager Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        /* General Styles */
         body {
-            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
         }
-        /* Sidebar styles */
+
         .sidebar {
-            width: 250px;
+            background-color: #2c3e50;
+            color: white;
             height: 100vh;
-            background-color: #343a40;
-            padding: 20px;
+            width: 250px;
             position: fixed;
             top: 0;
             left: 0;
-        }
-        .sidebar h4 {
-            color: #fff;
-            margin-bottom: 30px;
-        }
-        .sidebar .nav-link {
-            color: #adb5bd;
-            padding: 10px;
-            font-size: 16px;
-        }
-        .sidebar .nav-link.active, .sidebar .nav-link:hover {
-            color: #fff;
-            background-color: #495057;
-            border-radius: 4px;
+            padding-top: 20px;
         }
 
-        /* Main content */
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+
         .content {
             margin-left: 250px;
             padding: 20px;
+            width: calc(100% - 250px);
         }
 
-        /* Navbar */
         .navbar {
-            background-color: #343a40;
-            margin-bottom: 30px;
-        }
-        .navbar .navbar-brand {
-            color: #fff;
-        }
-        .navbar .navbar-brand:hover {
-            color: #adb5bd;
+            background-color: #2c3e50;
+            color: white;
         }
 
-        /* Dashboard content */
-        h2 {
-            margin-bottom: 30px;
+        .navbar-brand {
+            color: white;
+            font-weight: bold;
         }
 
-        /* Cards */
         .card {
+            background-color: #ecf0f1;
             border: none;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            transition: transform 0.3s ease;
         }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
         .card-header {
-            background-color: #007bff;
-            color: #fff;
-            font-size: 18px;
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
         }
+
         .card-body {
             padding: 20px;
+            text-align: center;
         }
-        .card-body .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+
+        .card .btn {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 10px;
         }
-        .card-body .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
+
+        .card .btn:hover {
+            background-color: #3498db;
+            color: white;
         }
+
     </style>
 </head>
 <body>
 
 <!-- Sidebar -->
 <div class="d-flex">
-    <nav class="sidebar flex-column p-3">
-        <h4>Manager Dashboard</h4>
+    <nav class="sidebar flex-column">
         <ul class="nav flex-column">
-<<<<<<< HEAD
-        <li class="nav-item"></li>
-        <a class="nav-link" href="{% url 'payment' %}">ASSIGN COACH</a>
-        </li>
-        <ul class="nav flex-column">
-=======
-<<<<<<< HEAD
-            <li class="nav-item"></li>
-            <a class="nav-link" href="{% url 'payment' %}">ASSIGN COACH</a>
-        </li>
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'manage_team' %}">CREATE TEAM</a>
+                <a class="nav-link" href="{% url 'approvedcoaches' %}">APPROVED COACHES</a>
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="{% url 'admin_dashboard' %}">MANAGE PLAYERS AND COACHES</a>
-            </li> -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'approvedplayers' %}">APPROVED PLAYERS</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manage_team' %}">CREATE TEAM</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'team_players' %}">VIEW TEAM</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'manage_schedules' %}">SCHEDULES</a>
             </li>
-            <li class="nav-item"></li>
-            <a class="nav-link" href="{% url 'schedulefans' %}">SET SCHEDULES FOR FANS</a>
-        </li>
-            <li class="nav-item"></li>
-                <a class="nav-link" href="{% url 'payment' %}">PAYMENT</a>
-            </li>
-            <!-- <li class="nav-item">
-=======
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'manage_team' %}">Create Team</a>
+                <a class="nav-link" href="{% url 'schedulefans' %}">SET SCHEDULES FOR FANS</a>
             </li>
-            <li class="nav-item">
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-                <a class="nav-link" href="{% url 'admin_dashboard' %}">Manage Players and coaches</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'manage_schedules' %}">Schedules</a>
-            </li>
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
-            <li class="nav-item"></li>
-            <a class="nav-link" href="{% url 'approvedcoaches' %}">APPROVED COACHES</a>
-            </li>
-
-            <ul class="nav flex-column">
-                <li class="nav-item"></li>
-                <a class="nav-link" href="{% url 'approvedplayers' %}">APPROVED PLAYERS</a>
-                </li>
-                <ul class="nav flex-column">
-                    <li class="nav-item"></li>
-                    <a class="nav-link" href="{% url 'manage_team' %}">CREATE TEAM</a>
-                    </li>
-                    <ul class="nav flex-column">
-                        <li class="nav-item"></li>
-                        <a class="nav-link" href="{% url 'team_players' %}">CREATE TEAMS</a>
-                        </li>
-       
-            <!-- <li class="nav-item">
-<<<<<<< HEAD
-                <a class="nav-link" href="{% url 'admin_dashboard' %}">MANAGE PLAYERS AND COACHES</a>
-            </li> -->
-        <li class="nav-item"></li>
-            <a class="nav-link" href="{% url 'manage_schedules' %}">SCHEDULES</a>
-        </li>
-            <li class="nav-item"></li>
-            <a class="nav-link" href="{% url 'schedulefans' %}">SET SCHEDULES FOR FANS</a>
-        </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'payment' %}">PAYMENT</a>
-            </li>
-            
-
-=======
-=======
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
-                <a class="nav-link" href="#">Manage Players</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Schedules</a>
-            </li>
-            <li class="nav-item">
-<<<<<<< HEAD
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
-                <a class="nav-link" href="#">Reports</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
-<<<<<<< HEAD
-            </li> -->
-=======
-<<<<<<< HEAD
-            </li>
-=======
-<<<<<<< HEAD
-            </li> -->
-=======
-            </li>
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
         </ul>
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
     </nav>
 
     <!-- Main content -->
-    <div class="content w-100">
+    <div class="content">
         <!-- Top navbar -->
-        <nav class="navbar navbar-dark">
-            <a class="navbar-brand" href="#">Dashboard</a>
+        <nav class="navbar">
+            <a class="navbar-brand" href="#">MANAGER DASHBOARD</a>
         </nav>
 
         <!-- Dashboard content -->
         <div class="container-fluid">
-            <h2>Welcome, Manager!</h2>
             <div class="row">
                 <!-- Card 1 -->
-                
-
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <div class="card">
-                        <div class="card-header">Team</div>
+                        <div class="card-header">TEAM</div>
                         <div class="card-body">
-                            <a href="{% url 'teamupdate' %}" class="btn btn-primary">View Teams</a>
+                            <a href="{% url 'manage_team' %}" class="btn">CREATE TEAM</a>
+                            <a href="{% url 'teamupdate' %}" class="btn">VIEW TEAM</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Card 2 -->
-<<<<<<< HEAD
-
                 <div class="col-md-4">
-
-=======
-<<<<<<< HEAD
-                <!-- <div class="col-md-4">
-=======
-<<<<<<< HEAD
-                <div class="col-md-4">
-=======
-<<<<<<< HEAD
-                <!-- <div class="col-md-4">
-=======
-                <div class="col-md-4">
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
                     <div class="card">
-                        <div class="card-header">Players</div>
+                        <div class="card-header">PLAYERS</div>
                         <div class="card-body">
-                            <a href="{% url 'viewprofile' %}" class="btn btn-primary">manage players</a>
-                            <a href="{% url 'viewplayerdetails' %}" class="btn btn-primary">View details</a>
+                            <a href="{% url 'viewprofile' %}" class="btn">MANAGE PLAYERS</a>
+                            <a href="{% url 'viewplayerdetails' %}" class="btn">VIEW DETAILS</a>
                         </div>
-                    </div>
-<<<<<<< HEAD
-
-                </div> 
-                
-                <div class="card">
-                    <div class="card-header">coaches</div>
-                    <div class="card-body">
-                        <a href="{% url 'managecoachprofile' %}" class="btn btn-primary">managr coaches</a>
-                        <a href="{% url 'editcoachprofile' %}" class="btn btn-primary">View coach details</a>
                     </div>
                 </div>
 
+                <!-- Card 3 -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">COACHES</div>
+                        <div class="card-body">
+                            <a href="{% url 'managecoachprofile' %}" class="btn">MANAGE COACHES</a>
+                            <a href="{% url 'editcoachprofile' %}" class="btn">VIEW COACH DETAILS</a>
+                        </div>
+                    </div>
+                </div>
             </div> 
-
-                <!-- Card 3 -->
-                <!-- <div class="col-md-4">
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
-                </div> -->
-
-                <!-- Card 3 -->
-                <!-- <div class="col-md-4">
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
-                </div>
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
-
-                <div class="col-md-4">
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
-                    <div class="card">
-                        <div class="card-header">Coaches</div>
-                        <div class="card-body">
-                            <a href="{% url 'coaches' %}" class="btn btn-primary">Manage Coaches</a>
-                        </div>
-                    </div>
-
-                </div> -->
-<<<<<<< HEAD
-
-                </div>
-
-=======
-=======
-<<<<<<< HEAD
-                </div>
-=======
-<<<<<<< HEAD
-                </div> -->
-=======
-                </div>
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
-            </div>
-
-            <!-- More dashboard content here -->
         </div>
     </div>
 </div>

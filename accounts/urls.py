@@ -54,16 +54,7 @@ urlpatterns = [
     path('managerdasboard/',views.managerdasboard, name='managerdasboard'), 
     path('teamupdate/',views.teamupdate, name='teamupdate'),
     path('viewteamcoach/',views.viewteamcoach, name='viewteamcoach'),
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
     path('logout/', views.logout_view, name='logout'),
     path('lineups/',views.lineups, name='lineups'),
     path('payment/',views.payment, name='payment'),
@@ -72,10 +63,6 @@ urlpatterns = [
     path('session/',views.session, name='session'),
     path('markattendance/',views.markattendance, name='markattendance'),
     path('viewattendance/',views.viewattendance, name='viewattendance'),
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
     path('fanpage/',views.fanpage, name='fanpage'),
     path('schedulefans/',views.schedulefans, name='schedulefans'),
     path('viewprofile/',views.viewprofile, name='viewprofile'),
@@ -89,26 +76,17 @@ urlpatterns = [
     path('practicechange/',views.practicechange, name='practicechange'),
     path('gameresult/',views.gameresult, name='gameresult'),
     path('announcement/',views.announcement, name='announcement'),
-<<<<<<< HEAD
     path('registration/',views.registration, name='registration'),
     path('viewplayerdetails/',views.viewplayerdetails, name='viewplayerdetails'),
     path('approvedcoaches/',views.approvedcoaches, name='approvedcoaches'),
     path('approvedplayers/',views.approvedplayers, name='approvedplayers'),
     path('managecoachprofile/',views.managecoachprofile, name='managecoachprofile'),
     path('team_players/',views.team_players, name='team_players'),
+    path('formation1/',views.formation1, name='formation1'),
+    path('viewplayerimage/',views.viewplayerimage, name='viewplayerimage'),
 
 
-=======
 
-
-
-=======
-
-=======
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
->>>>>>> 46d1897297df01375989a552f6ec599eaf15b63a
->>>>>>> 9ea7a12c623032af2a641b10172abf8ebae95c5e
 
 ]
 
