@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation 4-4-2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+
+        .lineup-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 600px;
+        }
+
+        .lineup-field {
+            position: relative;
+            background-color: #4CAF50;
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .player {
+            position: absolute;
+            background-color: red;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .gk { top: 85%; left: 43%; }
+        .cb1 { top: 65%; left: 30%; }
+        .cb2 { top: 65%; left: 55%; }
+        .lb { top: 65%; left: 15%; }
+        .rb { top: 65%; left: 70%; }
+        .lm { top: 40%; left: 10%; }
+        .cm1 { top: 40%; left: 35%; }
+        .cm2 { top: 40%; left: 50%; }
+        .rm { top: 40%; left: 80%; }
+        .st1 { top: 15%; left: 35%; }
+        .st2 { top: 15%; left: 55%; }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .save-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .save-button:hover {
+            background-color: #45a049;
+        }
+
+        #lineup-select {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Football Lineup Form -->
+    <div class="lineup-section">
+        <h2>Formation 4-4-2</h2>
+        <select id="lineup-select" onchange="loadLineup()">
+            <option value="">Select a lineup</option>
+        </select>
+        <div class="lineup-field" id="lineup-field">
+            <div contenteditable="true" class="player gk">GK</div>
+            <div contenteditable="true" class="player cb1">CB</div>
+            <div contenteditable="true" class="player cb2">CB</div>
+            <div contenteditable="true" class="player lb">LB</div>
+            <div contenteditable="true" class="player rb">RB</div>
+            <div contenteditable="true" class="player lm">LM</div>
+            <div contenteditable="true" class="player cm1">CM</div>
+            <div contenteditable="true" class="player cm2">CM</div>
+            <div contenteditable="true" class="player rm">RM</div>
+            <div contenteditable="true" class="player st1">ST</div>
+            <div contenteditable="true" class="player st2">ST</div>
+        </div>
+        <button class="save-button" onclick="saveLineup()">Save Lineup</button>
+        <p id="message"></p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Ensure the user is authenticated
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+                loadLineups(); // Load existing lineups on auth
+            } else {
+                console.log("User is not authenticated");
+                alert("You must be logged in to save the lineup.");
+                window.location.href = '/login';  // Redirect to login page
+            }
+        });
+
+        // Load existing lineups from Firestore
+        function loadLineups() {
+            db.collection("lineups").get().then(snapshot => {
+                const lineupSelect = document.getElementById("lineup-select");
+                snapshot.forEach(doc => {
+                    const option = document.createElement("option");
+                    option.value = doc.id;
+                    option.textContent = doc.data().gk || 'Lineup ' + (lineupSelect.options.length); // Displaying GK as name
+                    lineupSelect.appendChild(option);
+                });
+            });
+        }
+
+        // Load selected lineup into the fields
+        function loadLineup() {
+            const selectedId = document.getElementById("lineup-select").value;
+            if (selectedId) {
+                db.collection("lineups").doc(selectedId).get().then(doc => {
+                    if (doc.exists) {
+                        const lineup = doc.data();
+                        document.querySelector(".gk").innerText = lineup.gk || "GK";
+                        document.querySelector(".cb1").innerText = lineup.cb1 || "CB";
+                        document.querySelector(".cb2").innerText = lineup.cb2 || "CB";
+                        document.querySelector(".lb").innerText = lineup.lb || "LB";
+                        document.querySelector(".rb").innerText = lineup.rb || "RB";
+                        document.querySelector(".lm").innerText = lineup.lm || "LM";
+                        document.querySelector(".cm1").innerText = lineup.cm1 || "CM";
+                        document.querySelector(".cm2").innerText = lineup.cm2 || "CM";
+                        document.querySelector(".rm").innerText = lineup.rm || "RM";
+                        document.querySelector(".st1").innerText = lineup.st1 || "ST";
+                        document.querySelector(".st2").innerText = lineup.st2 || "ST";
+                    }
+                });
+            }
+        }
+
+        // Save lineup function
+        function saveLineup() {
+            const lineup = {
+                gk: document.querySelector(".gk").innerText,
+                cb1: document.querySelector(".cb1").innerText,
+                cb2: document.querySelector(".cb2").innerText,
+                lb: document.querySelector(".lb").innerText,
+                rb: document.querySelector(".rb").innerText,
+                lm: document.querySelector(".lm").innerText,
+                cm1: document.querySelector(".cm1").innerText,
+                cm2: document.querySelector(".cm2").innerText,
+                rm: document.querySelector(".rm").innerText,
+                st1: document.querySelector(".st1").innerText,
+                st2: document.querySelector(".st2").innerText,
+            };
+
+            // Check if an existing lineup is selected
+            const selectedId = document.getElementById("lineup-select").value;
+            if (selectedId) {
+                // Update existing lineup
+                db.collection("lineups").doc(selectedId).update(lineup)
+                .then(() => {
+                    console.log("Lineup successfully updated");
+                    document.getElementById("message").innerText = "Lineup updated successfully!";
+                })
+                .catch(error => {
+                    console.error("Error updating lineup: ", error);
+                    document.getElementById("message").innerText = "Error updating lineup!";
+                });
+            } else {
+                // Create new lineup
+                db.collection("lineups").add(lineup)
+                .then(() => {
+                    console.log("Lineup successfully created");
+                    document.getElementById("message").innerText = "Lineup saved successfully!";
+                    loadLineups(); // Reload lineups after saving
+                })
+                .catch(error => {
+                    console.error("Error saving lineup: ", error);
+                    document.getElementById("message").innerText = "Error saving lineup!";
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>

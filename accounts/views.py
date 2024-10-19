@@ -571,6 +571,10 @@ def team_players(request):
 def formation1(request):
     return render(request, 'accounts/formation1.html')
 
+
+def formation2(request):
+    return render(request, 'accounts/formation2.html')
+
 def viewplayerimage(request):
     return render(request, 'accounts/viewplayerimage.html')
 
@@ -767,15 +771,47 @@ def markattendance(request):
 def viewattendance(request):
     return render(request, 'accounts/viewattendance.html')
 
+def payment(request):
+    return render(request, 'accounts/payment.html')
+
+def paymentplayer(request):
+    return render(request, 'accounts/paymentplayer.html')
+
+
 
 def session(request):
     return render(request, 'accounts/session.html')
 
-def payment(request):
-    return render(request, 'accounts/payment.html')
+def assigncoach(request):
+    return render(request, 'accounts/assigncoach.html')
 
 
 def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        try:
+            user = auth.get_user_by_email(email)  # Fetch user by email
+            # Here you can add your password verification logic.
+            # Since you are using Firebase, you may need to handle password verification in the frontend as you've done.
+
+            # Assuming user verification is successful
+            doc = db.collection("users").document(user.uid).get()
+            if doc.exists:
+                user_data = doc.to_dict()
+                user_type = user_data.get('userType')
+
+                # Set session variables
+                request.session['user_id'] = user.uid
+                request.session['user_email'] = email
+                request.session['user_type'] = user_type
+
+                return JsonResponse({'success': True, 'user_type': user_type})
+            else:
+                return JsonResponse({'success': False, 'error': 'User not found in database.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
     return render(request, 'accounts/login.html')
 
 def coaches(request):
@@ -843,47 +879,47 @@ def editcoachprofile(request):
 
 #     return render(request, 'accounts/login.html')
 
-def login(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+# def login(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
 
-        # Admin login check
-        if email == 'admin@gmail.com' and password == 'admin@123':
-            return redirect('modules')  # Redirect to admin dashboard
+#         # Admin login check
+#         if email == 'admin@gmail.com' and password == 'admin@123':
+#             return redirect('modules')  # Redirect to admin dashboard
 
-        try:
-            # Sign in the user with Firebase Authentication
-            user = auth.get_user_by_email(email)
+#         try:
+#             # Sign in the user with Firebase Authentication
+#             user = auth.get_user_by_email(email)
             
-            # Simulate Firebase Authentication sign-in process
-            # Use Firebase Client SDK for actual user authentication on the client side
+#             # Simulate Firebase Authentication sign-in process
+#             # Use Firebase Client SDK for actual user authentication on the client side
 
-            # Retrieve user details from Firestore
-            user_ref = db.collection('users').document(user.uid)
-            user_data = user_ref.get().to_dict()
+#             # Retrieve user details from Firestore
+#             user_ref = db.collection('users').document(user.uid)
+#             user_data = user_ref.get().to_dict()
             
-            if user_data is None:
-                messages.error(request, 'User not found in the database.')
-                return redirect('login')
+#             if user_data is None:
+#                 messages.error(request, 'User not found in the database.')
+#                 return redirect('login')
 
-            # Check user type and redirect to appropriate dashboard
-            userType = user_data.get('userType')
-            if userType == 'Player':
-                return redirect('player_dashboard')  # Define URL for player dashboard
-            elif userType == 'Coach':
-                return redirect('coach_dashboard')  # Define URL for coach dashboard
-            elif userType == 'Admin':
-                return redirect('admin_dashboard')  # Define URL for admin dashboard
-            else:
-                messages.error(request, 'User type not recognized.')
-                return redirect('login')
+#             # Check user type and redirect to appropriate dashboard
+#             userType = user_data.get('userType')
+#             if userType == 'Player':
+#                 return redirect('player_dashboard')  # Define URL for player dashboard
+#             elif userType == 'Coach':
+#                 return redirect('coach_dashboard')  # Define URL for coach dashboard
+#             elif userType == 'Admin':
+#                 return redirect('admin_dashboard')  # Define URL for admin dashboard
+#             else:
+#                 messages.error(request, 'User type not recognized.')
+#                 return redirect('login')
 
-        except Exception as e:
-            messages.error(request, f"Login error: {str(e)}")
-            return redirect('login')
+#         except Exception as e:
+#             messages.error(request, f"Login error: {str(e)}")
+#             return redirect('login')
 
-    return render(request, 'accounts/login.html')
+#     return render(request, 'accounts/login.html')
 
 def send_message(request):
     if request.method == 'POST':

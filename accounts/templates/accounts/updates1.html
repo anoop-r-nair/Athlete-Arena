@@ -4,75 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Information</title>
+
     <style>
-        /* General body styling */
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
-        }
-
-        /* Container for the cards - vertical layout */
-        .container {
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
             display: flex;
-            flex-direction: column;
-            align-items: center; /* Center the cards vertically */
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
-        /* Styling for individual modules (cards) */
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2c3e50;
+            width: 200px;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Dashboard Modules (Cards) */
         .module {
             background-color: white;
-            width: 300px;
-            margin: 20px 0; /* Add space between cards vertically */
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
             text-align: center;
         }
 
-        /* Module heading */
         .module h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #34495e;
         }
 
-        /* Hover effect to make the cards interactive */
-        .module:hover {
-            transform: translateY(-10px);
-        }
-
-        /* Styling for buttons */
-        .btn {
+        .module .btn {
+            text-decoration: none;
             display: inline-block;
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #2c3e50;
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
-        /* Button hover effect */
-        .btn:hover {
-            background-color: #45a049;
+        .module .btn:hover {
+            background-color: #1e2d3d;
         }
 
-        /* Responsive layout for smaller screens */
+        /* Responsive Design */
         @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                flex-direction: column;
+                padding: 20px;
+            }
+
             .module {
-                width: 90%;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="">Contact</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
         <!-- Announcement Box -->
         <div class="module">
             <h2>ANNOUNCEMENT</h2>

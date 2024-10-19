@@ -57,7 +57,7 @@ urlpatterns = [
 
     path('logout/', views.logout_view, name='logout'),
     path('lineups/',views.lineups, name='lineups'),
-    path('payment/',views.payment, name='payment'),
+    path('assigncoach/',views.assigncoach, name='assigncoach'),
     path('attendance/',views.attendance, name='attendance'),
     path('viewlineups/',views.viewlineups, name='viewlineups'),
     path('session/',views.session, name='session'),
@@ -83,7 +83,10 @@ urlpatterns = [
     path('managecoachprofile/',views.managecoachprofile, name='managecoachprofile'),
     path('team_players/',views.team_players, name='team_players'),
     path('formation1/',views.formation1, name='formation1'),
+    path('formation2/',views.formation2, name='formation2'),
     path('viewplayerimage/',views.viewplayerimage, name='viewplayerimage'),
+    path('payment/',views.payment, name='payment'),
+    path('paymentplayer/',views.paymentplayer, name='paymentplayer'),
 
 
 

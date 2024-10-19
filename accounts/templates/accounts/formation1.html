@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation 4-2-3-1</title>
     <style>
+        /* (Styles are the same as in your original code) */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -48,8 +50,6 @@
             font-size: 14px;
         }
 
-        /* Formation Positions */
-        /* 4-2-3-1 */
         .gk { top: 85%; left: 43%; }
         .cb1 { top: 65%; left: 30%; }
         .cb2 { top: 65%; left: 55%; }
@@ -61,48 +61,6 @@
         .lam { top: 30%; left: 25%; }
         .ram { top: 30%; left: 60%; }
         .cf { top: 10%; left: 42%; }
-
-        /* 4-4-2 */
-        .st1 { top: 10%; left: 35%; }
-        .st2 { top: 10%; left: 55%; }
-        .lm { top: 40%; left: 10%; }
-        .cm1 { top: 40%; left: 35%; }
-        .cm2 { top: 40%; left: 50%; }
-        .rm { top: 40%; left: 80%; }
-
-        /* 3-5-2 */
-        .cb5 { top: 65%; left: 25%; }
-        .cb6 { top: 65%; left: 50%; }
-        .cb7 { top: 65%; left: 75%; }
-        .lm2 { top: 40%; left: 15%; }
-        .cm3 { top: 40%; left: 35%; }
-        .cm4 { top: 40%; left: 50%; }
-        .rm2 { top: 40%; left: 85%; }
-        .st3 { top: 10%; left: 35%; }
-        .st4 { top: 10%; left: 55%; }
-
-        /* 4-3-3 */
-        .cb8 { top: 65%; left: 30%; }
-        .cb9 { top: 65%; left: 55%; }
-        .lw { top: 40%; left: 10%; }
-        .cf2 { top: 10%; left: 42%; }
-        .rw { top: 40%; left: 80%; }
-        .cm5 { top: 40%; left: 42%; }
-
-        /* 4-1-4-1 */
-        .dm3 { top: 50%; left: 42%; }
-        .lm3 { top: 40%; left: 15%; }
-        .rm3 { top: 40%; left: 80%; }
-        .st5 { top: 10%; left: 42%; }
-
-        /* 5-3-2 */
-        .cb10 { top: 65%; left: 20%; }
-        .cb11 { top: 65%; left: 50%; }
-        .cb12 { top: 65%; left: 80%; }
-        .lm4 { top: 40%; left: 15%; }
-        .rm4 { top: 40%; left: 85%; }
-        .st6 { top: 10%; left: 35%; }
-        .st7 { top: 10%; left: 55%; }
 
         h2 {
             text-align: center;
@@ -131,19 +89,20 @@
 
     <!-- Football Lineup Form -->
     <div class="lineup-section">
-        <h2>Select Formation</h2>
-        <select id="formation-select" onchange="updateLineup()">
-            <option value="4-2-3-1">4-2-3-1</option>
-            <option value="4-4-2">4-4-2</option>
-            <option value="3-5-2">3-5-2</option>
-            <option value="4-3-3">4-3-3</option>
-            <option value="4-1-4-1">4-1-4-1</option>
-            <option value="5-3-2">5-3-2</option>
-        </select>
-
-        <!-- Lineup Display -->
-        <div class="lineup-field" id="lineup-field"></div>
-
+        <h2>Formation 4-2-3-1</h2>
+        <div class="lineup-field" id="lineup-field">
+            <div contenteditable="true" class="player gk">GK</div>
+            <div contenteditable="true" class="player cb1">CB</div>
+            <div contenteditable="true" class="player cb2">CB</div>
+            <div contenteditable="true" class="player lb">LB</div>
+            <div contenteditable="true" class="player rb">RB</div>
+            <div contenteditable="true" class="player dm1">DM</div>
+            <div contenteditable="true" class="player dm2">DM</div>
+            <div contenteditable="true" class="player cam">CAM</div>
+            <div contenteditable="true" class="player lam">LAM</div>
+            <div contenteditable="true" class="player ram">RAM</div>
+            <div contenteditable="true" class="player cf">CF</div>
+        </div>
         <button class="save-button" onclick="saveLineup()">Save Lineup</button>
         <p id="message"></p>
     </div>
@@ -180,127 +139,20 @@
             }
         });
 
-        // Update lineup based on selected formation
-        function updateLineup() {
-            const formation = document.getElementById("formation-select").value;
-            const lineupField = document.getElementById("lineup-field");
-
-            if (formation === "4-2-3-1") {
-                lineupField.innerHTML = `
-                    <div contenteditable="true" class="player gk">GK</div>
-                    <div contenteditable="true" class="player cb1">CB</div>
-                    <div contenteditable="true" class="player cb2">CB</div>
-                    <div contenteditable="true" class="player lb">LB</div>
-                    <div contenteditable="true" class="player rb">RB</div>
-                    <div contenteditable="true" class="player dm1">DM</div>
-                    <div contenteditable="true" class="player dm2">DM</div>
-                    <div contenteditable="true" class="player cam">CAM</div>
-                    <div contenteditable="true" class="player lam">LAM</div>
-                    <div contenteditable="true" class="player ram">RAM</div>
-                    <div contenteditable="true" class="player cf">CF</div>
-                `;
-            } else if (formation === "4-4-2") {
-                lineupField.innerHTML = `
-                    <div contenteditable="true" class="player gk">GK</div>
-                    <div contenteditable="true" class="player cb1">CB</div>
-                    <div contenteditable="true" class="player cb2">CB</div>
-                    <div contenteditable="true" class="player lb">LB</div>
-                    <div contenteditable="true" class="player rb">RB</div>
-                    <div contenteditable="true" class="player lm">LM</div>
-                    <div contenteditable="true" class="player cm1">CM</div>
-                    <div contenteditable="true" class="player cm2">CM</div>
-                    <div contenteditable="true" class="player rm">RM</div>
-                    <div contenteditable="true" class="player st1">ST</div>
-                    <div contenteditable="true" class="player st2">ST</div>
-                `;
-            } else if (formation === "3-5-2") {
-                lineupField.innerHTML = `
-                    <div contenteditable="true" class="player gk">GK</div>
-                    <div contenteditable="true" class="player cb5">CB</div>
-                    <div contenteditable="true" class="player cb6">CB</div>
-                    <div contenteditable="true" class="player cb7">CB</div>
-                    <div contenteditable="true" class="player lm2">LM</div>
-                    <div contenteditable="true" class="player cm3">CM</div>
-                    <div contenteditable="true" class="player cm4">CM</div>
-                    <div contenteditable="true" class="player rm2">RM</div>
-                    <div contenteditable="true" class="player st3">ST</div>
-                    <div contenteditable="true" class="player st4">ST</div>
-                `;
-            } else if (formation === "4-3-3") {
-                lineupField.innerHTML = `
-                    <div contenteditable="true" class="player gk">GK</div>
-                    <div contenteditable="true" class="player cb8">CB</div>
-                    <div contenteditable="true" class="player cb9">CB</div>
-                    <div contenteditable="true" class="player lb">LB</div>
-                    <div contenteditable="true" class="player rb">RB</div>
-                    <div contenteditable="true" class="player lw">LW</div>
-                    <div contenteditable="true" class="player cm5">CM</div>
-                    <div contenteditable="true" class="player rw">RW</div>
-                    <div contenteditable="true" class="player cf2">CF</div>
-                `;
-            } else if (formation === "4-1-4-1") {
-                lineupField.innerHTML = `
-                    <div contenteditable="true" class="player gk">GK</div>
-                    <div contenteditable="true" class="player cb1">CB</div>
-                    <div contenteditable="true" class="player cb2">CB</div>
-                    <div contenteditable="true" class="player lb">LB</div>
-                    <div contenteditable="true" class="player rb">RB</div>
-                    <div contenteditable="true" class="player dm3">DM</div>
-                    <div contenteditable="true" class="player lm3">LM</div>
-                    <div contenteditable="true" class="player cm5">CM</div>
-                    <div contenteditable="true" class="player rm3">RM</div>
-                    <div contenteditable="true" class="player st5">ST</div>
-                `;
-            } else if (formation === "5-3-2") {
-                lineupField.innerHTML = `
-                    <div contenteditable="true" class="player gk">GK</div>
-                    <div contenteditable="true" class="player cb10">CB</div>
-                    <div contenteditable="true" class="player cb11">CB</div>
-                    <div contenteditable="true" class="player cb12">CB</div>
-                    <div contenteditable="true" class="player lm4">LM</div>
-                    <div contenteditable="true" class="player cm5">CM</div>
-                    <div contenteditable="true" class="player rm4">RM</div>
-                    <div contenteditable="true" class="player st6">ST</div>
-                    <div contenteditable="true" class="player st7">ST</div>
-                `;
-            }
-        }
-
         // Save lineup function
         function saveLineup() {
             var lineup = {
                 gk: document.querySelector(".gk").innerText,
-                cb1: document.querySelector(".cb1") ? document.querySelector(".cb1").innerText : "",
-                cb2: document.querySelector(".cb2") ? document.querySelector(".cb2").innerText : "",
-                cb5: document.querySelector(".cb5") ? document.querySelector(".cb5").innerText : "",
-                cb6: document.querySelector(".cb6") ? document.querySelector(".cb6").innerText : "",
-                cb7: document.querySelector(".cb7") ? document.querySelector(".cb7").innerText : "",
-                lb: document.querySelector(".lb") ? document.querySelector(".lb").innerText : "",
-                rb: document.querySelector(".rb") ? document.querySelector(".rb").innerText : "",
-                dm1: document.querySelector(".dm1") ? document.querySelector(".dm1").innerText : "",
-                dm2: document.querySelector(".dm2") ? document.querySelector(".dm2").innerText : "",
-                cam: document.querySelector(".cam") ? document.querySelector(".cam").innerText : "",
-                lam: document.querySelector(".lam") ? document.querySelector(".lam").innerText : "",
-                ram: document.querySelector(".ram") ? document.querySelector(".ram").innerText : "",
-                cf: document.querySelector(".cf") ? document.querySelector(".cf").innerText : "",
-                lm: document.querySelector(".lm") ? document.querySelector(".lm").innerText : "",
-                st1: document.querySelector(".st1") ? document.querySelector(".st1").innerText : "",
-                st2: document.querySelector(".st2") ? document.querySelector(".st2").innerText : "",
-                st3: document.querySelector(".st3") ? document.querySelector(".st3").innerText : "",
-                st4: document.querySelector(".st4") ? document.querySelector(".st4").innerText : "",
-                lw: document.querySelector(".lw") ? document.querySelector(".lw").innerText : "",
-                rw: document.querySelector(".rw") ? document.querySelector(".rw").innerText : "",
-                dm3: document.querySelector(".dm3") ? document.querySelector(".dm3").innerText : "",
-                lm3: document.querySelector(".lm3") ? document.querySelector(".lm3").innerText : "",
-                rm3: document.querySelector(".rm3") ? document.querySelector(".rm3").innerText : "",
-                st5: document.querySelector(".st5") ? document.querySelector(".st5").innerText : "",
-                cb10: document.querySelector(".cb10") ? document.querySelector(".cb10").innerText : "",
-                cb11: document.querySelector(".cb11") ? document.querySelector(".cb11").innerText : "",
-                cb12: document.querySelector(".cb12") ? document.querySelector(".cb12").innerText : "",
-                lm4: document.querySelector(".lm4") ? document.querySelector(".lm4").innerText : "",
-                rm4: document.querySelector(".rm4") ? document.querySelector(".rm4").innerText : "",
-                st6: document.querySelector(".st6") ? document.querySelector(".st6").innerText : "",
-                st7: document.querySelector(".st7") ? document.querySelector(".st7").innerText : "",
+                cb1: document.querySelector(".cb1").innerText,
+                cb2: document.querySelector(".cb2").innerText,
+                lb: document.querySelector(".lb").innerText,
+                rb: document.querySelector(".rb").innerText,
+                dm1: document.querySelector(".dm1").innerText,
+                dm2: document.querySelector(".dm2").innerText,
+                cam: document.querySelector(".cam").innerText,
+                lam: document.querySelector(".lam").innerText,
+                ram: document.querySelector(".ram").innerText,
+                cf: document.querySelector(".cf").innerText,
             };
 
             db.collection("lineups").add(lineup)
@@ -313,9 +165,6 @@
                 document.getElementById("message").innerText = "Error saving lineup!";
             });
         }
-
-        // Initialize with default formation
-        updateLineup();
     </script>
 
 </body>
