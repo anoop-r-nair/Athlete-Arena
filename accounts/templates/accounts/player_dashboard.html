@@ -2,218 +2,191 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>player Dashboard | Athlet Arena</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Dashboard | Athlet Arena</title>
     <style>
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
         }
 
+        /* Header */
         .header {
-            background-color: #004aad;
+            background-color: #2c3e50;
             color: white;
             padding: 20px;
             text-align: center;
         }
 
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Container and Layout */
         .container {
             display: flex;
-            justify-content: space-around;
-            margin: 20px;
+            min-height: 100vh;
         }
 
+        /* Sidebar */
         .sidebar {
-            width: 20%;
-            background-color: #e9ecef;
+            width: 250px;
+            background-color: #34495e;
+            color: white;
             padding: 20px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        .content {
-            width: 75%;
-            background-color: white;
-            padding: 20px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
         }
 
         .sidebar ul li {
-            padding: 10px 0;
-            margin: 10px 0;
-            background-color: #004aad;
-            color: white;
-            text-align: center;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .sidebar ul li:hover {
-            background-color: #003780;
-        }
-
-        .coach-info {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 20px;
         }
 
-        .coach-info div {
-            flex: 1;
-            padding: 10px;
-            margin: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            display: block;
+            transition: background-color 0.3s ease;
         }
 
+        .sidebar ul li a:hover {
+            background-color: #2c3e50;
+            border-radius: 4px;
+        }
+
+        /* Main Content */
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .content h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Dashboard Modules */
         .dashboard-container {
             display: flex;
-            flex-wrap: wrap;
             gap: 20px;
-            justify-content: space-between;
-            background-color: #f7f9fc;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
         }
 
         .module {
-            flex: 1 1 calc(33% - 20px);
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 30%;
             text-align: center;
         }
 
         .module h2 {
-            margin-bottom: 20px;
-            color: #004aad;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #34495e;
         }
 
-        .btn {
-            background-color: #004aad;
-            color: white;
-            padding: 10px 20px;
+        .module .btn {
             text-decoration: none;
-            border-radius: 5px;
             display: inline-block;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
-        .btn:hover {
-            background-color: #003780;
+        .module .btn:hover {
+            background-color: #1e2d3d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                box-shadow: none;
+                padding: 15px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .module {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-
-    <a href="{% url 'logout' %}">Logout</a>
-
-
-
-
-    <a href="{% url 'logout' %}">Logout</a>
-
-
-
-    <h1>Player Dashboard | Athlet Arena</h1>
-</div>
-
-<div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <ul>
-
-            <li> <a href="{% url 'playerprofile' %}" class="btn">ADD PROFILE</a></li>
-            <li> <a href="{% url 'viewlineups' %}" class="btn">VIEW LINEUPS</a></li>
-            <li> <a href="{% url 'viewattendance' %}" class="btn">VIEW ATTENDANCE</a></li>
-            <!-- <li> <a href="{% url 'viewprofile' %}" class="btn">EDIT PLAYER PROFILE</a></li> -->
-            <li> <a href="{% url 'playerdevelopment' %}" class="btn">LOG ASSESSMENT</a></li>
-
-
-
-            <!-- <li> <a href="{% url 'playerprofile' %}" class="btn">profile</a></li>
-
-
-
-            <li> <a href="{% url 'viewlineups' %}" class="btn">view lineups</a></li>
-            <li> <a href="{% url 'viewattendance' %}" class="btn">view attendance</a></li> -->
-
-
-
-            
-                      
-            <!-- <li>Settings</li> -->
-        </ul>
+    <!-- Header -->
+    <div class="header">
+        <a href="{% url 'logout' %}">Logout</a>
+        <h1>Player Dashboard | Athlet Arena</h1>
     </div>
 
-    <!-- Main Content -->
-    <div class="content">
-        <h2>Welcome {{ coach_email }}</h2>
+    <!-- Main Container -->
+    <div class="container">
 
-
-        <!-- Coach Information -->
-        <!-- <div class="coach-info">
-            <div>
-                <h3>Coach ID:</h3>
-                <p>12345</p>
-            </div>
-            <div>
-                <h3>Team:</h3>
-                <p>Team A</p>
-            </div>
-        </div> -->
-
-        <!-- Dashboard Features -->
-        <div class="dashboard-container">
-            <div class="module">
-
-                <h2>UPDATES</h2>
-                <a href="{% url 'viewupdates' %}" class="btn">VIEW UPDATES</a>
-            </div>
-            <div class="module">
-                <h2>SCHEDULES</h2>
-                <a href="{% url 'viewschedules' %}" class="btn">VIEW SCHEDULES</a>
-            </div>
-            <div class="module">
-                <h2>WORKOUTS</h2>
-                <a href="{% url 'workouts' %}" class="btn">LOG WORKOUTS</a>
-            </div>
-            <div class="module">
-                <h2>COMMUNICATE WITH COACH</h2>
-                <a href="{% url 'communicate_with_players' %}" class="btn">COMMUNICATE NOW</a>
-
-                <!-- <h2>Updates</h2>
-                <a href="{% url 'viewupdates' %}" class="btn">View Updates</a>
-            </div>
-            <div class="module">
-                <h2>Schedules</h2>
-                <a href="{% url 'viewschedules' %}" class="btn">View Schedules</a>
-            </div>
-            <div class="module">
-                <h2>Workouts</h2>
-                <a href="{% url 'workouts' %}" class="btn">Log Workouts</a>
-            </div>
-            <div class="module">
-                <h2>Communicate with coach</h2>
-                <a href="{% url 'communicate_with_players' %}" class="btn">Communicate Now</a>
-
-            </div> -->
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul>
+                <!-- <li><a href="{% url 'playerprofile' %}" class="btn">ADD PROFILE</a></li> -->
+                <li><a href="{% url 'viewlineups' %}" class="btn">VIEW LINEUPS</a></li>
+                <li><a href="{% url 'viewattendance' %}" class="btn">VIEW ATTENDANCE</a></li>
+                <li><a href="{% url 'playerdevelopment' %}" class="btn">LOG ASSESSMENT</a></li>
+            </ul>
         </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h2>Welcome {{ player_email }}</h2>
+
+            <!-- Dashboard Features -->
+            <div class="dashboard-container">
+                <div class="module">
+                    <h2>UPDATES</h2>
+                    <a href="{% url 'viewupdates' %}" class="btn">VIEW UPDATES</a>
+                </div>
+                <div class="module">
+                    <h2>SCHEDULES</h2>
+                    <a href="{% url 'viewschedules' %}" class="btn">VIEW SCHEDULES</a>
+                </div>
+                <div class="module">
+                    <h2>WORKOUTS</h2>
+                    <a href="{% url 'workouts' %}" class="btn">LOG WORKOUTS</a>
+                </div>
+                <div class="module">
+                    <h2>COMMUNICATE WITH COACH</h2>
+                    <a href="{% url 'communicate_with_players' %}" class="btn">COMMUNICATE NOW</a>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Athlet Arena</p>
+    </footer>
 
 </body>
 </html>

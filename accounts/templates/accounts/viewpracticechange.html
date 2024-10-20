@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Changes | Athlete Arena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color:  #34495e;
+            padding: 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color:  #34495e;
+            padding: 20px;
+            color: white;
+            height: 100vh;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            background-color:  #34495e;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .sidebar ul li a:hover {
+            background-color:  #34495e;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: #e9ecef;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color:  #34495e;
+            color: white;
+        }
+
+        footer {
+            background-color:  #34495e;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+  
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="view-practice-changes-container">
+                <h3>Practice Changes</h3>
+                <p>Updates to practice schedules.</p>
+                <div class="table-container">
+                    <table id="practice-changes-table" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>Change Type</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>New Location</th>
+                            </tr>
+                        </thead>
+                        <tbody id="practice-changes-body">
+                            <!-- Data will be inserted here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Athlete Arena</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to view practice changes
+        function viewPracticeChanges() {
+            const practiceChangesTable = document.getElementById('practice-changes-table');
+            const practiceChangesBody = document.getElementById('practice-changes-body');
+            practiceChangesTable.style.display = 'table';
+
+            // Clear existing rows
+            practiceChangesBody.innerHTML = '';
+
+            db.collection("practice_changes").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const change = doc.data();
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${change.changeType}</td>
+                        <td>${change.date}</td>
+                        <td>${change.time}</td>
+                        <td>${change.newLocation}</td>
+                    `;
+                    practiceChangesBody.appendChild(row);
+                });
+            });
+        }
+
+        window.onload = function() {
+            viewPracticeChanges();
+        };
+    </script>
+</body>
+</html>

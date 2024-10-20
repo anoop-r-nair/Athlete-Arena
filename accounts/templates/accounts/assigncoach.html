@@ -283,28 +283,42 @@
     }
 
     function sendEmail() {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const name = document.getElementById("name").value;
-        const messageElement = document.getElementById("message");
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const name = document.getElementById("name").value;
+    const messageElement = document.getElementById("message");
 
-        const templateParams = {
-            to_email: email,
-            to_name: name,
-            coach_password: password
-        };
+    // Trigger Firebase password reset
+    firebase.auth().sendPasswordResetEmail(email)
+        .then(() => {
+            // Use EmailJS to send the email with reset link and credentials
+            const templateParams = {
+                to_email: email,
+                to_name: name,
+                coach_email: email,
+                coach_password: password,
+                reset_link: `A password reset link has been sent to your email. You can also reset your password using this link: https://athletarena.firebaseapp.com/__/auth/action?mode=resetPassword&email=${email}&apiKey=${firebaseConfig.apiKey}`
+            };
 
-        emailjs.send("service_ya7myzl", "template_56qfrf9", templateParams)
-            .then(() => {
-                messageElement.textContent = "Email sent successfully to the coach.";
-                messageElement.classList.add("message-success");
-                messageElement.style.display = "block";
-            }, (error) => {
-                messageElement.textContent = "Failed to send email: " + error.text;
-                messageElement.classList.add("message-error");
-                messageElement.style.display = "block";
-            });
-    }
+            emailjs.send("service_ya7myzl", "template_56qfrf9", templateParams)
+                .then(() => {
+                    messageElement.textContent = "Email with credentials and reset link sent successfully to the coach.";
+                    messageElement.classList.add("message-success");
+                    messageElement.style.display = "block";
+                })
+                .catch((error) => {
+                    messageElement.textContent = "Failed to send email: " + error.text;
+                    messageElement.classList.add("message-error");
+                    messageElement.style.display = "block";
+                });
+        })
+        .catch((error) => {
+            messageElement.textContent = "Failed to send password reset email: " + error.message;
+            messageElement.classList.add("message-error");
+            messageElement.style.display = "block";
+        });
+}
+
 </script>
 </body>
 </html>

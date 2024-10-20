@@ -579,6 +579,16 @@ def viewplayerimage(request):
     return render(request, 'accounts/viewplayerimage.html')
 
 
+def viewgameresult(request):
+    return render(request, 'accounts/viewgameresult.html')
+
+def viewpracticechange(request):
+    return render(request, 'accounts/viewpracticechange.html')
+
+def viewannouncement(request):
+    return render(request, 'accounts/viewannouncement.html')    
+
+
 
 
 

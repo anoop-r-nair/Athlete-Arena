@@ -3,272 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Updates | Athlete Arena</title>
+    <title>Team Information</title>
+
     <style>
+        /* General Styles */
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #fff;
-            background: #1a1a1a;
-        }
-        header {
-            background: #000;
-            padding: 20px 0;
-            color: #fff;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-        }
-        .logo a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            transition: color 0.3s;
-        }
-        nav ul li a:hover {
-            color: #ccc;
-        }
-        .main {
-            min-height: calc(100vh - 80px);
+            background-color: #f4f4f4;
+            color: #333;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding-top: 100px;
-            padding-left: 20px;
-            padding-right: 20px;
         }
-        h3 {
-            font-size: 2em;
-            color: #fff;
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2c3e50;
+            width: 200px;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Dashboard Modules (Cards) */
+        .module {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .module h2 {
             margin-bottom: 15px;
+            font-size: 18px;
+            color: #34495e;
         }
-        p {
-            color: #ccc;
-            margin-bottom: 20px;
-            font-size: 1.2em;
+
+        .module .btn {
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
-        .table-container {
-            margin-top: 30px;
-            overflow-x: auto;
-            margin-bottom: 50px;
+
+        .module .btn:hover {
+            background-color: #1e2d3d;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #222;
-            color: #fff;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #555;
-        }
-        th {
-            background: #444;
-        }
-        .section-title {
-            margin-top: 50px;
-            font-size: 1.8em;
-            color: #fff;
-            margin-bottom: 10px;
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .module {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="#">Athlete Arena</a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main class="main">
-        <!-- Team Announcements -->
-        <div class="view-announcements-container">
-            <h3>Team Announcements</h3>
-            <p>Important updates for the team.</p>
-            <div class="table-container">
-                <table id="announcements-table" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody id="announcements-body">
-                        <!-- Data will be inserted here dynamically -->
-                    </tbody>
-                </table>
-            </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="">Contact</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Announcement Box -->
+        <div class="module">
+            <h2>ANNOUNCEMENT</h2>
+            <a href="{% url 'viewannouncement' %}" class="btn">VIEW</a>
         </div>
 
-        <!-- Practice Changes -->
-        <div class="view-practice-changes-container">
-            <h3 class="section-title">Practice Changes</h3>
-            <p>Updates to practice schedules.</p>
-            <div class="table-container">
-                <table id="practice-changes-table" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>Change Type</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>New Location</th>
-                        </tr>
-                    </thead>
-                    <tbody id="practice-changes-body">
-                        <!-- Data will be inserted here dynamically -->
-                    </tbody>
-                </table>
-            </div>
+        <!-- Practice Change Box -->
+        <div class="module">
+            <h2>PRACTICE CHANGE</h2>
+            <a href="{% url 'viewpracticechange' %}" class="btn">VIEW</a>
         </div>
 
-        <!-- Game Results -->
-        <div class="view-game-results-container">
-            <h3 class="section-title">Game Results</h3>
-            <p>Results of recent games.</p>
-            <div class="table-container">
-                <table id="game-results-table" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>Game Date</th>
-                            <th>Opponent</th>
-                            <th>Score</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody id="game-results-body">
-                        <!-- Data will be inserted here dynamically -->
-                    </tbody>
-                </table>
-            </div>
+        <!-- Game Result Box -->
+        <div class="module">
+            <h2>GAME RESULT</h2>
+            <a href="{% url 'viewgameresult' %}" class="btn">VIEW</a>
         </div>
-    </main>
+    </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
-            authDomain: "athletarena.firebaseapp.com",
-            projectId: "athletarena",
-            storageBucket: "athletarena.appspot.com",
-            messagingSenderId: "1016152202031",
-            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
-            measurementId: "G-RC780HJPZ6"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Function to view announcements
-        function viewAnnouncements() {
-            const announcementsTable = document.getElementById('announcements-table');
-            const announcementsBody = document.getElementById('announcements-body');
-            announcementsTable.style.display = 'table';
-
-            // Clear existing rows
-            announcementsBody.innerHTML = '';
-
-            db.collection("announcements").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const announcement = doc.data();
-                    const row = document.createElement('tr');
-
-                    row.innerHTML = `
-                        <td>${announcement.title}</td>
-                        <td>${announcement.date}</td>
-                        <td>${announcement.details}</td>
-                    `;
-                    announcementsBody.appendChild(row);
-                });
-            });
-        }
-
-        // Function to view practice changes
-        function viewPracticeChanges() {
-            const practiceChangesTable = document.getElementById('practice-changes-table');
-            const practiceChangesBody = document.getElementById('practice-changes-body');
-            practiceChangesTable.style.display = 'table';
-
-            // Clear existing rows
-            practiceChangesBody.innerHTML = '';
-
-            db.collection("practice_changes").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const change = doc.data();
-                    const row = document.createElement('tr');
-
-                    row.innerHTML = `
-                        <td>${change.changeType}</td>
-                        <td>${change.date}</td>
-                        <td>${change.time}</td>
-                        <td>${change.newLocation}</td>
-                    `;
-                    practiceChangesBody.appendChild(row);
-                });
-            });
-        }
-
-        // Function to view game results
-        function viewGameResults() {
-            const gameResultsTable = document.getElementById('game-results-table');
-            const gameResultsBody = document.getElementById('game-results-body');
-            gameResultsTable.style.display = 'table';
-
-            // Clear existing rows
-            gameResultsBody.innerHTML = '';
-
-            db.collection("game_results").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const result = doc.data();
-                    const row = document.createElement('tr');
-
-                    row.innerHTML = `
-                        <td>${result.gameDate}</td>
-                        <td>${result.opponent}</td>
-                        <td>${result.score}</td>
-                        <td>${result.result}</td>
-                    `;
-                    gameResultsBody.appendChild(row);
-                });
-            });
-        }
-
-        // Automatically call the view functions on page load
-        window.onload = function() {
-            viewAnnouncements();
-            viewPracticeChanges();
-            viewGameResults();
-        };
-    </script>
 </body>
 </html>

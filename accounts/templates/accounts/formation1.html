@@ -1,21 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formation 4-2-3-1</title>
+    <title>Team | Athlete Arena</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <style>
-        /* (Styles are the same as in your original code) */
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
             display: flex;
-            justify-content: center;
-            align-items: center;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            width: 200px;
             height: 100vh;
-            background-color: #f3f3f3;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* Allow scrolling if needed */
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .formation {
+            color: white;
+            margin-top: 20px;
+            font-size: 16px;
+            
+        }
+
+        main {
+            margin-left: 220px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .lineup-section {
@@ -24,6 +66,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 600px;
+            margin: 0 auto;
         }
 
         .lineup-field {
@@ -62,11 +105,6 @@
         .ram { top: 30%; left: 60%; }
         .cf { top: 10%; left: 42%; }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         .save-button {
             background-color: #4CAF50;
             color: white;
@@ -82,30 +120,68 @@
         .save-button:hover {
             background-color: #45a049;
         }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color:  #34495e;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            main {
+                margin-left: 0;
+            }
+
+            table th, table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
-
 <body>
 
-    <!-- Football Lineup Form -->
-    <div class="lineup-section">
-        <h2>Formation 4-2-3-1</h2>
-        <div class="lineup-field" id="lineup-field">
-            <div contenteditable="true" class="player gk">GK</div>
-            <div contenteditable="true" class="player cb1">CB</div>
-            <div contenteditable="true" class="player cb2">CB</div>
-            <div contenteditable="true" class="player lb">LB</div>
-            <div contenteditable="true" class="player rb">RB</div>
-            <div contenteditable="true" class="player dm1">DM</div>
-            <div contenteditable="true" class="player dm2">DM</div>
-            <div contenteditable="true" class="player cam">CAM</div>
-            <div contenteditable="true" class="player lam">LAM</div>
-            <div contenteditable="true" class="player ram">RAM</div>
-            <div contenteditable="true" class="player cf">CF</div>
+    <!-- Sidebar with player list -->
+    <div class="sidebar">
+        <a href="index.html"></a>
+        <div class="formation" id="formation-display"></div>
+        <h4 class="text-white">Team Players:</h4>
+        <div id="team-players-list" class="text-white">
+            <!-- Player names and positions will be inserted here -->
         </div>
-        <button class="save-button" onclick="saveLineup()">Save Lineup</button>
-        <p id="message"></p>
+        <a href="contact.html"></a>
     </div>
+
+    <!-- Main content with football formation -->
+    <main>
+        <div class="lineup-section">
+            <h2>Formation 4-2-3-1</h2>
+            <div class="lineup-field" id="lineup-field">
+                <div contenteditable="true" class="player gk">GK</div>
+                <div contenteditable="true" class="player cb1">CB</div>
+                <div contenteditable="true" class="player cb2">CB</div>
+                <div contenteditable="true" class="player lb">LB</div>
+                <div contenteditable="true" class="player rb">RB</div>
+                <div contenteditable="true" class="player dm1">DM</div>
+                <div contenteditable="true" class="player dm2">DM</div>
+                <div contenteditable="true" class="player cam">CAM</div>
+                <div contenteditable="true" class="player lam">LAM</div>
+                <div contenteditable="true" class="player ram">RAM</div>
+                <div contenteditable="true" class="player cf">CF</div>
+            </div>
+            <button class="save-button" onclick="saveLineup()">Save Lineup</button>
+            <p id="message"></p>
+        </div>
+    </main>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
@@ -124,20 +200,30 @@
             measurementId: "G-RC780HJPZ6"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Ensure the user is authenticated
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                console.log("User is authenticated:", user);
-            } else {
-                console.log("User is not authenticated");
-                alert("You must be logged in to save the lineup.");
-                window.location.href = '/login';  // Redirect to login page
-            }
-        });
+        // Fetch team players and display in sidebar
+        function fetchTeamPlayers() {
+            const teamPlayersList = document.getElementById("team-players-list");
+
+            db.collection("teams").get()
+            .then((querySnapshot) => {
+                teamPlayersList.innerHTML = ""; // Clear existing player list
+
+                querySnapshot.forEach((doc) => {
+                    const player = doc.data();
+
+                    // Add player details to the sidebar
+                    const playerItem = document.createElement("div");
+                    playerItem.textContent = `${player.name} - ${player.position}`;
+                    teamPlayersList.appendChild(playerItem);
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching team players: ", error);
+            });
+        }
 
         // Save lineup function
         function saveLineup() {
@@ -155,18 +241,24 @@
                 cf: document.querySelector(".cf").innerText,
             };
 
-            db.collection("lineups").add(lineup)
+            db.collection("lineups").doc("currentLineup").set(lineup)
             .then(() => {
-                console.log("Lineup successfully created");
                 document.getElementById("message").innerText = "Lineup saved successfully!";
             })
             .catch(error => {
-                console.error("Error saving lineup: ", error);
                 document.getElementById("message").innerText = "Error saving lineup!";
             });
         }
+
+        // Ensure the user is authenticated before accessing the page
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                fetchTeamPlayers();
+            } else {
+                alert("You must be logged in to view this page.");
+                window.location.href = '/login';  // Redirect to login if not logged in
+            }
+        });
     </script>
-
 </body>
-
 </html>

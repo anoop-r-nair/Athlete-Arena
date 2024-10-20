@@ -87,6 +87,9 @@ urlpatterns = [
     path('viewplayerimage/',views.viewplayerimage, name='viewplayerimage'),
     path('payment/',views.payment, name='payment'),
     path('paymentplayer/',views.paymentplayer, name='paymentplayer'),
+    path('viewgameresult/',views.viewgameresult, name='viewgameresult'),
+    path('viewpracticechange/',views.viewpracticechange, name='viewpracticechange'),
+    path('viewannouncement/',views.viewannouncement, name='viewannouncement'),
 
 
 
