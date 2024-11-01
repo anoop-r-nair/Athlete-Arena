@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Assessment Session</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2c3e50;
+            width: 200px;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 220px;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1e2d3d;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: green;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .form-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <main class="main-content">
+        <div class="form-container">
+            <h1>Create Assessment Session</h1>
+            <form id="assessment-form">
+                <div class="form-group">
+                    <label for="assessmentDate">Assessment Date</label>
+                    <input type="date" id="assessmentDate" class="form-control" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="assessmentDay">Day of the Week</label>
+                    <select id="assessmentDay" class="form-control" required aria-required="true">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assessmentType">Assessment Type</label>
+                    <select id="assessmentType" class="form-control" required aria-required="true">
+                        <option value="Performance">Performance</option>
+                        <option value="Skill">Skill</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="Mental">Mental</option>
+                        <option value="Teamwork">Teamwork</option>
+                        <option value="Strategy">Strategy</option>
+                        <option value="Endurance">Endurance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assessmentDescription">Description</label>
+                    <input type="text" id="assessmentDescription" class="form-control" placeholder="Enter a brief description" required>
+                </div>
+                <button type="submit">Create Assessment</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Ensure the user is authenticated
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+                // Proceed with Firestore operation
+                document.getElementById("assessment-form").addEventListener("submit", createAssessment);
+            } else {
+                console.log("User is not authenticated");
+                alert("You must be logged in to create an assessment session.");
+                window.location.href = '/login';  // Redirect to login page
+            }
+        });
+
+        // Set the minimum date to today for the date input
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("assessmentDate").setAttribute("min", today);
+
+        // Create assessment function
+        function createAssessment(event) {
+            event.preventDefault();
+
+            var assessmentDate = document.getElementById("assessmentDate").value;
+            var assessmentDay = document.getElementById("assessmentDay").value;
+            var assessmentType = document.getElementById("assessmentType").value;
+            var assessmentDescription = document.getElementById("assessmentDescription").value;
+            
+            if (assessmentDate && assessmentDay && assessmentType && assessmentDescription) {
+                db.collection("assessments").add({
+                    assessmentDate: assessmentDate,
+                    assessmentDay: assessmentDay,
+                    assessmentType: assessmentType,
+                    assessmentDescription: assessmentDescription
+                })
+                .then(() => {
+                    console.log("Assessment successfully created");
+                    alert("Assessment Created successfully");
+                    document.getElementById("message").innerHTML = "Assessment Created successfully";
+                })
+                .catch((error) => {
+                    console.error("Error creating assessment: ", error);
+                    document.getElementById("message").innerHTML = "Error creating assessment: " + error.message;
+                });
+            }
+        }
+    </script>
+</body>
+</html>

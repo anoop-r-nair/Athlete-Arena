@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach Dashboard | View Workouts</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <style>
         body {
             background-color: #f8f9fa;
@@ -112,9 +111,6 @@
 
     <div class="sidebar">
         <a href="index.html">Home</a>
-        <!-- <a href="approved_players.html">Approved Players</a>
-        <a href="manage_assessments.html">Manage Assessments</a>
-        <a href="team_view.html">Team View</a> -->
         <a href="contact.html">Contact</a>
     </div>
 
@@ -125,7 +121,7 @@
         <table id="workoutTable" class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>Player ID</th>
+                    <th>Player Email</th>
                     <th>Workout Type</th>
                     <th>Duration (min)</th>
                     <th>Date</th>
@@ -139,16 +135,17 @@
 
         <p id="errorMessage" class="error">Error fetching workouts.</p>
         <div class="loader">Loading workouts...</div>
-    </main>
 
-    <!-- <footer>
-        <p>&copy; 2024 Athlete Arena. All rights reserved.</p>
-    </footer> -->
+        <h3>Workout Duration by Type</h3>
+        <canvas id="workoutChart"></canvas> <!-- Placeholder for the chart -->
+
+    </main>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Add Chart.js -->
 
     <script>
         // Firebase configuration
@@ -164,43 +161,89 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    const db = firebase.firestore();
 
-        // Function to fetch and display workout details
-        function fetchWorkouts() {
-            document.querySelector('.loader').style.display = 'block';
-            const workoutTableBody = document.getElementById('workoutTableBody');
+    // Store workout duration data for each player
+    let playerWorkoutData = {};
 
-            db.collection('workouts')
-                .get()
-                .then((querySnapshot) => {
-                    workoutTableBody.innerHTML = '';  // Clear existing data
-                    querySnapshot.forEach((doc) => {
-                        const workout = doc.data();
+    // Function to fetch and display workout details along with player email
+    function fetchWorkouts() {
+        document.querySelector('.loader').style.display = 'block';
+        const workoutTableBody = document.getElementById('workoutTableBody');
+
+        db.collection('workouts')
+            .get()
+            .then((querySnapshot) => {
+                workoutTableBody.innerHTML = '';  // Clear existing data
+                querySnapshot.forEach((doc) => {
+                    const workout = doc.data();
+
+                    // Fetch the player email based on userId from the 'users' collection
+                    db.collection('users').doc(workout.userId).get().then((userDoc) => {
+                        const userEmail = userDoc.exists ? userDoc.data().email : 'N/A';
+
                         const row = document.createElement('tr');
-
-                        // Append the workout data to the table row
                         row.innerHTML = `
-                            <td>${workout.userId}</td>
+                            <td>${userEmail}</td>
                             <td>${workout.workoutType}</td>
                             <td>${workout.duration}</td>
                             <td>${workout.date.toDate().toDateString()}</td>
                             <td>${workout.notes || 'N/A'}</td>
                         `;
-
                         workoutTableBody.appendChild(row);
-                    });
-                    document.querySelector('.loader').style.display = 'none';
-                })
-                .catch((error) => {
-                    console.error('Error fetching workouts:', error);
-                    document.getElementById('errorMessage').style.display = 'block';
-                    document.querySelector('.loader').style.display = 'none';
-                });
-        }
 
-        // Fetch workouts on page load
-        window.onload = fetchWorkouts;
+                        // Update playerWorkoutData
+                        if (userEmail in playerWorkoutData) {
+                            playerWorkoutData[userEmail] += workout.duration;
+                        } else {
+                            playerWorkoutData[userEmail] = workout.duration;
+                        }
+
+                    }).catch((error) => {
+                        console.error('Error fetching user details:', error);
+                        document.getElementById('errorMessage').style.display = 'block';
+                    });
+                });
+                document.querySelector('.loader').style.display = 'none';
+                updatePlayerWorkoutChart(); // Call function to update chart after data is loaded
+            })
+            .catch((error) => {
+                console.error('Error fetching workouts:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+                document.querySelector('.loader').style.display = 'none';
+            });
+    }
+
+    // Function to update the chart with player workout data
+    function updatePlayerWorkoutChart() {
+        const ctx = document.getElementById('workoutChart').getContext('2d');
+        const labels = Object.keys(playerWorkoutData);
+        const data = Object.values(playerWorkoutData);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Workout Duration by Player (min)',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Fetch workouts on page load
+    window.onload = fetchWorkouts;
     </script>
 
 </body>

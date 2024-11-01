@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team | Athlete Arena</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            width: 200px;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        main {
+            margin-left: 220px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color:  #34495e;
+            color: white;
+        }
+
+        table td {
+            background-color: #f8f9fa;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #34495e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color:  #34495e;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            main {
+                margin-left: 0;
+            }
+
+            table th, table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="index.html">Home</a>
+        <!-- <a href="approved_players.html">Approved Players</a>
+        <a href="manage_assessments.html">Manage Assessments</a> -->
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <main>
+        <h2>Selected Players for Team</h2>
+
+        <table id="team-list" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Team player rows will be inserted here -->
+            </tbody>
+        </table>
+
+        <button onclick="goBack()">Back to Approved Players</button>
+    </main>
+<!-- 
+    <footer>
+        <p>&copy; 2024 Athlete Arena. All rights reserved.</p>
+    </footer> -->
+
+    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function fetchTeamPlayers() {
+            const teamList = document.getElementById("team-list").getElementsByTagName("tbody")[0];
+
+            db.collection("teams").get()
+            .then((querySnapshot) => {
+                teamList.innerHTML = "";  // Clear existing rows
+
+                querySnapshot.forEach((doc) => {
+                    const player = doc.data();
+
+                    // Create a new row
+                    const row = teamList.insertRow();
+
+                    // Add team player details to the row
+                    row.innerHTML = `
+                        <td>${player.name}</td>
+                        <td>${player.email}</td>
+                        <td>${player.position}</td>
+                    `;
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching team players: ", error);
+            });
+        }
+
+        function goBack() {
+            window.location.href = 'approved_players.html';  // Change this URL to your Approved Players page
+        }
+
+        window.onload = fetchTeamPlayers;
+    </script>
+</body>
+</html>

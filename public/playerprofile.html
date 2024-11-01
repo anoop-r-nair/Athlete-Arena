@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Player Profile | Athlet Arena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(120deg, #ffffff, #f3f5f7);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #2980b9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2980b9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00bfa5;
+            box-shadow: 0 0 4px rgba(0, 191, 165, 0.5);
+        }
+
+        /* Add flex container to align first name and last name in one row */
+        .form-group.flex-group {
+    display: flex;
+    align-items: center; /* Aligns items vertically in the center */
+    justify-content: space-between;
+    gap: 10px; /* Adjusts the gap between label and checkbox */
+}
+
+.form-group.flex-group label {
+    margin-right: 10px; /* Additional space on the right of the label */
+}
+
+
+        button[type="submit"] {
+            background-color: #2980b9;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #2980b9;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header, .form-container {
+                padding: 10px;
+            }
+
+            .form-container {
+                width: 90%;
+            }
+
+            nav ul li {
+                margin-left: 10px;
+            }
+
+            .logo a {
+                font-size: 1.2rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlet Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Add Player Profile</h2>
+            <form id="add-profile-form" onsubmit="addProfile(); return false;">
+                <div class="form-group flex-group">
+                    <div>
+                        <label for="firstname">First Name:</label>
+                        <input type="text" id="firstname" placeholder="Enter first name" required>
+                    </div>
+                    <div>
+                        <label for="lastname">Last Name:</label>
+                        <input type="text" id="lastname" placeholder="Enter last name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" placeholder="Enter address" required>
+                </div>
+                <div class="form-group">
+                    <label for="formerTeam">Former Team Name:</label>
+                    <input type="text" id="formerTeam" placeholder="Enter former team name">
+                </div>
+                <div class="form-group">
+                    <label for="position">Position:</label>
+                    <input type="text" id="position" placeholder="Enter position">
+                </div>
+                <div class="form-group">
+                    <label for="experience">Experience (Years):</label>
+                    <input type="number" id="experience" placeholder="Years of experience" required>
+                </div>
+                <div class="form-group flex-group">
+                    <label for="captaincy" style='margin-right: 5px;'>Captaincy Experience, If any:</label>
+                    <input type="checkbox" id="captaincy" style='margin-left: 5px;'> 
+                </div>
+                
+                <div class="form-group">
+                    <label for="matchesPlayed">Matches Played:</label>
+                    <input type="number" id="matchesPlayed" placeholder="Number of matches played">
+                </div>
+                <div class="form-group">
+                    <label for="goalsScored">Goals Scored:</label>
+                    <input type="number" id="goalsScored" placeholder="Number of goals scored">
+                </div>
+                <div class="form-group">
+                    <label for="profileImage">Profile Image:</label>
+                    <input type="file" id="profileImage" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="resume">Upload Resume:</label>
+                    <input type="file" id="resume" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="form-group">
+                    <label for="certificate">Upload Certificate:</label>
+                    <input type="file" id="certificate" accept=".pdf,.doc,.docx" required>
+                </div>
+                <button type="submit">Add Profile</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Athlet Arena. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        function addProfile() {
+            var email = document.getElementById("email").value.trim();
+            var phone = document.getElementById("phone").value.trim();
+            var address = document.getElementById("address").value.trim();
+            var name = document.getElementById("firstname").value.trim() + ' ' + document.getElementById("lastname").value.trim();
+            var formerTeam = document.getElementById("formerTeam").value.trim();
+            var position = document.getElementById("position").value.trim();
+            var experience = document.getElementById("experience").value.trim();
+            var captaincy = document.getElementById("captaincy").checked ? true : false;
+            var matchesPlayed = document.getElementById("matchesPlayed").value.trim();
+            var goalsScored = document.getElementById("goalsScored").value.trim();
+
+            var profileImage = document.getElementById("profileImage").files[0];
+            var resume = document.getElementById("resume").files[0];
+            var certificate = document.getElementById("certificate").files[0];
+
+            if (profileImage && resume && certificate) {
+                var profileImageRef = storage.ref("profiles/" + profileImage.name);
+                var resumeRef = storage.ref("resumes/" + resume.name);
+                var certificateRef = storage.ref("certificates/" + certificate.name);
+
+                Promise.all([
+                    profileImageRef.put(profileImage),
+                    resumeRef.put(resume),
+                    certificateRef.put(certificate)
+                ]).then((snapshots) => {
+                    return Promise.all(snapshots.map(snapshot => snapshot.ref.getDownloadURL()));
+                }).then((urls) => {
+                    return db.collection("players").add({
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        address: address,
+                        formerTeam: formerTeam,
+                        position: position,
+                        experience: experience,
+                        captaincy: captaincy,
+                        matchesPlayed: matchesPlayed,
+                        goalsScored: goalsScored,
+                        profileImage: urls[0],
+                        resume: urls[1],
+                        certificate: urls[2]
+                    });
+                }).then(() => {
+                    document.getElementById("message").textContent = "Profile added successfully!";
+                    document.getElementById("add-profile-form").reset();
+                }).catch((error) => {
+                    document.getElementById("message").textContent = "Error adding profile: " + error.message;
+                });
+            } else {
+                document.getElementById("message").textContent = "Please upload all required files.";
+            }
+        }
+    </script>
+</body>
+</html>

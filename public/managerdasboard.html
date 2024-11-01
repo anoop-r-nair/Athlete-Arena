@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .sidebar .nav-link {
+            color: #fff;
+            font-size: 16px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #34495e;
+            border-radius: 4px;
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Cards */
+        .card {
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #34495e;
+            color: white;
+            font-size: 18px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-body .btn {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+
+        .card-body .btn:hover {
+            background-color: #1e2d3d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="d-flex">
+    <nav class="sidebar flex-column">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'approvedcoaches' %}">Approved Coaches</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'approvedplayers' %}">Approved Players</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manage_team' %}">Create Team</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'team_players' %}">View Team</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'paymentplayer' %}">Payment (Players)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'payment' %}">Payments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manage_schedules' %}">Schedules</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'schedulefans' %}">Set Schedules for Fans</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="content">
+        <!-- Top navbar -->
+        <nav class="navbar">
+            <a class="navbar-brand" href="#">Manager Dashboard</a>
+        </nav>
+
+        <!-- Dashboard content -->
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Card 1 -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Players</div>
+                        <div class="card-body">
+                            <a href="{% url 'viewprofile' %}" class="btn">Manage Players</a>
+                            <a href="{% url 'viewplayerdetails' %}" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Coaches</div>
+                        <div class="card-body">
+                            <a href="{% url 'managecoachprofile' %}" class="btn">Manage Coaches</a>
+                            <a href="{% url 'editcoachprofile' %}" class="btn">View Coach Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

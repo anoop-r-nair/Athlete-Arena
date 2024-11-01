@@ -90,6 +90,11 @@ urlpatterns = [
     path('viewgameresult/',views.viewgameresult, name='viewgameresult'),
     path('viewpracticechange/',views.viewpracticechange, name='viewpracticechange'),
     path('viewannouncement/',views.viewannouncement, name='viewannouncement'),
+    path('fitness/',views.fitness, name='fitness'),
+    path('viewfitness/',views.viewfitness, name='viewfitness'),
+    path('vediocall/',views.vediocall, name='vediocall'),
+    path('assignplayers/',views.assignplayers, name='assignplayers'),
+    
 
 
 

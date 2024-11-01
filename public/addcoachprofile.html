@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coach Profile | Athlet Arena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(120deg, #ffffff, #ffffff);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #2980b9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color:#2980b9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 4px#2980b9(0, 191, 165, 0.5);
+        }
+
+        /* Add flex container to align first name and last name in one row */
+        .form-group.flex-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .form-group.flex-group input {
+            width: 25rem;
+        }
+
+        button[type="submit"] {
+            background-color:#2980b9;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background-color:#2980b9;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header, .form-container {
+                padding: 10px;
+            }
+
+            .form-container {
+                width: 90%;
+            }
+
+            nav ul li {
+                margin-left: 10px;
+            }
+
+            .logo a {
+                font-size: 1.2rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+
+            .form-group.flex-group input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlet Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Add Coach Profile</h2>
+            <form id="add-profile-form" onsubmit="addProfile(); return false;">
+                <div class="form-group flex-group">
+                    <div>
+                        <label for="firstname">First Name:</label>
+                        <input type="text" id="firstname" placeholder="Enter first name" required>
+                    </div>
+                    <div>
+                        <label for="lastname">Last Name:</label>
+                        <input type="text" id="lastname" placeholder="Enter last name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" placeholder="Enter address" required>
+                </div>
+                <div class="form-group">
+                    <label for="experience">Experience (Years):</label>
+                    <input type="number" id="experience" placeholder="Years of experience" required>
+                </div>
+                <div class="form-group">
+                    <label for="profileImage">Profile Image:</label>
+                    <input type="file" id="profileImage" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="resume">Upload Resume:</label>
+                    <input type="file" id="resume" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="form-group">
+                    <label for="certificate">Upload certificate:</label>
+                    <input type="file" id="certificate" accept=".pdf,.doc,.docx" required>
+                </div>
+                <button type="submit">Add Profile</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Athlet Arena. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        function addProfile() {
+    var email = document.getElementById("email").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var name = document.getElementById("firstname").value.trim() + ' ' + document.getElementById("lastname").value.trim(); // Combine first and last name
+    var experience = document.getElementById("experience").value;
+    var profileImage = document.getElementById("profileImage").files[0];
+    var resume = document.getElementById("resume").files[0];
+    var certificate = document.getElementById("certificate").files[0]; // Get the certificate file
+    var messageElement = document.getElementById("message");
+
+    messageElement.style.color = "red";
+    messageElement.innerHTML = "";
+
+    if (!email || !phone || !address || !name || !experience || !profileImage || !resume || !certificate) {
+        messageElement.innerHTML = "Please fill in all the fields.";
+        return;
+    }
+
+    var phonePattern = /^[6-9]\d{9}$/;
+    if (!phonePattern.test(phone)) {
+        messageElement.innerHTML = "Phone number must be a valid Indian number (10 digits, starting with 6-9).";
+        return;
+    }
+
+    var namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(name)) {
+        messageElement.innerHTML = "Name must contain only letters and spaces.";
+        return;
+    }
+
+    // Validate Profile Image
+    if (profileImage) {
+        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+        if (!validImageTypes.includes(profileImage.type)) {
+            messageElement.innerHTML = "Profile Image must be a valid image file (JPEG, PNG, GIF, BMP, WebP).";
+            return;
+        }
+
+        var maxSizeInBytes = 5 * 1024 * 1024;
+        if (profileImage.size > maxSizeInBytes) {
+            messageElement.innerHTML = "Profile Image size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    // Validate Resume
+    if (resume) {
+        var validResumeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!validResumeTypes.includes(resume.type)) {
+            messageElement.innerHTML = "Resume must be a PDF or Word document.";
+            return;
+        }
+
+        var maxResumeSizeInBytes = 5 * 1024 * 1024;
+        if (resume.size > maxResumeSizeInBytes) {
+            messageElement.innerHTML = "Resume file size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    // Validate Certificate
+    if (certificate) {
+        var validCertificateTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!validCertificateTypes.includes(certificate.type)) {
+            messageElement.innerHTML = "Certificate must be a PDF or Word document.";
+            return;
+        }
+
+        var maxCertificateSizeInBytes = 5 * 1024 * 1024;
+        if (certificate.size > maxCertificateSizeInBytes) {
+            messageElement.innerHTML = "Certificate file size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    var coachRef = db.collection("coaches").doc(email);
+
+    coachRef.get().then((docSnapshot) => {
+        if (docSnapshot.exists) {
+            messageElement.innerHTML = "A coach with this email already exists.";
+            return;
+        }
+
+        var storageRef = storage.ref();
+        var profileImageRef = storageRef.child('coach_images/' + profileImage.name);
+        var resumeRef = storageRef.child('coach_resumes/' + resume.name);
+        var certificateRef = storageRef.child('coach_certificates/' + certificate.name); // Add reference for certificate
+
+        var uploadTasks = [
+            profileImageRef.put(profileImage),
+            resumeRef.put(resume),
+            certificateRef.put(certificate) // Add certificate upload to tasks
+        ];
+
+        Promise.all(uploadTasks)
+            .then((uploadResults) => {
+                return Promise.all(uploadResults.map((uploadResult) => uploadResult.ref.getDownloadURL()));
+            })
+            .then((downloadURLs) => {
+                var profileImageUrl = downloadURLs[0];
+                var resumeUrl = downloadURLs[1];
+                var certificateUrl = downloadURLs[2]; // Get certificate URL
+
+                coachRef.set({
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    name: name,
+                    experience: parseInt(experience),
+                    profileImageUrl: profileImageUrl,
+                    resumeUrl: resumeUrl,
+                    certificateUrl: certificateUrl // Store certificate URL
+                }).then(() => {
+                    messageElement.style.color = "green";
+                    messageElement.innerHTML = "Coach profile added successfully!";
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                    messageElement.innerHTML = "Failed to add coach profile.";
+                });
+            }).catch((error) => {
+                console.error("Error uploading files: ", error);
+                messageElement.innerHTML = "Error uploading files.";
+            });
+    }).catch((error) => {
+        console.error("Error checking coach existence: ", error);
+        messageElement.innerHTML = "Error checking coach existence.";
+    });
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup | Athlete Arena</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #5c67f2;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-width: 90%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c67f2;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #4a54d1;
+        }
+
+        .google-btn {
+            background-color: #db4437;
+            margin-top: 15px;
+        }
+
+        .google-btn:hover {
+            background-color: #c33727;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border-left: 4px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .error {
+            color: #f00;
+            font-size: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #5c67f2;
+            color: white;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlete Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Signup</h2>
+            <form id="signup-form" onsubmit="signup(); return false;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required aria-required="true">
+                    <p id="emailError" class="error"></p>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required aria-required="true">
+                    <p id="passwordError" class="error"></p>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" required aria-required="true">
+                    <p id="confirmPasswordError" class="error"></p>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required aria-required="true">
+                    <p id="nameError" class="error"></p>
+                </div>
+                <div class="form-group">
+                    <label for="userType">User Type:</label>
+                    <select id="userType" required aria-required="true">
+                        <option value="Player">Player</option>
+                        <option value="Parent">Parent</option>
+                    </select>
+                </div>
+                <button type="submit">Signup</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Athlete Arena. All rights reserved.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-auth-domain",
+            projectId: "your-project-id",
+            storageBucket: "your-storage-bucket",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Validation and signup function
+        const validEmailDomainRegex = /^[^\s@]+@(gmail\.com|ac\.in)$/;
+        const validNameRegex = /^[A-Za-z\s]+$/;
+
+        document.getElementById("email").addEventListener("input", function () {
+            const email = this.value;
+            const emailError = document.getElementById("emailError");
+            if (!validEmailDomainRegex.test(email)) {
+                emailError.textContent = "Email must be from a valid domain (gmail.com or ac.in).";
+            } else {
+                firebase.auth().fetchSignInMethodsForEmail(email)
+                    .then((signInMethods) => {
+                        emailError.textContent = signInMethods.length ? "Email is already in use." : "";
+                    })
+                    .catch(() => emailError.textContent = "Invalid email format.");
+            }
+        });
+
+        document.getElementById("password").addEventListener("input", function () {
+            const password = this.value;
+            document.getElementById("passwordError").textContent = password.length < 8 ? "Password must be at least 8 characters long." : "";
+        });
+
+        document.getElementById("confirm-password").addEventListener("input", function () {
+            const confirmPassword = this.value;
+            const password = document.getElementById("password").value;
+            document.getElementById("confirmPasswordError").textContent = password !== confirmPassword ? "Passwords do not match." : "";
+        });
+
+        document.getElementById("name").addEventListener("input", function () {
+            const name = this.value;
+            document.getElementById("nameError").textContent = !validNameRegex.test(name) ? "Name cannot contain numbers or special characters." : "";
+        });
+
+        function signup() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const name = document.getElementById("name").value;
+            const userType = document.getElementById("userType").value;
+            const messageElement = document.getElementById("message");
+
+            // Add validation checks here
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    return db.collection('users').doc(user.uid).set({
+                        email,
+                        name,
+                        userType
+                    });
+                })
+                .then(() => {
+                    messageElement.textContent = "Signup successful!";
+                    messageElement.style.display = "block";
+                })
+                .catch((error) => {
+                    messageElement.textContent = error.message;
+                    messageElement.style.display = "block";
+                });
+        }
+    </script>
+</body>
+</html>

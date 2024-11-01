@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@emailjs/browser": "^4.4.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

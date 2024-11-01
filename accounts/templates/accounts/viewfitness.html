@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Fitness Data | Athlete Arena</title>
+
+    <!-- Internal CSS -->
+    <style>
+        /* Add your existing styles here */
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Enter Fitness Data</h2>
+        <form id="fitness-form" onsubmit="logFitnessData(); return false;">
+            <!-- Your existing form fields -->
+            <button type="submit">Log Fitness Data</button>
+            <p id="message" class="message">Fitness data logged successfully!</p>
+            <p id="errorMessage" class="error">Error logging fitness data.</p>
+        </form>
+    </div>
+
+    <!-- Chart Container -->
+    <div>
+        <h2>Fitness Data Analysis</h2>
+        <canvas id="fitnessChart" width="400" height="200"></canvas>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Function to log fitness data
+        function logFitnessData() {
+            // Your existing logFitnessData code
+            // Call fetchData() after logging new data
+            fetchData();
+        }
+
+        // Function to fetch fitness data and update the chart
+        function fetchData() {
+            db.collection("fitnessData").get().then((querySnapshot) => {
+                const activityTypes = [];
+                const durations = [];
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    activityTypes.push(data.activityType);
+                    durations.push(data.duration);
+                });
+
+                updateChart(activityTypes, durations);
+            });
+        }
+
+        // Function to update the chart
+        function updateChart(activityTypes, durations) {
+            const ctx = document.getElementById('fitnessChart').getContext('2d');
+
+            const chartData = {};
+            activityTypes.forEach((type, index) => {
+                chartData[type] = (chartData[type] || 0) + durations[index];
+            });
+
+            const labels = Object.keys(chartData);
+            const data = Object.values(chartData);
+
+            const fitnessChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Duration (minutes)',
+                        data: data,
+                        backgroundColor: 'rgba(92, 103, 242, 0.5)',
+                        borderColor: 'rgba(92, 103, 242, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

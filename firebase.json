@@ -1,10 +1,15 @@
 {
   "hosting": {
-    "public": "accounts/templates/accounts",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+    "public": "public",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/api/**",
+        "function": "api"
+      }
     ]
   }
 }

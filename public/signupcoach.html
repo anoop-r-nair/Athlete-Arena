@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coach Profile | Athlet Arena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+        #message {
+            color: red;
+            margin-top: 10px;
+        }
+        .button-link {
+            display: inline-block;
+            padding: 12px 45px;
+            border-radius: 20px;
+            border: 1px solid #FF4B2B;
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 80ms ease-in;
+        }
+
+        .button-link:active {
+            transform: scale(0.95);
+        }
+        .button-link:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlet Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Add Coach Profile</h2>
+            <form id="add-profile-form" onsubmit="addProfile(); return false;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="profile-pic">Profile Picture:</label>
+                    <input type="file" id="profile-pic" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="resume">Resume (PDF):</label>
+                    <input type="file" id="resume" accept=".pdf" required>
+                </div>
+                <button type="submit">Add Profile</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Add Profile function
+        function addProfile() {
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var name = document.getElementById("name").value;
+            var profilePic = document.getElementById("profile-pic").files[0];
+            var resume = document.getElementById("resume").files[0];
+            var messageElement = document.getElementById("message");
+
+            // Phone number validation
+            var phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(phone)) {
+                messageElement.innerHTML = "Phone number must be exactly 10 digits long.";
+                return;
+            }
+
+            // Upload profile picture
+            var profilePicRef = storage.ref('profile_pictures/' + profilePic.name);
+            var resumeRef = storage.ref('resumes/' + resume.name);
+
+            // Upload profile picture and resume in parallel
+            Promise.all([profilePicRef.put(profilePic), resumeRef.put(resume)])
+                .then((uploads) => {
+                    return Promise.all([uploads[0].ref.getDownloadURL(), uploads[1].ref.getDownloadURL()]);
+                })
+                .then((downloadURLs) => {
+                    var profilePicUrl = downloadURLs[0];
+                    var resumeUrl = downloadURLs[1];
+
+                    // Add coach details to Firestore
+                    return db.collection("coaches").add({
+                        email: email,
+                        phone: phone,
+                        address: address,
+                        name: name,
+                        profilePicture: profilePicUrl,
+                        resume: resumeUrl,
+                    });
+                })
+                .then(() => {
+                    alert("Profile added successfully to Firestore with files!");
+                    messageElement.innerHTML = "Profile added successfully!";
+                    window.location.href = '/accounts/coach_dashboard/';
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                    alert("Error adding profile");
+                    messageElement.innerHTML = "Error adding profile.";
+                });
+        }
+    </script>
+</body>
+</html>

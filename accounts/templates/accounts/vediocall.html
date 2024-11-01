@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Meeting Room</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* Button Styling */
+        #startMeetingBtn {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.4);
+            margin-top: 20px;
+        }
+
+        #startMeetingBtn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Meeting Container Styling */
+        #jitsiContainer {
+            width: 80%;
+            max-width: 800px;
+            height: 600px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h2>Online Meeting with Coach/Players</h2>
+    <button id="startMeetingBtn">Start Meeting</button>
+    <div id="jitsiContainer"></div>
+
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+        const startMeetingBtn = document.getElementById("startMeetingBtn");
+        const jitsiContainer = document.getElementById("jitsiContainer");
+
+        let api = null;
+
+        function startMeeting() {
+            const roomName = `AthleteArena_${Date.now()}`;
+            api = new JitsiMeetExternalAPI("meet.jit.si", {
+                roomName: roomName,
+                parentNode: jitsiContainer,
+                width: '100%',
+                height: 600,
+                configOverwrite: { startWithVideoMuted: true }
+            });
+
+            api.addEventListener('videoConferenceJoined', () => {
+                console.log("Meeting started");
+            });
+        }
+
+        startMeetingBtn.addEventListener("click", startMeeting);
+    </script>
+</body>
+</html>

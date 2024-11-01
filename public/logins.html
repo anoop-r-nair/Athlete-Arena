@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Athlete Arena</title>
+   
+    <!-- Internal CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #5c67f2;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-width: 90%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5c67f2;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #4a54d1;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border-left: 4px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Hidden initially */
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #5c67f2;
+            color: white;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #5c67f2;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlete Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Login</h2>
+            <form id="login-form" onsubmit="login(); return false;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required aria-required="true">
+                </div>
+                <button type="submit">Login</button>
+                <div class="signup-link">
+                    <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+                </div>
+                <div class="forgot-password">
+                    <p><a href="#" onclick="forgotPassword()">Forgot Password?</a></p>
+                </div>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Athlete Arena. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Login function
+        function login() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // Check for admin credentials
+            if (email === 'admin@gmail.com' && password === 'admin@123') {
+                window.location.href = '/accounts/modules';  // Redirect to admin dashboard
+                return;
+            }
+            if (email === 'manager@gmail.com' && password === 'manager@123') {
+                window.location.href = '/accounts/managerdasboard';  // Redirect to admin dashboard
+                return;
+            }
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    var user = userCredential.user;
+
+                    // Retrieve user details from Firestore
+                    db.collection("users").doc(user.uid).get().then((doc) => {
+                        if (doc.exists) {
+                            var userData = doc.data();
+                            var userType = userData.userType;
+
+                            // Redirect based on user type
+                            if (userType === 'Player') {
+                                window.location.href = '/accounts/player_dashboard';  // Redirect to player dashboard
+                            } else if (userType === 'Coach') {
+                                window.location.href = '/accounts/coach_dashboard';  // Redirect to coach dashboard
+                            } else if (userType === 'Admin') {
+                                window.location.href = '/accounts/admin_dashboard';  // Redirect to admin dashboard
+                            } else {
+                                document.getElementById("message").innerHTML = 'User type not recognized.';
+                                document.getElementById("message").style.display = "block";
+                            }
+                        } else {
+                            document.getElementById("message").innerHTML = 'User not found in the database.';
+                            document.getElementById("message").style.display = "block";
+                        }
+                    }).catch((error) => {
+                        document.getElementById("message").innerHTML = `Error retrieving user data: ${error.message}`;
+                        document.getElementById("message").style.display = "block";
+                    });
+                })
+                .catch((error) => {
+                    var errorMessage = error.message;
+                    document.getElementById("message").innerHTML = errorMessage;
+                    document.getElementById("message").style.display = "block";
+                });
+        }
+
+        // Forgot Password function
+        function forgotPassword() {
+            var email = document.getElementById("email").value;
+            if (email) {
+                firebase.auth().sendPasswordResetEmail(email)
+                    .then(() => {
+                        document.getElementById("message").innerHTML = 'Password reset email sent.';
+                        document.getElementById("message").style.display = "block";
+                    })
+                    .catch((error) => {
+                        var errorMessage = error.message;
+                        document.getElementById("message").innerHTML = errorMessage;
+                        document.getElementById("message").style.display = "block";
+                    });
+            } else {
+                document.getElementById("message").innerHTML = 'Please enter your email address.';
+                document.getElementById("message").style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

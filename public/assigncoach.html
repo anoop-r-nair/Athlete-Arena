@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Coach | Athlete Arena</title>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- EmailJS library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+    <!-- Initialize EmailJS with your public key -->
+    <script>
+        (function() {
+            emailjs.init("b-6-qIUOR_AGQhvgT"); // Replace with your actual EmailJS public key
+        })();
+    </script>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        header .logo a {
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Form Styles */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            margin-bottom: 40px;
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        button {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3498db;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="d-flex">
+    <nav class="sidebar flex-column">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="content">
+        <!-- <header>
+            <div class="logo">
+                <a href="#">Athlete Arena</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header> -->
+
+        <div class="form-container">
+            <h2>Assign Coach</h2>
+            <form id="assign-coach-form" onsubmit="assignCoach(); return false;">
+                <div class="form-group">
+                    <label for="email">Coach Email:</label>
+                    <input type="email" id="email" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="name">Coach Name:</label>
+                    <input type="text" id="name" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="password">Coach Password:</label>
+                    <input type="password" id="password" required aria-required="true">
+                </div>
+                <button type="submit">Assign Coach</button>
+                <button type="button" onclick="sendEmail()">Send Email</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+        authDomain: "athletarena.firebaseapp.com",
+        projectId: "athletarena",
+        storageBucket: "athletarena.appspot.com",
+        messagingSenderId: "1016152202031",
+        appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+        measurementId: "G-RC780HJPZ6"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function assignCoach() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const name = document.getElementById("name").value;
+        const messageElement = document.getElementById("message");
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                user.sendEmailVerification().then(() => {
+                    messageElement.textContent = "Verification email sent. Please check your inbox.";
+                    messageElement.classList.add("message-success");
+                    messageElement.style.display = "block";
+
+                    const interval = setInterval(() => {
+                        user.reload().then(() => {
+                            if (user.emailVerified) {
+                                clearInterval(interval);
+
+                                db.collection("users").doc(user.uid).set({
+                                    name: name,
+                                    email: email,
+                                    userType: "Coach"
+                                }).then(() => {
+                                    messageElement.textContent = "Coach assigned successfully!";
+                                    messageElement.classList.add("message-success");
+                                    messageElement.style.display = "block";
+
+                                    setTimeout(() => {
+                                        window.location.href = '/accounts/managerdashboard/';
+                                    }, 2000);
+                                }).catch(() => {
+                                    messageElement.textContent = "Error saving coach data to Firestore.";
+                                    messageElement.classList.add("message-error");
+                                    messageElement.style.display = "block";
+                                });
+                            }
+                        });
+                    }, 3000); 
+                });
+            })
+            .catch((error) => {
+                messageElement.textContent = error.message;
+                messageElement.classList.add("message-error");
+                messageElement.style.display = "block";
+            });
+    }
+
+    function sendEmail() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const name = document.getElementById("name").value;
+    const messageElement = document.getElementById("message");
+
+    // Trigger Firebase password reset
+    firebase.auth().sendPasswordResetEmail(email)
+        .then(() => {
+            // Use EmailJS to send the email with reset link and credentials
+            const templateParams = {
+                to_email: email,
+                to_name: name,
+                coach_email: email,
+                coach_password: password,
+                reset_link: `A password reset link has been sent to your email. You can also reset your password using this link: https://athletarena.firebaseapp.com/__/auth/action?mode=resetPassword&email=${email}&apiKey=${firebaseConfig.apiKey}`
+            };
+
+            emailjs.send("service_ya7myzl", "template_56qfrf9", templateParams)
+                .then(() => {
+                    messageElement.textContent = "Email with credentials and reset link sent successfully to the coach.";
+                    messageElement.classList.add("message-success");
+                    messageElement.style.display = "block";
+                })
+                .catch((error) => {
+                    messageElement.textContent = "Failed to send email: " + error.text;
+                    messageElement.classList.add("message-error");
+                    messageElement.style.display = "block";
+                });
+        })
+        .catch((error) => {
+            messageElement.textContent = "Failed to send password reset email: " + error.message;
+            messageElement.classList.add("message-error");
+            messageElement.style.display = "block";
+        });
+}
+
+</script>
+</body>
+</html>

@@ -787,6 +787,16 @@ def payment(request):
 def paymentplayer(request):
     return render(request, 'accounts/paymentplayer.html')
 
+def viewfitness(request):
+    return render(request, 'accounts/viewfitness.html')
+
+def fitness(request):
+    return render(request, 'accounts/fitness.html')
+
+
+def vediocall(request):
+    return render(request, 'accounts/vediocall.html')
+
 
 
 def session(request):
@@ -794,6 +804,11 @@ def session(request):
 
 def assigncoach(request):
     return render(request, 'accounts/assigncoach.html')
+
+def assignplayers(request):
+    return render(request, 'accounts/assignplayers.html')
+
+
 
 
 def login(request):

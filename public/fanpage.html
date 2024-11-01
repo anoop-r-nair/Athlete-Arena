@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profiles and Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+        }
+        .box {
+            width: 40%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .box:hover {
+            transform: scale(1.05);
+        }
+        h2 {
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            background-color: #007bff;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="box">
+            <h2>View Profiles</h2>
+            <p>Click below to view profiles.</p>
+            <a href="{% url 'fanviewprofile' %}">Go to Profiles</a>
+        </div>
+
+        <div class="box">
+            <h2>View Results</h2>
+            <p>Click below to view results.</p>
+            <a href="{% url 'fanviewresult' %}">Go to Results</a>
+        </div>
+    </div>
+
+</body>
+</html>

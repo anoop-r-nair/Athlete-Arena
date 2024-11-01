@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Coach</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin: 10px 0 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .current-img, .current-resume {
+            margin-bottom: 20px;
+        }
+        .current-img img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+        }
+        .current-resume a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .current-resume a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Coach</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ coach.name }}" required>
+        
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="{{ coach.address }}" required>
+        
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="{{ coach.phone }}" required>
+
+            <!-- Profile Picture -->
+            <label for="profilePicture">Profile Picture:</label>
+            <input type="file" id="profilePicture" name="profilePicture">
+
+            <!-- Display current profile picture -->
+            <div class="current-img">
+                <p>Current Profile Picture:</p>
+                <img src="{{ coach.profilePicture }}" alt="Profile Picture">
+            </div>
+        
+            <!-- Resume -->
+            <label for="resume">Resume:</label>
+            <input type="file" id="resume" name="resume">
+        
+            <!-- Display current resume link -->
+            <div class="current-resume">
+                <p>Current Resume:</p>
+                <a href="{{ coach.resume }}" target="_blank">View Resume</a>
+            </div>
+        
+            <button type="submit">Update Coach</button>
+        </form>
+    </div>
+</body>
+</html>

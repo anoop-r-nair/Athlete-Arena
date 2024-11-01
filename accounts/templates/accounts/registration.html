@@ -4,95 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach and Player Registration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        h2 {
+            color: #333;
             text-align: center;
-            padding: 40px;
-            flex: 1;
-            transition: transform 0.3s ease;
+            margin: 20px 0;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card i {
-            font-size: 40px;
-            color: #3498db;
-            margin-bottom: 15px;
-        }
-
-        .card h2 {
-            font-size: 24px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            font-size: 16px;
-            color: #7f8c8d;
-            margin-bottom: 20px;
-        }
-
-        .card a {
-            text-decoration: none;
-            background-color: #2980b9;
-            color: white;
+        a {
+            display: inline-block;
             padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
-        .card a:hover {
-            background-color: #3498db;
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        .registrationSection {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        .disabledMessage {
+            color: #d9534f;
+            text-align: center;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <!-- Coach Registration Card -->
-        <div class="card">
-            <i class="fas fa-chalkboard-teacher"></i>
-            <h2>Coach Registration</h2>
-            <p>Click here to register as a coach.</p>
-            <a href="{% url 'addcoachprofile' %}">Register as Coach</a>
-        </div>
-
-        <!-- Player Registration Card -->
-        <div class="card">
-            <i class="fas fa-futbol"></i>
-            <h2>Player Registration</h2>
-            <p>Click here to register as a player.</p>
-            <a href="{% url 'playerprofile' %}">Register as Player</a>
-        </div>
+    <!-- Coach Registration Section -->
+    <div class="registrationSection" id="coachRegistrationForm" style="display: none;">
+        <h2><a href="{% url 'addcoachprofile' %}" id="coachLink">Register as Coach</a></h2>
+        <!-- Your coach registration form inputs -->
     </div>
+
+    <div class="registrationSection" id="coachRegistrationDisabled" style="display: none;">
+        <h2 class="disabledMessage">Coach registration is currently stoped.</h2>
+    </div>
+
+    <!-- Player Registration Section -->
+    <div class="registrationSection" id="playerRegistrationForm" style="display: none;">
+        <h2><a href="{% url 'playerprofile' %}" id="playerLink">Register as Player</a></h2>
+        <!-- Your player registration form inputs -->
+    </div>
+
+    <div class="registrationSection" id="playerRegistrationDisabled" style="display: none;">
+        <h2 class="disabledMessage">Player registration is currently stoped.</h2>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script>
+        // Firebase config and initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Check if registration is enabled
+        window.onload = function() {
+            // Check for coach registration setting
+            db.collection("settings").doc("registration").get().then((doc) => {
+                if (doc.exists) {
+                    if (doc.data().coachEnabled) {
+                        document.getElementById("coachRegistrationForm").style.display = "block";
+                    } else {
+                        document.getElementById("coachRegistrationDisabled").style.display = "block";
+                    }
+                    
+                    // Check for player registration setting
+                    if (doc.data().playerEnabled) {
+                        document.getElementById("playerRegistrationForm").style.display = "block";
+                    } else {
+                        document.getElementById("playerRegistrationDisabled").style.display = "block";
+                    }
+                } else {
+                    console.error("No settings document found.");
+                    document.getElementById("coachRegistrationDisabled").style.display = "block";
+                    document.getElementById("playerRegistrationDisabled").style.display = "block";
+                }
+            }).catch((error) => {
+                console.error("Error getting settings: ", error);
+                document.getElementById("coachRegistrationDisabled").style.display = "block";
+                document.getElementById("playerRegistrationDisabled").style.display = "block";
+            });
+        };
+    </script>
 </body>
 </html>

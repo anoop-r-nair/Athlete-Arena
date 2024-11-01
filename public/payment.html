@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Payment Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .payment-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .payment-container h1 {
+            color: #333;
+        }
+
+        .pay-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .pay-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div class="payment-container">
+        <h1>Complete Payment</h1>
+        <button class="pay-btn" id="rzp-button">Pay with Razorpay</button>
+    </div>
+
+    <script>
+        // Razorpay payment options
+        var options = {
+            "key": "P34opqPWlBA3pW", // Replace with your Razorpay key
+            "amount": 5, // Amount is in paise, so 50000 paise = INR 500
+            "currency": "INR",
+            "name": "Your Company Name",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "handler": function (response){
+                alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                // You can handle further actions here after payment is completed.
+            },
+            "prefill": {
+                "name": "Customer Name",
+                "email": "customer@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#528FF0"
+            }
+        };
+
+        // On clicking the pay button, open the Razorpay payment gateway
+        document.getElementById('rzp-button').onclick = function(e){
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>
