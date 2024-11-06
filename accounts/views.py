@@ -10,9 +10,6 @@ from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 # from django.views.decorators.cache import cache_control
-
-
-
 # Initialize Firebase Admin SDK
 cred_path = os.path.join(os.path.dirname(__file__), 'C:/Users/Anoop/sports_team_management/sports_team_management/athletarena-firebase-adminsdk-q957f-b59ba119bd.json')
 if not firebase_admin._apps:
