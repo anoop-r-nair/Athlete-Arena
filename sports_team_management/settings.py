@@ -16,7 +16,7 @@ import firebase_admin
 from firebase_admin import credentials,firestore
 
 # Path to your Firebase Admin SDK private key
-cred = credentials.Certificate("C:/Users/Anoop/sports_team_management/sports_team_management/athletarena-firebase-adminsdk-q957f-b59ba119bd.json")
+cred = credentials.Certificate("./athletarena-firebase-adminsdk-q957f-b59ba119bd.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
