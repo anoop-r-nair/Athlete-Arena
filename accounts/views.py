@@ -549,9 +549,7 @@ def playerprofile(request):
     return render(request, 'accounts/playerprofile.html')
 
 def lineups(request):
-    users_ref = db.collection('users')
-    users = [doc.to_dict() for doc in users_ref.stream()]
-    return render(request, 'accounts/lineups.html', {'users': users})
+    return render(request, 'accounts/lineups.html')
 
 
 def registration(request):
@@ -848,14 +846,7 @@ def coaches(request):
         return render(request, 'accounts/coaches.html', {'coaches': []})
     
 def editcoachprofile(request):
-    try:
-        # Fetch all coaches from Firestore
-        coaches_ref = db.collection('coaches')
-        coaches = [doc.to_dict() for doc in coaches_ref.stream()]
-        print(coaches)  # For debugging: Print the coaches data
-        return render(request, 'accounts/editcoachprofile.html', {'coaches': coaches})
-    except Exception as e:
-        messages.error(request, f"An error occurred: {str(e)}")
+    
         return render(request, 'accounts/editcoachprofile.html',  {'coaches': []})    
     
 

@@ -8,143 +8,141 @@
     <!-- Styles -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-      /* General Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: flex-start; /* Align content at the top */
-    min-height: 100vh;
-}
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: flex-start; /* Align content at the top */
+            min-height: 100vh;
+        }
 
-/* Sidebar styles */
-.sidebar {
-    background-color: #2c3e50;
-    color: white;
-    width: 200px;
-    padding: 20px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-}
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            width: 200px;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
 
-.sidebar a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-}
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
 
-.sidebar a:hover {
-    background-color: #34495e;
-}
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
 
-/* Main content */
-.main {
-    margin-left: 220px; /* Push the content away from the sidebar */
-    padding: 20px;
-    flex-grow: 1;
-    max-width: 900px;
-    width: 100%;
-}
+        /* Main content */
+        .main {
+            margin-left: 220px; /* Push the content away from the sidebar */
+            padding: 20px;
+            flex-grow: 1;
+            max-width: 900px;
+            width: 100%;
+        }
 
-/* Form and button styles */
-.form-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    max-width: 600px; /* Restrict width */
-    width: 100%;
-    margin-left: auto; /* Center the form horizontally */
-    margin-right: auto; /* Center the form horizontally */
-}
+        /* Form and button styles */
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin-left: auto; /* Center the form horizontally */
+            margin-right: auto; /* Center the form horizontally */
+        }
 
-button {
-    padding: 8px 15px;
-    background-color: #777;;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
+        button {
+            padding: 8px 15px;
+            background-color: #777;;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-button:hover {
-    background-color:  #777;;
-}
+        button:hover {
+            background-color:  #777;;
+        }
 
-/* Table styles */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
-    font-size: 14px; /* Reduce font size for better fit */
-}
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+            font-size: 14px; /* Reduce font size for better fit */
+        }
 
-th {
-    background-color: #777;;
-    color: white;
-}
+        th {
+            background-color: #777;;
+            color: white;
+        }
 
-/* Adjust the form and table width */
-.table-container {
-    max-width: 800px;
-    margin-left: auto; /* Center the table horizontally */
-    margin-right: auto; /* Center the table horizontally */
-}
+        /* Adjust the form and table width */
+        .table-container {
+            max-width: 800px;
+            margin-left: auto; /* Center the table horizontally */
+            margin-right: auto; /* Center the table horizontally */
+        }
 
-/* Footer */
-footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #777;
-}
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    body {
-        flex-direction: column; /* Stack sidebar and main vertically */
-    }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Stack sidebar and main vertically */
+            }
 
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative; /* Adjust for mobile */
-    }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative; /* Adjust for mobile */
+            }
 
-    .main {
-        margin-left: 0; /* Remove the sidebar gap */
-    }
+            .main {
+                margin-left: 0; /* Remove the sidebar gap */
+            }
 
-    .form-container, .table-container {
-        width: 100%;
-        padding: 10px;
-    }
-}
-
+            .form-container, .table-container {
+                width: 100%;
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
         <a href="{% url 'index' %}">Home</a>
         <a href="#">About</a>
@@ -180,6 +178,7 @@ footer {
                     <input type="text" id="description" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Add Schedule</button>
+                <button type="button" onclick="clearForm()" class="btn btn-secondary mt-2">Clear</button>
                 <p id="message"></p>
             </form>
             <!-- View Schedules Button -->
@@ -226,6 +225,17 @@ footer {
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // Set the minimum date for the date input field
+        document.addEventListener("DOMContentLoaded", () => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const dd = String(today.getDate()).padStart(2, '0');
+            const minDate = `${yyyy}-${mm}-${dd}`;
+
+            document.getElementById('date').setAttribute('min', minDate);
+        });
+
         // Function to add a schedule
         function addSchedule() {
             const type = document.getElementById('type').value;
@@ -234,34 +244,46 @@ footer {
             const location = document.getElementById('location').value;
             const description = document.getElementById('description').value;
 
-            db.collection("schedules").add({
-                type: type,
-                date: date,
-                time: time,
-                location: location,
-                description: description
-            })
-            .then(() => {
-                alert("Schedule added successfully!");
-                document.getElementById("message").innerHTML = "Schedule added successfully!";
-                document.getElementById("schedule-form").reset();
-                viewSchedules();
-            })
-            .catch((error) => {
-                console.error("Error adding schedule: ", error);
-                alert("Error adding schedule.");
-            });
+            // Check if we are updating a schedule
+            if (document.getElementById('schedule-form').dataset.scheduleId) {
+                updateSchedule(document.getElementById('schedule-form').dataset.scheduleId, {
+                    type,
+                    date,
+                    time,
+                    location,
+                    description
+                });
+            } else {
+                db.collection("schedules").add({
+                    type: type,
+                    date: date,
+                    time: time,
+                    location: location,
+                    description: description
+                })
+                .then(() => {
+                    alert("Schedule added successfully!");
+                    document.getElementById("schedule-form").reset();
+                    viewSchedules();
+                })
+                .catch((error) => {
+                    console.error("Error adding schedule: ", error);
+                    alert("Error adding schedule.");
+                });
+            }
         }
 
+        // Function to view schedules
         function viewSchedules() {
-            const schedulesBody = document.getElementById('schedules-body');
-            const schedulesTable = document.getElementById('schedules-table');
-            schedulesBody.innerHTML = '';
+            const schedulesTable = document.getElementById("schedules-table");
+            const schedulesBody = document.getElementById("schedules-body");
 
-            db.collection("schedules").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
+            schedulesBody.innerHTML = ''; // Clear current table rows
+
+            db.collection("schedules").get().then((snapshot) => {
+                snapshot.forEach((doc) => {
                     const schedule = doc.data();
-                    const row = document.createElement('tr');
+                    const row = document.createElement("tr");
 
                     row.innerHTML = `
                         <td>${schedule.type}</td>
@@ -270,65 +292,69 @@ footer {
                         <td>${schedule.location}</td>
                         <td>${schedule.description}</td>
                         <td>
-                            <button class="btn btn-warning" onclick="editSchedule('${doc.id}', '${schedule.type}', '${schedule.date}', '${schedule.time}', '${schedule.location}', '${schedule.description}')">Edit</button>
-                            <button class="btn btn-danger" onclick="deleteSchedule('${doc.id}')">Delete</button>
+                            <button onclick="deleteSchedule('${doc.id}')">Delete</button>
+                            <button onclick="editSchedule('${doc.id}')">Edit</button>
                         </td>
                     `;
                     schedulesBody.appendChild(row);
                 });
-
                 schedulesTable.style.display = 'table';
+            }).catch((error) => {
+                console.error("Error retrieving schedules: ", error);
+                alert("Error retrieving schedules.");
             });
         }
 
-        function deleteSchedule(id) {
-            if (confirm("Are you sure you want to delete this schedule?")) {
-                db.collection("schedules").doc(id).delete()
-                .then(() => {
-                    alert("Schedule deleted successfully!");
-                    viewSchedules();
-                })
-                .catch((error) => {
-                    console.error("Error deleting schedule: ", error);
-                    alert("Error deleting schedule.");
-                });
-            }
+        // Function to delete a schedule
+        function deleteSchedule(scheduleId) {
+            db.collection("schedules").doc(scheduleId).delete()
+            .then(() => {
+                alert("Schedule deleted successfully!");
+                viewSchedules();
+            })
+            .catch((error) => {
+                console.error("Error deleting schedule: ", error);
+                alert("Error deleting schedule.");
+            });
         }
 
-        function editSchedule(id, type, date, time, location, description) {
-            document.getElementById('type').value = type;
-            document.getElementById('date').value = date;
-            document.getElementById('time').value = time;
-            document.getElementById('location').value = location;
-            document.getElementById('description').value = description;
+        // Function to edit a schedule
+        function editSchedule(scheduleId) {
+            db.collection("schedules").doc(scheduleId).get().then((doc) => {
+                const schedule = doc.data();
 
-            const updateButton = document.createElement('button');
-            updateButton.innerText = "Update Schedule";
-            updateButton.classList.add('btn', 'btn-success');
-            updateButton.onclick = function () {
-                db.collection("schedules").doc(id).update({
-                    type: document.getElementById('type').value,
-                    date: document.getElementById('date').value,
-                    time: document.getElementById('time').value,
-                    location: document.getElementById('location').value,
-                    description: document.getElementById('description').value
-                })
-                .then(() => {
-                    alert("Schedule updated successfully!");
-                    document.getElementById("message").innerHTML = "Schedule updated successfully!";
-                    document.getElementById("schedule-form").reset();
-                    viewSchedules();
-                })
-                .catch((error) => {
-                    console.error("Error updating schedule: ", error);
-                    alert("Error updating schedule.");
-                });
-            };
+                // Populate the form with existing schedule data
+                document.getElementById('type').value = schedule.type;
+                document.getElementById('date').value = schedule.date;
+                document.getElementById('time').value = schedule.time;
+                document.getElementById('location').value = schedule.location;
+                document.getElementById('description').value = schedule.description;
 
-            const form = document.getElementById('schedule-form');
-            form.appendChild(updateButton);
+                // Set the form's data attribute for updating
+                document.getElementById('schedule-form').dataset.scheduleId = doc.id;
+            });
+        }
+
+        // Function to update a schedule
+        function updateSchedule(scheduleId, updatedData) {
+            db.collection("schedules").doc(scheduleId).update(updatedData)
+            .then(() => {
+                alert("Schedule updated successfully!");
+                document.getElementById('schedule-form').reset();
+                delete document.getElementById('schedule-form').dataset.scheduleId;
+                viewSchedules();
+            })
+            .catch((error) => {
+                console.error("Error updating schedule: ", error);
+                alert("Error updating schedule.");
+            });
+        }
+
+        // Function to clear the form
+        function clearForm() {
+            document.getElementById("schedule-form").reset();
+            delete document.getElementById('schedule-form').dataset.scheduleId;
         }
     </script>
-
 </body>
 </html>
