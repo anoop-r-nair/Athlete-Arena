@@ -49,7 +49,7 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
     apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
@@ -64,35 +64,133 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        async function addInjury() {
-    const playerName = document.getElementById("playerName").value.trim();
-    const injuryType = document.getElementById("injuryType").value.trim();
-    const status = document.getElementById("status").value;
-    const timestamp = new Date().toISOString();
+        // Enhanced validation functions
+        function validatePlayerName(name) {
+            if (!name) return { valid: false, message: "Player name is required" };
+            if (name.length < 2) return { valid: false, message: "Player name must be at least 2 characters long" };
+            if (name.length > 50) return { valid: false, message: "Player name cannot exceed 50 characters" };
+            
+            // Allow letters, spaces, and common special characters in names (e.g., O'Connor, Jean-Pierre)
+            const nameRegex = /^[A-Za-zÀ-ÿ\s'\-\.]+$/;
+            if (!nameRegex.test(name)) {
+                return { valid: false, message: "Player name can only contain letters, spaces, hyphens, and apostrophes" };
+            }
+            return { valid: true };
+        }
 
-    if (!playerName || !injuryType) {
-        alert("⚠️ Please fill in all fields!");
-        return;
-    }
+        function validateInjuryType(injury) {
+            if (!injury) return { valid: false, message: "Injury type is required" };
+            if (injury.length < 2) return { valid: false, message: "Injury type must be at least 2 characters long" };
+            if (injury.length > 100) return { valid: false, message: "Injury type cannot exceed 100 characters" };
+            
+            const injuryRegex = /^[A-Za-z\s\-()]+$/;
+            if (!injuryRegex.test(injury)) {
+                return { valid: false, message: "Injury type can only contain letters, spaces, hyphens, and parentheses" };
+            }
+            return { valid: true };
+        }
 
-    console.log("Adding injury record...", { playerName, injuryType, status, timestamp });
-
-    try {
-        await addDoc(collection(db, "injuries"), {
-            playerName,
-            injuryType,
-            status,
-            timestamp
+        // Real-time validation
+        document.getElementById("playerName").addEventListener("input", function(e) {
+            const result = validatePlayerName(e.target.value.trim());
+            validateField(e.target, result);
         });
-        alert("✅ Injury record added!");
-        document.getElementById("playerName").value = "";
-        document.getElementById("injuryType").value = "";
-    } catch (error) {
-        console.error("❌ Error adding injury:", error);
-        alert("❌ Failed to add injury! Check console for details.");
-    }
-}
 
+        document.getElementById("injuryType").addEventListener("input", function(e) {
+            const result = validateInjuryType(e.target.value.trim());
+            validateField(e.target, result);
+        });
+
+        function validateField(element, validationResult) {
+            const errorId = `${element.id}-error`;
+            const existingError = document.getElementById(errorId);
+            
+            if (existingError) {
+                existingError.remove();
+            }
+
+            if (!validationResult.valid) {
+                const errorDiv = document.createElement('div');
+                errorDiv.id = errorId;
+                errorDiv.className = 'field-error';
+                errorDiv.textContent = validationResult.message;
+                element.parentNode.appendChild(errorDiv);
+                element.classList.add('invalid');
+            } else {
+                element.classList.remove('invalid');
+            }
+        }
+
+        function showError(message) {
+            const existingError = document.getElementById('error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.id = 'error-message';
+            errorDiv.textContent = message;
+            errorDiv.style.color = '#e74c3c';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.marginBottom = '10px';
+            errorDiv.style.backgroundColor = '#fde8e8';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.style.textAlign = 'left';
+            
+            const button = document.querySelector('button');
+            button.parentNode.insertBefore(errorDiv, button);
+
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        async function addInjury() {
+            const playerNameInput = document.getElementById("playerName");
+            const injuryTypeInput = document.getElementById("injuryType");
+            const statusInput = document.getElementById("status");
+
+            const playerName = playerNameInput.value.trim();
+            const injuryType = injuryTypeInput.value.trim();
+            const status = statusInput.value;
+            const timestamp = new Date().toISOString();
+
+            // Validate all fields
+            const playerNameValidation = validatePlayerName(playerName);
+            const injuryTypeValidation = validateInjuryType(injuryType);
+
+            // Show validation errors if any
+            validateField(playerNameInput, playerNameValidation);
+            validateField(injuryTypeInput, injuryTypeValidation);
+
+            if (!playerNameValidation.valid || !injuryTypeValidation.valid) {
+                showError("Please correct the errors before submitting");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "injuries"), {
+                    playerName,
+                    injuryType,
+                    status,
+                    timestamp,
+                    lastUpdated: serverTimestamp()
+                });
+
+                // Clear form and show success
+                playerNameInput.value = "";
+                injuryTypeInput.value = "";
+                
+                showSuccess("Injury record added successfully!");
+                
+                // Clear any remaining validation states
+                document.querySelectorAll('.field-error').forEach(el => el.remove());
+                document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+
+            } catch (error) {
+                console.error("Error adding injury:", error);
+                showError("Failed to add injury. Please try again.");
+            }
+        }
 
         function loadInjuries() {
             onSnapshot(collection(db, "injuries"), (snapshot) => {
@@ -115,70 +213,198 @@
     </script>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-}
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
 
-.container {
-    width: 90%;
-    max-width: 600px;
-    background: white;
-    padding: 20px;
-    margin: auto;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            margin: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
 
-h2, h3 {
-    color: #2c3e50;
-}
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
 
-.form-group {
-    margin: 10px 0;
-}
+        h3 {
+            color: #34495e;
+            margin: 25px 0;
+            font-size: 1.6em;
+        }
 
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+        }
 
-button {
-    background-color: #27ae60;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 100%;
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
 
-button:hover {
-    background-color: #219150;
-}
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
 
-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-}
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
 
-table, th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
+        button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 14px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
 
-th {
-    background: #3498db;
-    color: white;
-}
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+        }
 
+        button:active {
+            transform: translateY(0);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #f5f6f7;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+
+        /* Add these new styles */
+        #error-message {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input:invalid, select:invalid {
+            border-color: #e74c3c;
+        }
+
+        .form-group label::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        /* Add these new validation styles */
+        .field-error {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            padding: 5px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        input.invalid {
+            border-color: #e74c3c;
+            background-color: #fff5f5;
+        }
+
+        input.invalid:focus {
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        /* Success message animation */
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </body>
 </html>

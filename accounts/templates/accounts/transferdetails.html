@@ -6,341 +6,616 @@
     <title>Player Transfer Blockchain</title>
 </head>
 <body>
+    <div class="container">
+        <h2>Player Transfer Blockchain</h2>
+        <p id="initStatus" style="color: red;">⏳ Initializing blockchain...</p>
 
-<h2>Player Transfer Blockchain with Firebase</h2>
-<p id="initStatus" style="color: red;">⏳ Initializing blockchain...</p>
+        <div class="form-group">
+            <label>Player ID:</label>
+            <input type="text" id="playerId">
+        </div>
 
-<label>Player ID:</label> <input type="text" id="playerId"><br>
-<label>Previous Club:</label> <input type="text" id="previousClub"><br>
-<label>New Club:</label> <input type="text" id="newClub"><br>
-<label>Transfer Fee ($):</label> <input type="text" id="transferFee"><br><br>
+        <div class="form-group">
+            <label>Previous Club:</label>
+            <input type="text" id="previousClub">
+        </div>
 
-<button onclick="addTransfer()">Add Transfer</button>
-<!-- <button onclick="mineBlock()">Mine Block</button> -->
-<button onclick="viewBlockchain()">View Blockchain</button>
+        <div class="form-group">
+            <label>New Club:</label>
+            <input type="text" id="newClub">
+        </div>
 
-<pre id="output"></pre>
+        <div class="form-group">
+            <label>Transfer Fee ($):</label>
+            <input type="text" id="transferFee">
+        </div>
 
-<!-- ✅ Firebase SDK (Correct Versions) -->
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, doc, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        <div class="button-group">
+            <button onclick="addTransfer()">Add Transfer</button>
+            <button onclick="viewBlockchain()">View Blockchain</button>
+        </div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
-    authDomain: "athletarena.firebaseapp.com",
-    projectId: "athletarena",
-    storageBucket: "athletarena.appspot.com",
-    messagingSenderId: "1016152202031",
-    appId: "1:1016152202031:web:3123482b3362f095d1dfda",
-    measurementId: "G-RC780HJPZ6"
-  };
+        <pre id="output"></pre>
+    </div>
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    <!-- ✅ Firebase SDK (Correct Versions) -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getFirestore, collection, doc, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // Make Firebase functions and db available globally
-  window.db = db;
-  window.collection = collection;
-  window.doc = doc;
-  window.setDoc = setDoc;
-  window.getDoc = getDoc;
-  window.getDocs = getDocs;
+      const firebaseConfig = {
+        apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+        authDomain: "athletarena.firebaseapp.com",
+        projectId: "athletarena",
+        storageBucket: "athletarena.appspot.com",
+        messagingSenderId: "1016152202031",
+        appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+        measurementId: "G-RC780HJPZ6"
+      };
 
-  // Initialize the app
-  window.addEventListener('load', function() {
-    initApp();
-  });
-</script>
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-<script>
-    let myBlockchain = null;  // Blockchain object
-    let isInitialized = false;  // Check if blockchain is ready
+      // Make Firebase functions and db available globally
+      window.db = db;
+      window.collection = collection;
+      window.doc = doc;
+      window.setDoc = setDoc;
+      window.getDoc = getDoc;
+      window.getDocs = getDocs;
 
-    // ✅ 1. Initialize Firebase
-    async function initializeFirebase() {
-        try {
-            const testQuery = await getDocs(collection(window.db, "blockchain"));
-            console.log("🔥 Firebase initialized successfully!");
-            return true;
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-            return false;
+      // Initialize the app
+      window.addEventListener('load', function() {
+        initApp();
+      });
+    </script>
+
+    <script>
+        let myBlockchain = null;  // Blockchain object
+        let isInitialized = false;  // Check if blockchain is ready
+
+        // ✅ 1. Initialize Firebase
+        async function initializeFirebase() {
+            try {
+                const testQuery = await getDocs(collection(window.db, "blockchain"));
+                console.log("🔥 Firebase initialized successfully!");
+                return true;
+            } catch (error) {
+                console.error("Firebase initialization error:", error);
+                return false;
+            }
         }
-    }
 
-    // ✅ 2. Blockchain Class
-    class Block {
-        constructor(index, timestamp, transferData, previousHash = '') {
-            this.index = index;
-            this.timestamp = timestamp;
-            this.transferData = transferData;
-            this.previousHash = previousHash;
-            this.hash = this.calculateHash();
-            this.nonce = 0;
-        }
-
-        calculateHash() {
-            return btoa(this.index + this.timestamp + JSON.stringify(this.transferData) + this.previousHash + this.nonce);
-        }
-
-        mineBlock(difficulty) {
-            while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
-                this.nonce++;
+        // ✅ 2. Blockchain Class
+        class Block {
+            constructor(index, timestamp, transferData, previousHash = '') {
+                this.index = index;
+                this.timestamp = timestamp;
+                this.transferData = transferData;
+                this.previousHash = previousHash;
                 this.hash = this.calculateHash();
+                this.nonce = 0;
             }
-        }
-    }
 
-    class Blockchain {
-        constructor() {
-            this.chain = [this.createGenesisBlock()];
-            this.difficulty = 2;
-        }
-
-        createGenesisBlock() {
-            return new Block(0, Date.now(), { message: "Genesis Block" }, "0");
-        }
-
-        getLatestBlock() {
-            return this.chain[this.chain.length - 1];
-        }
-
-        async addBlock(newBlock) {
-            try {
-                console.log("Starting addBlock process...");
-                newBlock.previousHash = this.getLatestBlock().hash;
-                console.log("Mining block...");
-                newBlock.mineBlock(this.difficulty);
-                console.log("Block mined, adding to chain...");
-                this.chain.push(newBlock);
-                console.log("Saving to Firebase...");
-                await this.saveToFirebase();
-                console.log("Block added and saved successfully");
-            } catch (error) {
-                console.error("Error in addBlock:", error);
-                throw new Error("Failed to add block: " + error.message);
+            calculateHash() {
+                return btoa(this.index + this.timestamp + JSON.stringify(this.transferData) + this.previousHash + this.nonce);
             }
-        }
 
-        async saveToFirebase() {
-            try {
-                const docRef = doc(window.db, "blockchain", "chain");
-                await setDoc(docRef, { data: JSON.stringify(this.chain) });
-                console.log("✅ Blockchain saved to Firebase");
-            } catch (error) {
-                console.error("❌ Error saving to Firebase:", error);
-            }
-        }
-
-        async loadFromFirebase() {
-            try {
-                const docRef = doc(window.db, "blockchain", "chain");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    this.chain = JSON.parse(docSnap.data().data);
-                    console.log("✅ Blockchain loaded from Firebase!");
+            mineBlock(difficulty) {
+                while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+                    this.nonce++;
+                    this.hash = this.calculateHash();
                 }
-            } catch (error) {
-                console.error("❌ Error loading blockchain:", error);
             }
         }
-    }
 
-    // ✅ 3. Initialize Blockchain AFTER Firebase is Ready
-    async function initializeBlockchain() {
-        myBlockchain = new Blockchain();
-        await myBlockchain.loadFromFirebase();
-        isInitialized = true;
-        document.getElementById("initStatus").style.color = "green";
-        document.getElementById("initStatus").textContent = "✅ Blockchain initialized successfully!";
-        console.log("✅ Blockchain is ready!");
-    }
+        class Blockchain {
+            constructor() {
+                this.chain = [this.createGenesisBlock()];
+                this.difficulty = 2;
+            }
 
-    // ✅ 4. Ensure Firebase and Blockchain Load Before Using Them
-    async function initApp() {
-        const success = await initializeFirebase();
-        if (success) {
-            await initializeBlockchain();
-        } else {
-            document.getElementById("initStatus").style.color = "red";
-            document.getElementById("initStatus").textContent = "❌ Initialization failed. Please refresh the page.";
+            createGenesisBlock() {
+                return new Block(0, Date.now(), { message: "Genesis Block" }, "0");
+            }
+
+            getLatestBlock() {
+                return this.chain[this.chain.length - 1];
+            }
+
+            async addBlock(newBlock) {
+                try {
+                    console.log("Starting addBlock process...");
+                    newBlock.previousHash = this.getLatestBlock().hash;
+                    console.log("Mining block...");
+                    newBlock.mineBlock(this.difficulty);
+                    console.log("Block mined, adding to chain...");
+                    this.chain.push(newBlock);
+                    console.log("Saving to Firebase...");
+                    await this.saveToFirebase();
+                    console.log("Block added and saved successfully");
+                } catch (error) {
+                    console.error("Error in addBlock:", error);
+                    throw new Error("Failed to add block: " + error.message);
+                }
+            }
+
+            async saveToFirebase() {
+                try {
+                    const docRef = doc(window.db, "blockchain", "chain");
+                    await setDoc(docRef, { data: JSON.stringify(this.chain) });
+                    console.log("✅ Blockchain saved to Firebase");
+                } catch (error) {
+                    console.error("❌ Error saving to Firebase:", error);
+                }
+            }
+
+            async loadFromFirebase() {
+                try {
+                    const docRef = doc(window.db, "blockchain", "chain");
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        this.chain = JSON.parse(docSnap.data().data);
+                        console.log("✅ Blockchain loaded from Firebase!");
+                    }
+                } catch (error) {
+                    console.error("❌ Error loading blockchain:", error);
+                }
+            }
         }
-    }
 
-    // Add collection names as constants
-    const COLLECTIONS = {
-        TRANSFERS: 'public_transfers',  // Using public collection
-        BLOCKCHAIN: 'blockchain'
-    };
+        // ✅ 3. Initialize Blockchain AFTER Firebase is Ready
+        async function initializeBlockchain() {
+            myBlockchain = new Blockchain();
+            await myBlockchain.loadFromFirebase();
+            isInitialized = true;
+            document.getElementById("initStatus").style.color = "green";
+            document.getElementById("initStatus").textContent = "✅ Blockchain initialized successfully!";
+            console.log("✅ Blockchain is ready!");
+        }
 
-    // Update addTransfer function with better error handling
-    async function addTransfer() {
-        try {
-            if (!window.db) {
-                throw new Error("Database not initialized");
+        // ✅ 4. Ensure Firebase and Blockchain Load Before Using Them
+        async function initApp() {
+            const success = await initializeFirebase();
+            if (success) {
+                await initializeBlockchain();
+            } else {
+                document.getElementById("initStatus").style.color = "red";
+                document.getElementById("initStatus").textContent = "❌ Initialization failed. Please refresh the page.";
             }
+        }
 
-            const playerId = document.getElementById("playerId").value.trim();
-            const previousClub = document.getElementById("previousClub").value.trim();
-            const newClub = document.getElementById("newClub").value.trim();
-            const transferFee = document.getElementById("transferFee").value.trim();
+        // Add collection names as constants
+        const COLLECTIONS = {
+            TRANSFERS: 'public_transfers',  // Using public collection
+            BLOCKCHAIN: 'blockchain'
+        };
 
-            if (!playerId || !previousClub || !newClub || !transferFee) {
-                throw new Error("Please fill in all fields");
+        // Validation functions
+        const validators = {
+            playerId: {
+                validate: (value) => {
+                    return /^\d{6,10}$/.test(value);
+                },
+                message: "Player ID must be 6-10 digits long"
+            },
+            previousClub: {
+                validate: (value) => {
+                    return value.length >= 3 && value.length <= 50;
+                },
+                message: "Club name must be between 3 and 50 characters"
+            },
+            newClub: {
+                validate: (value) => {
+                    return value.length >= 3 && value.length <= 50;
+                },
+                message: "Club name must be between 3 and 50 characters"
+            },
+            transferFee: {
+                validate: (value) => {
+                    const fee = parseFloat(value);
+                    return !isNaN(fee) && fee >= 0 && fee <= 1000000000;
+                },
+                message: "Transfer fee must be a valid number between 0 and 1,000,000,000"
             }
+        };
 
-            const transferData = {
-                playerId,
-                previousClub,
-                newClub,
-                transferFee: parseFloat(transferFee),
-                timestamp: Date.now(),
-                status: 'pending',
-                created_at: new Date().toISOString()
-            };
-
-            // Use the public collection
-            const docId = Date.now().toString();
-            const transferRef = doc(window.db, COLLECTIONS.TRANSFERS, docId);
+        // Add validation to each input
+        Object.keys(validators).forEach(fieldId => {
+            const input = document.getElementById(fieldId);
+            const validator = validators[fieldId];
             
+            input.addEventListener('input', function() {
+                validateField(this, validator);
+            });
+
+            input.addEventListener('blur', function() {
+                validateField(this, validator);
+            });
+        });
+
+        function validateField(input, validator) {
+            const errorId = `${input.id}-error`;
+            let errorElement = document.getElementById(errorId);
+            
+            // Create error element if it doesn't exist
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.id = errorId;
+                errorElement.className = 'error-message';
+                input.parentNode.appendChild(errorElement);
+            }
+
+            const value = input.value.trim();
+            const isValid = value === '' || validator.validate(value);
+
+            input.classList.toggle('invalid', !isValid);
+            errorElement.textContent = isValid ? '' : validator.message;
+            
+            return isValid;
+        }
+
+        // Update addTransfer function with validation
+        async function addTransfer() {
             try {
+                if (!window.db) {
+                    throw new Error("Database not initialized");
+                }
+
+                // Validate all fields
+                let isValid = true;
+                const formData = {};
+
+                Object.keys(validators).forEach(fieldId => {
+                    const input = document.getElementById(fieldId);
+                    const value = input.value.trim();
+                    
+                    if (!value) {
+                        validateField(input, {
+                            validate: () => false,
+                            message: "This field is required"
+                        });
+                        isValid = false;
+                    } else if (!validateField(input, validators[fieldId])) {
+                        isValid = false;
+                    }
+
+                    formData[fieldId] = value;
+                });
+
+                if (!isValid) {
+                    throw new Error("Please correct the errors in the form");
+                }
+
+                const transferData = {
+                    playerId: formData.playerId,
+                    previousClub: formData.previousClub,
+                    newClub: formData.newClub,
+                    transferFee: parseFloat(formData.transferFee),
+                    timestamp: Date.now(),
+                    status: 'pending',
+                    created_at: new Date().toISOString()
+                };
+
+                // Use the public collection
+                const docId = Date.now().toString();
+                const transferRef = doc(window.db, COLLECTIONS.TRANSFERS, docId);
+                
                 await setDoc(transferRef, transferData);
                 console.log("Transfer saved successfully with ID:", docId);
                 
-                // Clear form
-                document.getElementById("playerId").value = "";
-                document.getElementById("previousClub").value = "";
-                document.getElementById("newClub").value = "";
-                document.getElementById("transferFee").value = "";
+                // Clear form and validation states
+                Object.keys(validators).forEach(fieldId => {
+                    const input = document.getElementById(fieldId);
+                    input.value = "";
+                    input.classList.remove('invalid');
+                    const errorElement = document.getElementById(`${fieldId}-error`);
+                    if (errorElement) errorElement.textContent = '';
+                });
 
-                alert("✅ Transfer added successfully!");
+                showNotification("✅ Transfer added successfully!", "success");
                 await viewBlockchain();
                 
             } catch (error) {
-                console.error("Error saving transfer:", error);
-                if (error.code === 'permission-denied') {
-                    throw new Error("Access denied. Please check database permissions.");
-                }
-                throw error;
+                console.error("Error in addTransfer:", error);
+                showNotification(error.message || "Error adding transfer", "error");
+            }
+        }
+
+        // ✅ 6. Mine a Block
+        async function mineBlock() {
+            if (!isInitialized || !myBlockchain) {
+                alert("⚠️ Blockchain not initialized yet. Please wait a moment and try again.");
+                return;
             }
 
-        } catch (error) {
-            console.error("Error in addTransfer:", error);
-            alert(error.message || "Error adding transfer");
-        }
-    }
-
-    // ✅ 6. Mine a Block
-    async function mineBlock() {
-        if (!isInitialized || !myBlockchain) {
-            alert("⚠️ Blockchain not initialized yet. Please wait a moment and try again.");
-            return;
+            await myBlockchain.loadFromFirebase();
+            myBlockchain.addBlock(new Block(myBlockchain.chain.length, Date.now(), { event: "Transfer Block Mined" }));
+            document.getElementById("output").textContent = JSON.stringify(myBlockchain.chain, null, 2);
+            console.log("✅ Block Mined Successfully!");
         }
 
-        await myBlockchain.loadFromFirebase();
-        myBlockchain.addBlock(new Block(myBlockchain.chain.length, Date.now(), { event: "Transfer Block Mined" }));
-        document.getElementById("output").textContent = JSON.stringify(myBlockchain.chain, null, 2);
-        console.log("✅ Block Mined Successfully!");
-    }
-
-    // Update viewBlockchain function
-    async function viewBlockchain() {
-        try {
-            const querySnapshot = await getDocs(collection(window.db, COLLECTIONS.TRANSFERS));
-            const transfers = [];
-            querySnapshot.forEach((doc) => {
-                transfers.push({
-                    id: doc.id,
-                    ...doc.data()
+        // Update viewBlockchain function
+        async function viewBlockchain() {
+            try {
+                const querySnapshot = await getDocs(collection(window.db, COLLECTIONS.TRANSFERS));
+                const transfers = [];
+                querySnapshot.forEach((doc) => {
+                    transfers.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
                 });
-            });
-            
-            if (transfers.length === 0) {
-                document.getElementById("output").textContent = "No transfers found.";
-            } else {
-                document.getElementById("output").textContent = JSON.stringify(transfers, null, 2);
+                
+                if (transfers.length === 0) {
+                    document.getElementById("output").textContent = "No transfers found.";
+                } else {
+                    document.getElementById("output").textContent = JSON.stringify(transfers, null, 2);
+                }
+            } catch (error) {
+                console.error("Error viewing transfers:", error);
+                document.getElementById("output").textContent = 
+                    "Error: Unable to load transfers. " + (error.message || "Please check permissions.");
             }
-        } catch (error) {
-            console.error("Error viewing transfers:", error);
-            document.getElementById("output").textContent = 
-                "Error: Unable to load transfers. " + (error.message || "Please check permissions.");
+        }
+
+        // Notification function
+        function showNotification(message, type = 'error') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+    <style>
+    :root {
+        --primary-color: #2563eb;
+        --secondary-color: #1e40af;
+        --background-color: #f8fafc;
+        --card-background: #ffffff;
+        --text-color: #1e293b;
+        --border-color: #e2e8f0;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 2rem;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: var(--card-background);
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+
+    h2 {
+        color: var(--text-color);
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        text-align: left;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+        background-color: var(--background-color);
+    }
+
+    input[type="text"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Buttons */
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    button:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-1px);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    /* Status Message */
+    #initStatus {
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    #initStatus[style*="green"] {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    #initStatus[style*="red"] {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* Output Section */
+    pre {
+        background-color: var(--background-color);
+        border: 2px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        overflow-x: auto;
+        font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        font-size: 0.875rem;
+        line-height: 1.7;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+        body {
+            padding: 1rem;
+        }
+
+        .container {
+            padding: 1rem;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        button {
+            width: 100%;
         }
     }
-</script>
-<style>
-  /* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-}
 
-/* Heading */
-h2 {
-    color: #007bff;
-    margin-bottom: 20px;
-}
+    /* Form Validation Styles */
+    input.invalid {
+        border-color: #dc2626;
+        background-color: #fef2f2;
+    }
 
-/* Form Styles */
-label {
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-}
+    input.invalid:focus {
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
 
-input[type="text"] {
-    width: 80%;
-    max-width: 400px;
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .error-message {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        min-height: 1.25rem;
+    }
 
-/* Buttons */
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-}
+    /* Notification Styles */
+    .notification {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 600;
+        z-index: 1000;
+        animation: slide-in 0.3s ease-out;
+    }
 
-button:hover {
-    background-color: #0056b3;
-}
+    .notification.success {
+        background-color: #059669;
+    }
 
-/* Status Message */
-#initStatus {
-    font-size: 18px;
-    font-weight: bold;
-}
+    .notification.error {
+        background-color: #dc2626;
+    }
 
-/* Output Section */
-pre {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 15px;
-    width: 80%;
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: left;
-    overflow-x: auto;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
+    .notification.fade-out {
+        animation: fade-out 0.3s ease-out forwards;
+    }
 
-</style>
+    @keyframes slide-in {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fade-out {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    /* Loading State Styles */
+    button:disabled {
+        background-color: var(--border-color);
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .loading {
+        position: relative;
+        pointer-events: none;
+    }
+
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin: -0.625rem;
+        border: 2px solid transparent;
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    </style>
 </body>
 </html>

@@ -103,5 +103,6 @@ urlpatterns = [
     path('analyzed/', views.analyzed, name='analyzed'),
     path('transferdetails/', views.transferdetails, name='transferdetails'),
     path('analysdashboard/', views.analysdashboard, name='analysdashboard'),
+    path('player-prediction/', views.player_prediction_view, name='player_prediction'),
 ]
 

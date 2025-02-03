@@ -13,6 +13,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from .video_analysis import analyze_football_video
 from django.conf import settings
+from .prediction_analysis import PerformancePredictor
+import io
+import base64
+import matplotlib.pyplot as plt
+import pandas as pd
+
 # Initialize Firebase Admin SDK
 cred_path = os.path.join(os.path.dirname(__file__), './athletarena-firebase-adminsdk-q957f-b59ba119bd.json')
 if not firebase_admin._apps:
@@ -1131,6 +1137,78 @@ def analyzevideo(request):
             return JsonResponse({'error': str(e)})
     else:
         return JsonResponse({'error': 'Invalid request method'})
+
+def player_prediction_view(request):
+    context = {}
+    
+    if request.method == 'POST':
+        if 'csvFile' in request.FILES:
+            try:
+                # Read CSV file
+                csv_file = request.FILES['csvFile']
+                df = pd.read_csv(csv_file)
+                
+                # Validate data
+                required_columns = ['Player', 'Position', 'Club', 'Age', 'Matches', 
+                                  'Goals', 'Assists', 'Pass Accuracy', 'Tackles', 
+                                  'Performance_Rating']
+                missing_columns = [col for col in required_columns if col not in df.columns]
+                if missing_columns:
+                    messages.error(request, f'Missing required columns: {", ".join(missing_columns)}')
+                    return render(request, 'accounts/player_prediction.html', context)
+                
+                if len(df) < 2:
+                    messages.error(request, 'CSV file must contain at least 2 rows of data')
+                    return render(request, 'accounts/player_prediction.html', context)
+                
+                # Initialize predictor
+                predictor = PerformancePredictor()
+                
+                # For small datasets (2-3 samples), use all data for both training and prediction
+                if len(df) <= 3:
+                    train_df = df.copy()
+                    predict_df = df.copy()
+                    messages.info(request, 'Using all data for both training and prediction due to small dataset size')
+                else:
+                    # For larger datasets, split into training and prediction
+                    train_size = max(2, int(len(df) * 0.7))
+                    train_df = df.iloc[:train_size]
+                    predict_df = df.iloc[train_size:]
+                
+                # Train the model
+                predictor.train(train_df)
+                
+                # Make predictions
+                predictions = predictor.predict(predict_df)
+                
+                # Prepare results
+                context['predictions'] = []
+                for idx, row in predict_df.iterrows():
+                    context['predictions'].append({
+                        'player': row['Player'],
+                        'team': row['Club'],
+                        'position': row['Position'],
+                        'performance': float(predictions[idx - predict_df.index[0]]),  # Adjust index
+                        'confidence': 85.0
+                    })
+                
+                # Generate feature importance plot
+                plt_figure = predictor.plot_feature_importance()
+                buf = io.BytesIO()
+                plt_figure.savefig(buf, format='png')
+                buf.seek(0)
+                context['feature_importance_plot'] = base64.b64encode(buf.read()).decode('utf-8')
+                
+                messages.success(request, 'Analysis completed successfully')
+                
+            except Exception as e:
+                messages.error(request, f'Error processing CSV file: {str(e)}')
+                print(f"Detailed error: {str(e)}")  # For debugging
+                
+        else:
+            messages.error(request, 'Please upload a CSV file with training data')
+    
+    return render(request, 'accounts/player_prediction.html', context)
 
 
 
