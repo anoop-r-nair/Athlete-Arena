@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Transfer Blockchain</title>
+</head>
+<body>
+
+<h2>Player Transfer Blockchain with Firebase</h2>
+<p id="initStatus" style="color: red;">⏳ Initializing blockchain...</p>
+
+<label>Player ID:</label> <input type="text" id="playerId"><br>
+<label>Previous Club:</label> <input type="text" id="previousClub"><br>
+<label>New Club:</label> <input type="text" id="newClub"><br>
+<label>Transfer Fee ($):</label> <input type="text" id="transferFee"><br><br>
+
+<button onclick="addTransfer()">Add Transfer</button>
+<!-- <button onclick="mineBlock()">Mine Block</button> -->
+<button onclick="viewBlockchain()">View Blockchain</button>
+
+<pre id="output"></pre>
+
+<!-- ✅ Firebase SDK (Correct Versions) -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+    authDomain: "athletarena.firebaseapp.com",
+    projectId: "athletarena",
+    storageBucket: "athletarena.appspot.com",
+    messagingSenderId: "1016152202031",
+    appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+    measurementId: "G-RC780HJPZ6"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Make Firebase functions and db available globally
+  window.db = db;
+  window.collection = collection;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDoc = getDoc;
+  window.getDocs = getDocs;
+
+  // Initialize the app
+  window.addEventListener('load', function() {
+    initApp();
+  });
+</script>
+
+<script>
+    let myBlockchain = null;  // Blockchain object
+    let isInitialized = false;  // Check if blockchain is ready
+
+    // ✅ 1. Initialize Firebase
+    async function initializeFirebase() {
+        try {
+            const testQuery = await getDocs(collection(window.db, "blockchain"));
+            console.log("🔥 Firebase initialized successfully!");
+            return true;
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            return false;
+        }
+    }
+
+    // ✅ 2. Blockchain Class
+    class Block {
+        constructor(index, timestamp, transferData, previousHash = '') {
+            this.index = index;
+            this.timestamp = timestamp;
+            this.transferData = transferData;
+            this.previousHash = previousHash;
+            this.hash = this.calculateHash();
+            this.nonce = 0;
+        }
+
+        calculateHash() {
+            return btoa(this.index + this.timestamp + JSON.stringify(this.transferData) + this.previousHash + this.nonce);
+        }
+
+        mineBlock(difficulty) {
+            while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+                this.nonce++;
+                this.hash = this.calculateHash();
+            }
+        }
+    }
+
+    class Blockchain {
+        constructor() {
+            this.chain = [this.createGenesisBlock()];
+            this.difficulty = 2;
+        }
+
+        createGenesisBlock() {
+            return new Block(0, Date.now(), { message: "Genesis Block" }, "0");
+        }
+
+        getLatestBlock() {
+            return this.chain[this.chain.length - 1];
+        }
+
+        async addBlock(newBlock) {
+            try {
+                console.log("Starting addBlock process...");
+                newBlock.previousHash = this.getLatestBlock().hash;
+                console.log("Mining block...");
+                newBlock.mineBlock(this.difficulty);
+                console.log("Block mined, adding to chain...");
+                this.chain.push(newBlock);
+                console.log("Saving to Firebase...");
+                await this.saveToFirebase();
+                console.log("Block added and saved successfully");
+            } catch (error) {
+                console.error("Error in addBlock:", error);
+                throw new Error("Failed to add block: " + error.message);
+            }
+        }
+
+        async saveToFirebase() {
+            try {
+                const docRef = doc(window.db, "blockchain", "chain");
+                await setDoc(docRef, { data: JSON.stringify(this.chain) });
+                console.log("✅ Blockchain saved to Firebase");
+            } catch (error) {
+                console.error("❌ Error saving to Firebase:", error);
+            }
+        }
+
+        async loadFromFirebase() {
+            try {
+                const docRef = doc(window.db, "blockchain", "chain");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    this.chain = JSON.parse(docSnap.data().data);
+                    console.log("✅ Blockchain loaded from Firebase!");
+                }
+            } catch (error) {
+                console.error("❌ Error loading blockchain:", error);
+            }
+        }
+    }
+
+    // ✅ 3. Initialize Blockchain AFTER Firebase is Ready
+    async function initializeBlockchain() {
+        myBlockchain = new Blockchain();
+        await myBlockchain.loadFromFirebase();
+        isInitialized = true;
+        document.getElementById("initStatus").style.color = "green";
+        document.getElementById("initStatus").textContent = "✅ Blockchain initialized successfully!";
+        console.log("✅ Blockchain is ready!");
+    }
+
+    // ✅ 4. Ensure Firebase and Blockchain Load Before Using Them
+    async function initApp() {
+        const success = await initializeFirebase();
+        if (success) {
+            await initializeBlockchain();
+        } else {
+            document.getElementById("initStatus").style.color = "red";
+            document.getElementById("initStatus").textContent = "❌ Initialization failed. Please refresh the page.";
+        }
+    }
+
+    // Add collection names as constants
+    const COLLECTIONS = {
+        TRANSFERS: 'public_transfers',  // Using public collection
+        BLOCKCHAIN: 'blockchain'
+    };
+
+    // Update addTransfer function with better error handling
+    async function addTransfer() {
+        try {
+            if (!window.db) {
+                throw new Error("Database not initialized");
+            }
+
+            const playerId = document.getElementById("playerId").value.trim();
+            const previousClub = document.getElementById("previousClub").value.trim();
+            const newClub = document.getElementById("newClub").value.trim();
+            const transferFee = document.getElementById("transferFee").value.trim();
+
+            if (!playerId || !previousClub || !newClub || !transferFee) {
+                throw new Error("Please fill in all fields");
+            }
+
+            const transferData = {
+                playerId,
+                previousClub,
+                newClub,
+                transferFee: parseFloat(transferFee),
+                timestamp: Date.now(),
+                status: 'pending',
+                created_at: new Date().toISOString()
+            };
+
+            // Use the public collection
+            const docId = Date.now().toString();
+            const transferRef = doc(window.db, COLLECTIONS.TRANSFERS, docId);
+            
+            try {
+                await setDoc(transferRef, transferData);
+                console.log("Transfer saved successfully with ID:", docId);
+                
+                // Clear form
+                document.getElementById("playerId").value = "";
+                document.getElementById("previousClub").value = "";
+                document.getElementById("newClub").value = "";
+                document.getElementById("transferFee").value = "";
+
+                alert("✅ Transfer added successfully!");
+                await viewBlockchain();
+                
+            } catch (error) {
+                console.error("Error saving transfer:", error);
+                if (error.code === 'permission-denied') {
+                    throw new Error("Access denied. Please check database permissions.");
+                }
+                throw error;
+            }
+
+        } catch (error) {
+            console.error("Error in addTransfer:", error);
+            alert(error.message || "Error adding transfer");
+        }
+    }
+
+    // ✅ 6. Mine a Block
+    async function mineBlock() {
+        if (!isInitialized || !myBlockchain) {
+            alert("⚠️ Blockchain not initialized yet. Please wait a moment and try again.");
+            return;
+        }
+
+        await myBlockchain.loadFromFirebase();
+        myBlockchain.addBlock(new Block(myBlockchain.chain.length, Date.now(), { event: "Transfer Block Mined" }));
+        document.getElementById("output").textContent = JSON.stringify(myBlockchain.chain, null, 2);
+        console.log("✅ Block Mined Successfully!");
+    }
+
+    // Update viewBlockchain function
+    async function viewBlockchain() {
+        try {
+            const querySnapshot = await getDocs(collection(window.db, COLLECTIONS.TRANSFERS));
+            const transfers = [];
+            querySnapshot.forEach((doc) => {
+                transfers.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            });
+            
+            if (transfers.length === 0) {
+                document.getElementById("output").textContent = "No transfers found.";
+            } else {
+                document.getElementById("output").textContent = JSON.stringify(transfers, null, 2);
+            }
+        } catch (error) {
+            console.error("Error viewing transfers:", error);
+            document.getElementById("output").textContent = 
+                "Error: Unable to load transfers. " + (error.message || "Please check permissions.");
+        }
+    }
+</script>
+<style>
+  /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Heading */
+h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Form Styles */
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+input[type="text"] {
+    width: 80%;
+    max-width: 400px;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Buttons */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Status Message */
+#initStatus {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Output Section */
+pre {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: left;
+    overflow-x: auto;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+</style>
+</body>
+</html>

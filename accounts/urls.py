@@ -54,7 +54,6 @@ urlpatterns = [
     path('managerdasboard/',views.managerdasboard, name='managerdasboard'), 
     path('teamupdate/',views.teamupdate, name='teamupdate'),
     path('viewteamcoach/',views.viewteamcoach, name='viewteamcoach'),
-
     path('logout/', views.logout_view, name='logout'),
     path('lineups/',views.lineups, name='lineups'),
     path('assigncoach/',views.assigncoach, name='assigncoach'),
@@ -94,10 +93,15 @@ urlpatterns = [
     path('viewfitness/',views.viewfitness, name='viewfitness'),
     path('vediocall/',views.vediocall, name='vediocall'),
     path('assignplayers/',views.assignplayers, name='assignplayers'),
-    
-
-
-
-
+    path('medical_staff_dashboard/',views.medical_staff_dashboard, name='medical_staff_dashboard'),
+    path('SportsPsychologist/',views.SportsPsychologist, name='SportsPsychologist'),
+    path('analysisexpert/',views.analysisexpert, name='analysisexpert'), 
+    path('analyzevideo/', views.analyzevideo, name='analyzevideo'),
+    path('reportgenerate/', views.reportgenerate, name='reportgenerate'),
+    path('injurytrack/', views.injurytrack, name='injurytrack'),
+    path('suggestion/', views.suggestion, name='suggestion'),
+    path('analyzed/', views.analyzed, name='analyzed'),
+    path('transferdetails/', views.transferdetails, name='transferdetails'),
+    path('analysdashboard/', views.analysdashboard, name='analysdashboard'),
 ]
 

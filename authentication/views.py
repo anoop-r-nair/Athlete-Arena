@@ -17,6 +17,9 @@
 #     return render(request, 'accounts/index.html')
 
 
+from django.shortcuts import render
+
+
 def index(request):
     return render(request, 'accounts/index.html')
 
@@ -26,8 +29,6 @@ def index(request):
 
 def index(request):
     return render(request, 'accounts/index.html')
->>>>>>> 9b8fda4e33aea8a09a1cbbdf622aa63b4ff1f31a
->>>>>>> 03012c97d16d6b4ed142a47da138b4166c1dff1c
 
 
 # def signup(request):

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Injury Tracking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            margin: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 10px;
+        }
+        .container h2 {
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            color: white;
+            background: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Transfer Details</h2>
+        <p>Transfer the details of the player.</p>
+        <a href="{% url 'transferdetails' %}" class="button">View Details</a>
+    </div>
+    <div class="container">
+        <h2>Vedio Analysis</h2>
+        <p>Analysis the vedio instantly.</p>
+        <a href="{% url 'analysisexpert' %}" class="button">Generate</a>
+    </div>
+    <!-- <div class="container">
+        <h2>Suggestion</h2>
+        <p>Monitor and manage injury records efficiently.</p>
+        <a href="{% url 'suggestion' %}" class="button">View Details</a>
+    </div> -->
+</body>
+</html>

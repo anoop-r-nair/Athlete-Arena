@@ -1,0 +1,173 @@
+{% extends 'accounts/main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .upload-form {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    .loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .video-container {
+        max-width: 100%;
+        margin-top: 20px;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    .error-message {
+        color: #dc3545;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            {% if messages %}
+            <div class="messages mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Football Match Analysis</h3>
+                </div>
+                <div class="card-body upload-form">
+                    <form method="POST" enctype="multipart/form-data" id="analysisForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="video" class="form-label">Upload Match Video</label>
+                            <input type="file" class="form-control" id="video" name="video" 
+                                   accept="video/mp4,video/x-m4v,video/*" required>
+                            <small class="form-text text-muted">Supported formats: MP4, AVI, MOV (max size: 100MB)</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3 w-100">Analyze Video</button>
+                    </form>
+                    
+                    <div class="loading" id="loadingIndicator">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Processing video... This may take a few minutes.</p>
+                    </div>
+                </div>
+            </div>
+
+            {% if analysis_complete %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4>Analysis Results</h4>
+                </div>
+                <div class="card-body">
+                    <div class="video-container">
+                        <video 
+                            width="100%" 
+                            height="auto" 
+                            controls 
+                            controlsList="nodownload" 
+                            preload="auto"
+                            poster="{% static 'images/video-placeholder.png' %}"
+                            class="w-100">
+                            <source src="{{ analyzed_video_url }}" type="video/mp4">
+                            <source src="{{ analyzed_video_url }}" type="video/webm">
+                            <source src="{{ analyzed_video_url }}" type="video/ogg">
+                            <p>Your browser doesn't support HTML5 video. Here is a 
+                                <a href="{{ analyzed_video_url }}">link to the video</a> instead.</p>
+                        </video>
+                        
+                        <div id="videoError" class="alert alert-danger mt-2" style="display: none;">
+                            Error loading video. Please check if the video file exists and is in a supported format.
+                        </div>
+
+                        {% if analyzed_video_url %}
+                        <div class="text-muted mt-2">
+                            <strong>Video URL:</strong> <span id="videoUrl">{{ analyzed_video_url }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('analysisForm').addEventListener('submit', function(e) {
+    const videoInput = document.getElementById('video');
+    const file = videoInput.files[0];
+    
+    // File validation
+    if (file) {
+        // Check file size (100MB limit)
+        if (file.size > 100 * 1024 * 1024) {
+            e.preventDefault();
+            alert('File size must be less than 100MB');
+            return;
+        }
+        
+        // Show loading indicator
+        document.getElementById('loadingIndicator').style.display = 'block';
+    }
+});
+
+// Enhanced video error handling
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.querySelector('video');
+    const videoError = document.getElementById('videoError');
+    
+    if (video) {
+        video.addEventListener('error', function(e) {
+            console.error('Error loading video:', e);
+            videoError.style.display = 'block';
+            
+            // Log detailed error information
+            const error = e.target.error;
+            if (error) {
+                switch (error.code) {
+                    case error.MEDIA_ERR_ABORTED:
+                        console.error('Video loading aborted');
+                        break;
+                    case error.MEDIA_ERR_NETWORK:
+                        console.error('Network error while loading video');
+                        break;
+                    case error.MEDIA_ERR_DECODE:
+                        console.error('Error decoding video');
+                        break;
+                    case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        console.error('Video format not supported');
+                        break;
+                    default:
+                        console.error('Unknown error while loading video');
+                }
+            }
+        });
+
+        // Add loading indicator
+        video.addEventListener('loadstart', function() {
+            video.style.opacity = '0.5';
+        });
+
+        // Remove loading indicator when video can play
+        video.addEventListener('canplay', function() {
+            video.style.opacity = '1';
+        });
+    }
+});
+</script>
+{% endblock %}

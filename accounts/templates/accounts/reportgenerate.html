@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Medical Report Generator</title>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #report {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Medical Report Generator</h1>
+    <form id="reportForm">
+        <label for="patientName">Patient Name:</label>
+        <input type="text" id="patientName" required><br><br>
+        
+        <label for="diagnosis">Diagnosis:</label>
+        <input type="text" id="diagnosis" required><br><br>
+        
+        <label for="treatment">Treatment:</label>
+        <input type="text" id="treatment" required><br><br>
+        
+        <button type="submit">Generate Report</button>
+    </form>
+
+    <div id="report" style="display:none;">
+        <h2>Medical Report</h2>
+        <p id="reportPatientName"></p>
+        <p id="reportDiagnosis"></p>
+        <p id="reportTreatment"></p>
+        <button id="download">Download PDF</button>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js";
+    
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+    
+        document.getElementById('reportForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const patientName = document.getElementById('patientName').value;
+            const diagnosis = document.getElementById('diagnosis').value;
+            const treatment = document.getElementById('treatment').value;
+    
+            // Update report section
+            document.getElementById('reportPatientName').innerText = "Patient Name: " + patientName;
+            document.getElementById('reportDiagnosis').innerText = "Diagnosis: " + diagnosis;
+            document.getElementById('reportTreatment').innerText = "Treatment: " + treatment;
+    
+            // Show the report
+            document.getElementById('report').style.display = 'block';
+    
+            // Save report to Firestore
+            try {
+                await addDoc(collection(db, "medicalReports"), {
+                    patientName: patientName,
+                    diagnosis: diagnosis,
+                    treatment: treatment
+                });
+                console.log("Report saved successfully!");
+            } catch (error) {
+                console.error("Error saving report: ", error);
+            }
+        });
+    
+        document.getElementById('download').addEventListener('click', () => {
+            const element = document.getElementById('report');
+            html2pdf().from(element).save('medical_report.pdf');
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+    
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 40px;
+        }
+    
+        form {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            color: #34495e;
+        }
+    
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+    
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    
+        #report {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            max-width: 500px;
+            margin: 40px auto;
+        }
+    
+        #report h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            text-align: center;
+        }
+    
+        #report p {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+    
+        #download {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        #download:hover {
+            background-color: #2980b9;
+        }
+    </style>
+    
+    
+</body>
+</html>

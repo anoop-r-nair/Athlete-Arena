@@ -10,6 +10,9 @@ from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 # from django.views.decorators.cache import cache_control
+from django.core.files.storage import FileSystemStorage
+from .video_analysis import analyze_football_video
+from django.conf import settings
 # Initialize Firebase Admin SDK
 cred_path = os.path.join(os.path.dirname(__file__), './athletarena-firebase-adminsdk-q957f-b59ba119bd.json')
 if not firebase_admin._apps:
@@ -530,6 +533,12 @@ def manage_schedules(request):
 def coach_dashboard(request):
     return render(request, 'accounts/coach_dashboard.html')
 
+def transferdetails(request):
+    return render(request, 'accounts/transferdetails.html')
+
+def analysdashboard(request):
+    return render(request, 'accounts/analysdashboard.html')
+
 
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 
@@ -581,7 +590,80 @@ def viewpracticechange(request):
     return render(request, 'accounts/viewpracticechange.html')
 
 def viewannouncement(request):
-    return render(request, 'accounts/viewannouncement.html')    
+    return render(request, 'accounts/viewannouncement.html')
+
+ 
+def medical_staff_dashboard(request):
+    return render(request, 'accounts/medical_staff_dashboard.html') 
+
+
+def SportsPsychologist(request):
+    return render(request, 'accounts/SportsPsychologist.html') 
+
+from django.http import HttpResponse
+
+def analyzed(request):
+    return HttpResponse("This is the analyzed page.")
+
+
+
+def analysisexpert(request):
+    if request.method == 'POST' and request.FILES.get('video'):
+        video_file = request.FILES['video']
+        
+        # Validate file size
+        if video_file.size > 100 * 1024 * 1024:  # 100MB limit
+            messages.error(request, 'File size must be less than 100MB')
+            return render(request, 'accounts/analysisexpert.html')
+        
+        fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+        
+        try:
+            # Create directories if they don't exist
+            upload_dir = os.path.join(settings.MEDIA_ROOT, 'uploads')
+            analyzed_dir = os.path.join(settings.MEDIA_ROOT, 'analyzed')
+            os.makedirs(upload_dir, exist_ok=True)
+            os.makedirs(analyzed_dir, exist_ok=True)
+            
+            # Save uploaded video
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            safe_filename = f"{timestamp}_{video_file.name.replace(' ', '_')}"
+            filename = fs.save(os.path.join('uploads', safe_filename), video_file)
+            video_path = os.path.join(settings.MEDIA_ROOT, filename)
+            
+            # Create output path
+            output_filename = f'analyzed_{safe_filename}'
+            output_path = os.path.join(analyzed_dir, output_filename)
+            
+            # Analyze video
+            analyze_football_video(video_path, output_path)
+            
+            # Generate URL for the analyzed video
+            analyzed_video_url = f'{settings.MEDIA_URL}analyzed/{output_filename}'
+            
+            # Clean up original upload
+            if os.path.exists(video_path):
+                os.remove(video_path)
+            
+            messages.success(request, 'Video analysis completed successfully!')
+            context = {
+                'analysis_complete': True,
+                'analyzed_video_url': analyzed_video_url,
+                'debug_info': {
+                    'media_root': settings.MEDIA_ROOT,
+                    'output_path': output_path,
+                    'file_exists': os.path.exists(output_path)
+                }
+            }
+            return render(request, 'accounts/analysisexpert.html', context)
+            
+        except Exception as e:
+            messages.error(request, f"Error processing video: {str(e)}")
+            # Clean up any uploaded files in case of error
+            if 'video_path' in locals() and os.path.exists(video_path):
+                os.remove(video_path)
+            
+    return render(request, 'accounts/analysisexpert.html')
 
 
 
@@ -803,7 +885,14 @@ def assigncoach(request):
 def assignplayers(request):
     return render(request, 'accounts/assignplayers.html')
 
+def injurytrack(request):
+    return render(request, 'accounts/injurytrack.html')
 
+def reportgenerate(request):
+    return render(request, 'accounts/reportgenerate.html')
+
+def suggestion(request):
+    return render(request, 'accounts/suggestion.html')
 
 
 def login(request):
@@ -966,6 +1055,83 @@ def get_messages(request, user_id):
 
 
     return JsonResponse({'messages': message_list})  
+from django.shortcuts import render
+from django.http import JsonResponse
+import cv2
+import numpy as np
+
+def analyzevideo(request):
+    if request.method == 'POST':
+        try:
+            # Video analysis code
+            vidcap = cv2.VideoCapture('cutvideo.mp4')
+            fps = vidcap.get(cv2.CAP_PROP_FPS)
+            frame_time = int(1000 / fps)
+            success, image = vidcap.read()
+
+            player_positions = {}
+            frame_idx = 0
+            font = cv2.FONT_HERSHEY_SIMPLEX
+
+            while success:
+                hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+                lower_green = np.array([40, 40, 40])
+                upper_green = np.array([70, 255, 255])
+                lower_blue = np.array([110, 50, 50])
+                upper_blue = np.array([130, 255, 255])
+                lower_red = np.array([0, 31, 255])
+                upper_red = np.array([176, 255, 255])
+
+                mask = cv2.inRange(hsv, lower_green, upper_green)
+                res = cv2.bitwise_and(image, image, mask=mask)
+                res_gray = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
+                kernel = np.ones((13, 13), np.uint8)
+                thresh = cv2.threshold(res_gray, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+                thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+                contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+                current_frame_positions = {}
+                for c in contours:
+                    x, y, w, h = cv2.boundingRect(c)
+                    if h >= 1.5 * w and w > 15 and h >= 15:
+                        player_img = image[y:y + h, x:x + w]
+                        player_hsv = cv2.cvtColor(player_img, cv2.COLOR_BGR2HSV)
+                        mask_blue = cv2.inRange(player_hsv, lower_blue, upper_blue)
+                        nz_blue = cv2.countNonZero(mask_blue)
+                        mask_red = cv2.inRange(player_hsv, lower_red, upper_red)
+                        nz_red = cv2.countNonZero(mask_red)
+
+                        label, color = None, None
+                        if nz_blue >= 20:
+                            label, color = 'France', (255, 0, 0)
+                        elif nz_red >= 20:
+                            label, color = 'Belgium', (0, 0, 255)
+
+                        if label:
+                            player_id = f"{label}_{x}_{y}"
+                            current_frame_positions[player_id] = (x + w // 2, y + h // 2)
+                            cv2.putText(image, label, (x - 2, y - 2), font, 0.8, color, 2, cv2.LINE_AA)
+                            cv2.rectangle(image, (x, y), (x + w, y + h), color, 3)
+
+                            if player_id in player_positions:
+                                prev_x, prev_y = player_positions[player_id]
+                                cur_x, cur_y = current_frame_positions[player_id]
+                                distance = np.sqrt((cur_x - prev_x)**2 + (cur_y - prev_y)**2)
+                                speed = (distance * fps) / 100
+                                cv2.putText(image, f"Speed: {speed:.2f} m/s", (x, y + h + 20), font, 0.6, (0, 255, 0), 2)
+
+                player_positions = current_frame_positions
+                cv2.imwrite(f"./Cropped/frame{frame_idx}.jpg", image)
+                success, image = vidcap.read()
+                frame_idx += 1
+
+            vidcap.release()
+            return JsonResponse({'message': 'Video analysis complete!'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
 
 
 
