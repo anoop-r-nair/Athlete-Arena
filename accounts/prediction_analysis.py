@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import matplotlib
+matplotlib.use('Agg')  # Set the backend to non-interactive Agg
 import matplotlib.pyplot as plt
 
 class PerformancePredictor:
