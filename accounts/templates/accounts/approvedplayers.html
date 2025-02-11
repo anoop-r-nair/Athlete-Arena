@@ -194,6 +194,7 @@
                         <th>Certificate</th>
                         <th>Select Position</th>
                         <th>Action</th>
+                        <th>Report</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -260,6 +261,7 @@
                         </select>
                     </td>
                     <td><button onclick="saveToTeam('${playerId}', '${player.name}', '${player.email}')">Add to Team</button></td>
+                    <td><button onclick="generatePlayerReport('${playerId}')">Generate Report</button></td>
                 `;
             });
         })
@@ -291,6 +293,85 @@
 
     function redirectToTeamPage() {
         window.location.href = 'team_players.html'; // Change this URL as per your "Team" page location
+    }
+
+    function generatePlayerReport(playerId) {
+        try {
+            // Get the row containing the player data
+            const row = document.querySelector(`button[onclick="generatePlayerReport('${playerId}')"]`).closest('tr');
+            
+            // Extract player data from the table row
+            const player = {
+                name: row.cells[0].textContent,
+                email: row.cells[1].textContent,
+                phone: row.cells[2].textContent,
+                position: row.cells[3].textContent,
+                experience: parseInt(row.cells[4].textContent),
+                captaincy: row.cells[5].textContent === 'Yes',
+                matchesPlayed: parseInt(row.cells[6].textContent),
+                goalsScored: parseInt(row.cells[7].textContent)
+            };
+
+            const report = generateReportContent(player);
+            downloadReport(player.name, report);
+        } catch (error) {
+            console.error("Error generating report: ", error);
+            alert("Failed to generate report. Please try again.");
+        }
+    }
+
+    function generateReportContent(player) {
+        const performanceScore = calculatePerformanceScore(player);
+        const report = `
+Player Performance Report
+------------------------
+Name: ${player.name}
+Position: ${player.position}
+Experience: ${player.experience} years
+
+Performance Metrics:
+------------------
+Matches Played: ${player.matchesPlayed}
+Goals Scored: ${player.goalsScored}
+Goals per Match: ${(player.matchesPlayed > 0 ? (player.goalsScored / player.matchesPlayed).toFixed(2) : '0.00')}
+Performance Score: ${performanceScore}/100
+
+Additional Information:
+---------------------
+Captaincy Experience: ${player.captaincy ? 'Yes' : 'No'}
+Contact: ${player.email}
+Phone: ${player.phone}
+
+Report generated on: ${new Date().toLocaleDateString()}
+        `;
+        return report;
+    }
+
+    function calculatePerformanceScore(player) {
+        try {
+            // Add safety checks for calculations
+            const goalsPerMatch = player.matchesPlayed > 0 ? player.goalsScored / player.matchesPlayed : 0;
+            const experienceScore = Math.min((player.experience || 0) * 5, 30);
+            const matchesScore = Math.min((player.matchesPlayed || 0) * 0.5, 30);
+            const goalsScore = Math.min(goalsPerMatch * 20, 40);
+            
+            return Math.round(experienceScore + matchesScore + goalsScore);
+        } catch (error) {
+            console.error("Error calculating performance score: ", error);
+            return 0;
+        }
+    }
+
+    function downloadReport(playerName, reportContent) {
+        const blob = new Blob([reportContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${playerName.replace(/\s+/g, '_')}_report.txt`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     }
 
     window.onload = fetchApprovedPlayers;

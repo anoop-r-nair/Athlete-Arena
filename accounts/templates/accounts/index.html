@@ -1,191 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ⚡ lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Team Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
     <style>
-        /* General Styles */
-        body {
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #0d47a1;
+            --accent-color: #2962ff;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --background-light: rgba(0, 0, 0, 0.7);
+            --card-hover: #e3f2fd;
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            position: relative;
+            min-height: 100vh;
+            background-color: var(--background-light);
+        }
+
+        /* Background Image */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background amp-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
         }
 
         header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            padding: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
-        .auth-buttons {
-            margin: 10px 0;
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .auth-buttons a {
-            color: white;
+            display: inline-block;
+            color: var(--text-light);
             text-decoration: none;
             margin: 0 10px;
-            padding: 10px 15px;
-            background-color: #2980b9;
-            border-radius: 5px;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .auth-buttons a:hover {
-            background-color: #3498db;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        nav ul li a.active, nav ul li a:hover {
-            text-decoration: underline;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(41, 98, 255, 0.3);
         }
 
         main {
-            padding: 20px;
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Card Styles */
-        .card {
-            display: flex;
-            flex-direction: column; /* Ensures image and text are stacked */
-            align-items: center;
-            padding: 20px;
-            margin: 20px;
-            border: 1px solid #ddd;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 10px;
-            background-color: #f9f9f9;
-            text-decoration: none;
-            color: #333;
-            width: 200px; /* Fixed width for each card */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, transform 0.2s;
         }
 
-        .card:hover {
-            background-color: #dfe6e9;
-            transform: scale(1.05); /* Slight zoom on hover */
-        }
-
-        .card i {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        /* Players List */
-        #player-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        #player-list li {
-            background-color: #ecf0f1;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #2c3e50;
-            color: white;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-
-        /* Additional Styles for Layout */
         .role-cards {
-            display: flex;
-            flex-wrap: wrap; /* Allow cards to wrap */
-            justify-content: center; /* Center the cards */
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            text-align: center;
+            padding: 1.5rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .role-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+
+    <div class="background">
+        <amp-img src="https://st3.depositphotos.com/9880800/15061/i/450/depositphotos_150617900-stock-photo-soccer-ball-on-grass.jpg" 
+                 width="1600" height="900" layout="fill">
+        </amp-img>
+    </div>
+
     <header>
         <h1>Football Team Management</h1>
         <div class="auth-buttons">
-            <a href="{% url 'login' %}" class="login">Login</a>
-            <a href="{% url 'registration' %}" class="login">Registration</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'registration' %}">Registration</a>
         </div>
-        <nav>
-            <ul>
-                <li><a href="#overview" class="active">Overview</a></li>
-                <li><a href="{% url 'viewplayerimage' %}" class="btn">Player List</a></li>
-                <li><a href="{% url 'viewschedules' %}" class="btn">Schedules</a></li>
-
-                <li><a href="#stats">Stats</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
-        <section id="overview" class="tab-content active">
+        <section>
             <h2>Team Overview</h2>
-            <p>Welcome to the football team management system. Manage your team effectively!</p>
+            <p>Manage your team effectively!</p>
             <h3>Select Your Role</h3>
             <div class="role-cards">
                 <a href="{% url 'login' %}" class="card">
                     <i class="fas fa-user-tie"></i>
                     <h3>Coach</h3>
-                    <p>Manage your team, training sessions, and player performance.</p>
+                    <p>Manage training and team performance.</p>
                 </a>
                 <a href="{% url 'login' %}" class="card">
                     <i class="fas fa-futbol"></i>
                     <h3>Player</h3>
-                    <p>Track your progress and communicate with your coach.</p>
-                </a>
-                <a href="{% url 'login' %}" class="card">
-                    <i class="fas fa-user-friends"></i>
-                    <h3>Fan Page</h3>
-                    <p>Stay informed about your team's stats.</p>
+                    <p>Track progress and communicate with coaches.</p>
                 </a>
                 <a href="{% url 'medical_staff_dashboard' %}" class="card">
                     <i class="fas fa-user-md"></i>
                     <h3>Medical Staff</h3>
-                    <p>Monitor player health and injuries.</p>
-                </a>
-                <a href="{% url 'SportsPsychologist' %}" class="card">
-                    <i class="fas fa-brain"></i>
-                    <h3>Sports Psychologist</h3>
-                    <p>Support the mental well-being of players.</p>
+                    <p>Monitor player health.</p>
                 </a>
                 <a href="{% url 'analysdashboard' %}" class="card">
                     <i class="fas fa-chart-line"></i>
                     <h3>Analytics Expert</h3>
-                    <p>Analyze performance data and improve strategies.</p>
+                    <p>Analyze performance and strategies.</p>
                 </a>
             </div>
         </section>
@@ -194,5 +182,6 @@
     <footer>
         <p>&copy; 2024 Football Team Management</p>
     </footer>
+
 </body>
 </html>

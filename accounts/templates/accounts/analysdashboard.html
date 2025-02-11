@@ -5,37 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Injury Tracking System</title>
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            flex-wrap: wrap;
+            min-height: 100vh;
             background-color: #f4f4f4;
-        }
-        .container {
-            width: 300px;
             padding: 20px;
-            margin: 20px;
+            margin: 0;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 320px;
+            padding: 20px;
+            margin: 15px;
             background: white;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             border-radius: 10px;
+            transition: transform 0.3s ease;
         }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
         .container h2 {
             color: #333;
+            font-size: 1.5rem;
         }
+
+        .container p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Button Styles */
         .button {
             display: inline-block;
-            padding: 10px 20px;
-            margin-top: 10px;
+            padding: 12px 20px;
+            margin-top: 15px;
             color: white;
             background: #007bff;
             text-decoration: none;
             border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
         }
+
         .button:hover {
             background: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                align-items: center;
+            }
+            .container {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container h2 {
+                font-size: 5vw;
+            }
+
+            .container p {
+                font-size: 4vw;
+            }
+
+            .button {
+                font-size: 4vw;
+                padding: 10px 15px;
+            }
         }
     </style>
 </head>
@@ -45,11 +95,13 @@
         <p>Transfer the details of the player.</p>
         <a href="{% url 'transferdetails' %}" class="button">View Details</a>
     </div>
+
     <div class="container">
-        <h2>Vedio Analysis</h2>
-        <p>Analysis the vedio instantly.</p>
+        <h2>Video Analysis</h2>
+        <p>Analyze the video instantly.</p>
         <a href="{% url 'analysisexpert' %}" class="button">Generate</a>
     </div>
+
     <div class="container">
         <h2>Performance Prediction</h2>
         <p>Predict the player's performance.</p>
