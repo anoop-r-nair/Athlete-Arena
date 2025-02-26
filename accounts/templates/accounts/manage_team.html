@@ -82,6 +82,16 @@
             <input type="checkbox" id="enablePlayer">
         </label>
 
+        <label>
+            Enable Medical Staff Registration: 
+            <input type="checkbox" id="enableMedicalStaff">
+        </label>
+
+        <label>
+            Enable Sports Analytics Registration:
+            <input type="checkbox" id="enableSportsAnalytics">
+        </label>
+
         <button onclick="saveSettings()">Save</button>
     </div>
 
@@ -109,6 +119,8 @@
                 if (doc.exists) {
                     document.getElementById("enableCoach").checked = doc.data().coachEnabled;
                     document.getElementById("enablePlayer").checked = doc.data().playerEnabled;
+                    document.getElementById("enableMedicalStaff").checked = doc.data().medicalStaffEnabled;
+                    document.getElementById("enableSportsAnalytics").checked = doc.data().sportsAnalyticsEnabled;
                 } else {
                     console.log("No settings found, using default values.");
                 }
@@ -121,11 +133,21 @@
         function saveSettings() {
             const coachEnabled = document.getElementById("enableCoach").checked;
             const playerEnabled = document.getElementById("enablePlayer").checked;
+            const medicalStaffEnabled = document.getElementById("enableMedicalStaff").checked;
+            const sportsAnalyticsEnabled = document.getElementById("enableSportsAnalytics").checked;
 
             db.collection("settings").doc("registration").set({
                 coachEnabled: coachEnabled,
-                playerEnabled: playerEnabled
+                playerEnabled: playerEnabled,
+                medicalStaffEnabled: medicalStaffEnabled,
+                sportsAnalyticsEnabled: sportsAnalyticsEnabled
             }).then(() => {
+                console.log("Saving settings:", {
+                    coachEnabled,
+                    playerEnabled,
+                    medicalStaffEnabled,
+                    sportsAnalyticsEnabled
+                });
                 alert("Settings saved successfully!");
             }).catch((error) => {
                 console.error("Error saving settings: ", error);

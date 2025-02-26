@@ -125,3 +125,21 @@ class PerformancePredictor:
         plt.title("Feature Importance")
         plt.tight_layout()
         return plt.gcf() 
+    
+    def predict_injury_risk(self, df):
+        """Predict injury risk based on player data"""
+        if not self.is_trained:
+            raise ValueError("Model must be trained before making predictions")
+
+        processed_df = self.preprocess_data(df)
+
+        # Ensure all required features are present
+        missing_cols = set(self.feature_columns) - set(processed_df.columns)
+        if missing_cols:
+            raise ValueError(f"Missing required columns: {missing_cols}")
+
+        # Here we assume a simple model for injury risk prediction
+        # This is a placeholder for actual injury prediction logic
+        injury_risk = np.random.rand(len(processed_df)) * 100  # Random risk percentage for demonstration
+
+        return injury_risk

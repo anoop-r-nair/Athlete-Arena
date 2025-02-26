@@ -104,5 +104,15 @@ urlpatterns = [
     path('transferdetails/', views.transferdetails, name='transferdetails'),
     path('analysdashboard/', views.analysdashboard, name='analysdashboard'),
     path('player-prediction/', views.player_prediction_view, name='player_prediction'),
+    path('sharelocation/', views.sharelocation, name='sharelocation'),
+    path('locationview/', views.locationview, name='locationview'),
+    path('injury_prediction/', views.injury_prediction_view, name='injury_prediction'),
+    path('medicalstaffregistration/',views.medicalstaffregistration, name='medicalstaffregistration'),
+    path('sportssychologits/',views.sportssychologits, name='sportssychologits'),
+    path('jerseycustomization/',views.jerseycustomization, name='jerseycustomization'),
+    path('jersey/',views.jersey, name='jersey'),
+    path('performancecalculator/',views.performancecalculator, name='performancecalculator'),
+    path('performancedashboard/',views.performancedashboard, name='performancedashboard'),
+    path('performance_data/',views.performance_data, name='performance_data'),
 ]
 

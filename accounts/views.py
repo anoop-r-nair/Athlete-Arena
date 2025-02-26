@@ -603,6 +603,12 @@ def medical_staff_dashboard(request):
     return render(request, 'accounts/medical_staff_dashboard.html') 
 
 
+def sharelocation(request):
+    return render(request, 'accounts/sharelocation.html')
+
+def locationview(request):
+    return render(request, 'accounts/locationview.html')
+
 def SportsPsychologist(request):
     return render(request, 'accounts/SportsPsychologist.html') 
 
@@ -788,6 +794,83 @@ def coachprofile(request):
     return render(request, 'accounts/coachprofile.html') 
 def managerdasboard(request):
     return render(request, 'accounts/managerdasboard.html')
+
+def medicalstaffregistration(request):
+    return render(request, 'accounts/medicalstaffregistration.html')
+
+def sportssychologits(request):
+    return render(request, 'accounts/sportssychologits.html')
+
+def jerseycustomization(request):
+    return render(request, 'accounts/jerseycustomization.html')
+
+
+def jersey(request):
+    return render(request, 'accounts/jersey.html')
+
+
+def performancecalculator(request):
+    return render(request, 'accounts/performancecalculator.html')
+
+
+def performancedashboard(request):
+    return render(request, 'accounts/performancedashboard.html')
+
+
+def performance_data(request):
+    return render(request, 'accounts/performance_data.html')
+
+
+
+    
+
+
+
+def injury_prediction_view(request):
+    context = {}
+
+    if request.method == 'POST':
+        if 'csvFile' in request.FILES:
+            try:
+                # Read CSV file
+                csv_file = request.FILES['csvFile']
+                df = pd.read_csv(csv_file)
+
+                # Validate data
+                required_columns = ['Player', 'Position', 'Club', 'Age', 'Matches', 
+                                    'Goals', 'Assists', 'Pass Accuracy', 'Tackles']
+                missing_columns = [col for col in required_columns if col not in df.columns]
+                if missing_columns:
+                    messages.error(request, f'Missing required columns: {", ".join(missing_columns)}')
+                    return render(request, 'accounts/injury_prediction.html', context)
+
+                # Initialize predictor
+                predictor = PerformancePredictor()
+
+                # Train the model (you may want to use a different dataset for training)
+                predictor.train(df)
+
+                # Make injury risk predictions
+                injury_risk = predictor.predict_injury_risk(df)
+
+                # Prepare results
+                context['predictions'] = []
+                for idx, row in df.iterrows():
+                    context['predictions'].append({
+                        'player': row['Player'],
+                        'injury_risk': float(injury_risk[idx]),
+                    })
+
+                messages.success(request, 'Injury risk analysis completed successfully')
+
+            except Exception as e:
+                messages.error(request, f'Error processing CSV file: {str(e)}')
+                print(f"Detailed error: {str(e)}")  # For debugging
+
+        else:
+            messages.error(request, 'Please upload a CSV file with player data')
+
+    return render(request, 'accounts/injury_prediction.html', context)
 
 
 # def edit_coach_profile(request, email):
@@ -1209,10 +1292,5 @@ def player_prediction_view(request):
             messages.error(request, 'Please upload a CSV file with training data')
     
     return render(request, 'accounts/player_prediction.html', context)
-
-
-
-
-
-
+ # Assume a class for injury prediction
 

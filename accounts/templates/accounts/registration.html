@@ -77,6 +77,26 @@
         <h2 class="disabledMessage">Player registration is currently stoped.</h2>
     </div>
 
+    <!-- Medical Staff Registration Section -->
+    <div class="registrationSection" id="medicalStaffRegistrationForm" style="display: none;">
+        <h2><a href="{% url 'medicalstaffregistration' %}" id="medicalStaffLink">Register as Medical Staff</a></h2>
+        <!-- Your medical staff registration form inputs -->
+    </div>
+
+    <div class="registrationSection" id="medicalStaffRegistrationDisabled" style="display: none;">
+        <h2 class="disabledMessage">Medical staff registration is currently stopped.</h2>
+    </div>
+
+    <!-- Sports Analytics Registration Section -->
+    <div class="registrationSection" id="sportsAnalyticsRegistrationForm" style="display: none;">
+        <h2><a href="{% url 'sportssychologits' %}" id="sportsAnalyticsLink">Register as Sports Analyst</a></h2>
+        <!-- Your sports analytics registration form inputs -->
+    </div>
+
+    <div class="registrationSection" id="sportsAnalyticsRegistrationDisabled" style="display: none;">
+        <h2 class="disabledMessage">Sports analytics registration is currently stopped.</h2>
+    </div>
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
@@ -97,20 +117,34 @@
 
         // Check if registration is enabled
         window.onload = function() {
-            // Check for coach registration setting
             db.collection("settings").doc("registration").get().then((doc) => {
                 if (doc.exists) {
+                    // Coach Registration
                     if (doc.data().coachEnabled) {
                         document.getElementById("coachRegistrationForm").style.display = "block";
                     } else {
                         document.getElementById("coachRegistrationDisabled").style.display = "block";
                     }
                     
-                    // Check for player registration setting
+                    // Player Registration
                     if (doc.data().playerEnabled) {
                         document.getElementById("playerRegistrationForm").style.display = "block";
                     } else {
                         document.getElementById("playerRegistrationDisabled").style.display = "block";
+                    }
+
+                    // Medical Staff Registration
+                    if (doc.data().medicalStaffEnabled) {
+                        document.getElementById("medicalStaffRegistrationForm").style.display = "block";
+                    } else {
+                        document.getElementById("medicalStaffRegistrationDisabled").style.display = "block";
+                    }
+
+                    // Sports Analytics Registration
+                    if (doc.data().sportsAnalyticsEnabled) {
+                        document.getElementById("sportsAnalyticsRegistrationForm").style.display = "block";
+                    } else {
+                        document.getElementById("sportsAnalyticsRegistrationDisabled").style.display = "block";
                     }
                 } else {
                     console.error("No settings document found.");

@@ -1,0 +1,228 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Player Performance Calculator</h3>
+        </div>
+        <div class="card-body">
+            <form id="performanceForm">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Position</th>
+                            <th>Club</th>
+                            <th>Age</th>
+                            <th>Matches</th>
+                            <th>Goals</th>
+                            <th>Assists</th>
+                            <th>Pass Accur</th>
+                            <th>Tackles</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" id="playerName" required></td>
+                            <td>
+                                <select class="form-control" id="position" required>
+                                    <option value="Forward">Forward</option>
+                                    <option value="Midfielder">Midfielder</option>
+                                    <option value="Defender">Defender</option>
+                                    <option value="Goalkeeper">Goalkeeper</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" id="club" required></td>
+                            <td><input type="number" class="form-control" id="age" min="15" max="45" required></td>
+                            <td><input type="number" class="form-control" id="matches" min="0" required></td>
+                            <td><input type="number" class="form-control" id="goals" min="0" required></td>
+                            <td><input type="number" class="form-control" id="assists" min="0" required></td>
+                            <td><input type="number" class="form-control" id="passAccuracy" min="0" max="100" required></td>
+                            <td><input type="number" class="form-control" id="tackles" min="0" required></td>
+                            <td><div class="performance-rating" id="performanceRating">0.0</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Calculate Performance</button>
+                </div>
+            </form>
+
+            <!-- Example Players -->
+            <div class="mt-4">
+                <h5>Top Players Performance</h5>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>Messi</td>
+                            <td>Forward</td>
+                            <td>PSG</td>
+                            <td>35</td>
+                            <td>30</td>
+                            <td>25</td>
+                            <td>15</td>
+                            <td>88%</td>
+                            <td>10</td>
+                            <td>9.5</td>
+                        </tr>
+                        <tr>
+                            <td>Ronaldo</td>
+                            <td>Forward</td>
+                            <td>Al-Nassr</td>
+                            <td>38</td>
+                            <td>28</td>
+                            <td>20</td>
+                            <td>10</td>
+                            <td>85%</td>
+                            <td>8</td>
+                            <td>9.2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Add this before the closing </div> of card-body -->
+            <div id="saveStatus" class="alert mt-3" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Firebase SDK before your script -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+// Firebase configuration
+const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+document.getElementById('performanceForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get all input values
+    const playerName = document.getElementById('playerName').value;
+    const position = document.getElementById('position').value;
+    const club = document.getElementById('club').value;
+    const age = parseInt(document.getElementById('age').value);
+    const matches = parseFloat(document.getElementById('matches').value);
+    const goals = parseFloat(document.getElementById('goals').value);
+    const assists = parseFloat(document.getElementById('assists').value);
+    const passAccuracy = parseFloat(document.getElementById('passAccuracy').value);
+    const tackles = parseFloat(document.getElementById('tackles').value);
+    
+    // Calculate performance rating
+    let rating = 0;
+    
+    // Goals contribution (max 3 points)
+    const goalRatio = goals / matches;
+    rating += Math.min(goalRatio * 3, 3);
+    
+    // Assists contribution (max 2 points)
+    const assistRatio = assists / matches;
+    rating += Math.min(assistRatio * 2, 2);
+    
+    // Pass accuracy contribution (max 3 points)
+    rating += (passAccuracy / 100) * 3;
+    
+    // Tackles contribution (max 2 points)
+    const tackleRatio = tackles / matches;
+    rating += Math.min(tackleRatio * 2, 2);
+    
+    // Display the result
+    const finalRating = rating.toFixed(1);
+    document.getElementById('performanceRating').textContent = finalRating;
+
+    // Save to Firebase
+    const playerData = {
+        playerName: playerName,
+        position: position,
+        club: club,
+        age: age,
+        matches: matches,
+        goals: goals,
+        assists: assists,
+        passAccuracy: passAccuracy,
+        tackles: tackles,
+        performanceRating: parseFloat(finalRating),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    // Save to Firestore
+    db.collection("performancecalculator").add(playerData)
+        .then((docRef) => {
+            showSaveStatus('Data saved successfully!', 'success');
+        })
+        .catch((error) => {
+            showSaveStatus('Error saving data: ' + error.message, 'danger');
+        });
+});
+
+// Function to show save status
+function showSaveStatus(message, type) {
+    const statusDiv = document.getElementById('saveStatus');
+    statusDiv.textContent = message;
+    statusDiv.className = `alert alert-${type} mt-3`;
+    statusDiv.style.display = 'block';
+    
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 3000);
+}
+</script>
+
+<style>
+.table input, .table select {
+    border: 1px solid #dee2e6;
+    padding: 4px 8px;
+    width: 100%;
+}
+
+.performance-rating {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #007bff;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.card {
+    margin-bottom: 2rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+</style>
+{% endblock %}

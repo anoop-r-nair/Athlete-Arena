@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Staff Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(120deg, #ffffff, #ffffff);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #2980b9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2980b9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
+        }
+
+        button[type="submit"] {
+            background-color: #2980b9;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #2980b9;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header, .form-container {
+                padding: 10px;
+            }
+
+            .form-container {
+                width: 90%;
+            }
+
+            nav ul li {
+                margin-left: 10px;
+            }
+
+            .logo a {
+                font-size: 1.2rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="#">Athlet Arena</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="form-container">
+            <h2>Register as Medical Staff</h2>
+            <form id="medicalStaffForm" onsubmit="registerMedicalStaff(); return false;">
+                <div class="form-group">
+                    <label for="staffName">Name:</label>
+                    <input type="text" id="staffName" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffEmail">Email:</label>
+                    <input type="email" id="staffEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffPhone">Phone:</label>
+                    <input type="text" id="staffPhone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffAddress">Address:</label>
+                    <input type="text" id="staffAddress" placeholder="Enter your address" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffExperience">Experience (Years):</label>
+                    <input type="number" id="staffExperience" placeholder="Years of experience" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffLicense">License Number:</label>
+                    <input type="text" id="staffLicense" placeholder="Enter your license number" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffQualification">Qualification:</label>
+                    <select id="staffQualification" required>
+                        <option value="" disabled selected>Select your qualification</option>
+                        <option value="MBBS">MBBS</option>
+                        <option value="MD">MD</option>
+                        <option value="BDS">BDS</option>
+                        <option value="MS">MS</option>
+                        <option value="MSc Nursing">MSc Nursing</option>
+                        <option value="DNB">DNB</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="staffSpecialization">Specialization:</label>
+                    <select id="staffSpecialization" required>
+                        <option value="" disabled selected>Select your specialization</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="General Practice">General Practice</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                        <option value="Surgery">Surgery</option>
+                        <option value="Radiology">Radiology</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="staffProfileImage">Profile Image:</label>
+                    <input type="file" id="staffProfileImage" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffResume">Upload Resume:</label>
+                    <input type="file" id="staffResume" accept=".pdf,.doc,.docx" required>
+                </div>
+                <button type="submit">Register</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Athlet Arena. All rights reserved.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function registerMedicalStaff() {
+            const name = document.getElementById("staffName").value.trim();
+            const email = document.getElementById("staffEmail").value.trim();
+            const phone = document.getElementById("staffPhone").value.trim();
+            const address = document.getElementById("staffAddress").value.trim();
+            const experience = document.getElementById("staffExperience").value;
+            const license = document.getElementById("staffLicense").value.trim();
+            const qualification = document.getElementById("staffQualification").value;
+            const specialization = document.getElementById("staffSpecialization").value;
+            const profileImage = document.getElementById("staffProfileImage").files[0];
+            const resume = document.getElementById("staffResume").files[0];
+            const messageElement = document.getElementById("message");
+
+            // Save the medical staff details to Firestore
+            db.collection("medicalStaff").add({
+                name: name,
+                email: email,
+                phone: phone,
+                address: address,
+                experience: experience,
+                license: license,
+                qualification: qualification,
+                specialization: specialization,
+                // You may want to handle file uploads separately
+            })
+            .then(() => {
+                messageElement.innerHTML = "Registration successful!";
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                messageElement.innerHTML = "Error during registration. Please try again.";
+            });
+        }
+    </script>
+</body>
+</html>

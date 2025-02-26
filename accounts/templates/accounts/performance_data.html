@@ -1,0 +1,189 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Performance Calculator Data</h3>
+            <button id="downloadCSV" class="btn btn-light">Download CSV</button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="performanceTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Player</th>
+                            <th>Position</th>
+                            <th>Club</th>
+                            <th>Age</th>
+                            <th>Matches</th>
+                            <th>Goals</th>
+                            <th>Assists</th>
+                            <th>Pass Accuracy</th>
+                            <th>Tackles</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="performanceData">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="loadingMessage" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Loading data...</p>
+            </div>
+            <div id="noDataMessage" class="text-center" style="display: none;">
+                <p>No performance data available.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+    authDomain: "athletarena.firebaseapp.com",
+    projectId: "athletarena",
+    storageBucket: "athletarena.appspot.com",
+    messagingSenderId: "1016152202031",
+    appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+    measurementId: "G-RC780HJPZ6"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Fetch and display data
+window.addEventListener('load', () => {
+    const performanceData = document.getElementById('performanceData');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const noDataMessage = document.getElementById('noDataMessage');
+    
+    db.collection("performancecalculator")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then((querySnapshot) => {
+            loadingMessage.style.display = 'none';
+            
+            if (querySnapshot.empty) {
+                noDataMessage.style.display = 'block';
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const row = document.createElement('tr');
+                
+                // Format date
+                const date = data.timestamp ? new Date(data.timestamp.seconds * 1000) : new Date();
+                const formattedDate = date.toLocaleDateString();
+                
+                row.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${data.playerName}</td>
+                    <td>${data.position}</td>
+                    <td>${data.club}</td>
+                    <td>${data.age}</td>
+                    <td>${data.matches}</td>
+                    <td>${data.goals}</td>
+                    <td>${data.assists}</td>
+                    <td>${data.passAccuracy}%</td>
+                    <td>${data.tackles}</td>
+                    <td>${data.performanceRating.toFixed(1)}</td>
+                `;
+                
+                performanceData.appendChild(row);
+            });
+        })
+        .catch((error) => {
+            console.error("Error fetching data: ", error);
+            loadingMessage.innerHTML = `<p class="text-danger">Error loading data: ${error.message}</p>`;
+        });
+});
+
+// Download CSV functionality
+document.getElementById('downloadCSV').addEventListener('click', () => {
+    const table = document.getElementById('performanceTable');
+    let csv = [];
+    
+    // Get headers
+    const headers = [];
+    table.querySelectorAll('thead th').forEach(header => {
+        headers.push(header.textContent);
+    });
+    csv.push(headers.join(','));
+    
+    // Get data rows
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach(cell => {
+            // Escape commas and quotes in the cell content
+            let content = cell.textContent.replace(/"/g, '""');
+            if (content.includes(',')) {
+                content = `"${content}"`;
+            }
+            rowData.push(content);
+        });
+        csv.push(rowData.join(','));
+    });
+    
+    // Create and download CSV file
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'performance_data.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.card {
+    margin-bottom: 2rem;
+}
+
+#downloadCSV {
+    transition: all 0.3s ease;
+}
+
+#downloadCSV:hover {
+    background-color: #e2e6ea;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+}
+
+.table-responsive {
+    max-height: 600px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %} 

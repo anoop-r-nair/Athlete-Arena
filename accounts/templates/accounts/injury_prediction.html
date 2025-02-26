@@ -1,0 +1,47 @@
+{% extends 'accounts/main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Injury Risk Prediction</h2>
+
+    {% if messages %}
+    <div class="messages mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="csvFile" class="form-label">Upload CSV File</label>
+            <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Predict Injury Risk</button>
+    </form>
+
+    {% if predictions %}
+    <h4 class="mt-4">Injury Risk Predictions</h4>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Injury Risk (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prediction in predictions %}
+            <tr>
+                <td>{{ prediction.player }}</td>
+                <td>{{ prediction.injury_risk|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

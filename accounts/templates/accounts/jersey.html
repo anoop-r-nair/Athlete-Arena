@@ -1,0 +1,220 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="jersey-preview bg-white p-4 rounded shadow-sm">
+                <div class="text-center mb-3">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" onclick="showView('front')">Front View</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="showView('back')">Back View</button>
+                    </div>
+                </div>
+                <canvas id="jerseyCanvas" width="400" height="500"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="customization-panel bg-white p-4 rounded shadow-sm">
+                <h3>Customize Your Jersey</h3>
+
+                <!-- Jersey Upload -->
+                <div class="form-group mb-3">
+                    <label>Upload Jersey:</label>
+                    <div class="d-flex align-items-center">
+                        <input type="file" id="jerseyUpload" class="form-control" accept="image/*">
+                        <span id="jerseyFileName" class="ms-2">OIP.jpeg</span>
+                    </div>
+                </div>
+                
+                <!-- Jersey Color -->
+                <div class="form-group mb-3">
+                    <label>Jersey Color:</label>
+                    <input type="color" id="jerseyColor" class="form-control" value="#dc3545">
+                </div>
+
+                <!-- Team Logo -->
+                <div class="form-group mb-3">
+                    <label>Team Logo:</label>
+                    <div class="d-flex align-items-center">
+                        <input type="file" id="logoUpload" class="form-control" accept="image/*">
+                        <span id="logoFileName" class="ms-2">OIP.jpeg</span>
+                    </div>
+                </div>
+
+                <!-- Player Number -->
+                <div class="form-group mb-3">
+                    <label>Player Number:</label>
+                    <input type="number" id="playerNumber" class="form-control" min="0" max="99" value="45">
+                </div>
+
+                <!-- Player Name -->
+                <div class="form-group mb-3">
+                    <label>Player Name:</label>
+                    <input type="text" id="playerName" class="form-control" maxlength="20" value="Playerhvg">
+                </div>
+
+                <!-- Save Button -->
+                <button class="btn btn-primary" onclick="saveJersey()">Save Design</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('jerseyCanvas');
+    const ctx = canvas.getContext('2d');
+    let jerseyImage = null;
+    let logoImage = null;
+    let currentView = 'front';
+
+    function showView(view) {
+        currentView = view;
+        document.querySelector(`button[onclick="showView('front')"]`).className = 
+            view === 'front' ? 'btn btn-primary' : 'btn btn-outline-primary';
+        document.querySelector(`button[onclick="showView('back')"]`).className = 
+            view === 'back' ? 'btn btn-primary' : 'btn btn-outline-primary';
+        drawCustomizedJersey();
+    }
+
+    function drawCustomizedJersey() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (jerseyImage) {
+            // Draw the jersey base
+            ctx.drawImage(jerseyImage, 0, 0, canvas.width, canvas.height);
+            
+            // Apply color overlay
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.fillStyle = document.getElementById('jerseyColor').value;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'source-over';
+
+            if (currentView === 'front' && logoImage) {
+                // Draw logo on front right in a circle
+                const logoWidth = 60;  // Smaller size
+                const logoHeight = 60;
+                const logoX = canvas.width - logoWidth - 50;  // Position from right
+                const logoY = 120;  // Position from top
+
+                // Create circular clip for logo
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(logoX + logoWidth/2, logoY + logoHeight/2, logoWidth/2, 0, Math.PI * 2);
+                
+                // Add white background for logo
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                
+                // Add border
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Clip to circle and draw logo
+                ctx.clip();
+                ctx.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
+                ctx.restore();
+            } else if (currentView === 'back') {
+                // Draw player number
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 160px Arial';
+                ctx.textAlign = 'center';
+                const number = document.getElementById('playerNumber').value;
+                ctx.fillText(number, canvas.width/2, canvas.height/2);
+
+                // Draw player name
+                ctx.font = 'bold 40px Arial';
+                const name = document.getElementById('playerName').value;
+                ctx.fillText(name, canvas.width/2, canvas.height/2 + 100);
+            }
+        }
+    }
+
+    // File upload handlers
+    document.getElementById('jerseyUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            document.getElementById('jerseyFileName').textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    jerseyImage = img;
+                    drawCustomizedJersey();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('logoUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            document.getElementById('logoFileName').textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    logoImage = img;
+                    drawCustomizedJersey();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Event listeners for customization
+    document.getElementById('jerseyColor').addEventListener('input', drawCustomizedJersey);
+    document.getElementById('playerNumber').addEventListener('input', drawCustomizedJersey);
+    document.getElementById('playerName').addEventListener('input', drawCustomizedJersey);
+
+    function saveJersey() {
+        if (!jerseyImage) {
+            alert('Please upload a jersey image first!');
+            return;
+        }
+        const design = {
+            color: document.getElementById('jerseyColor').value,
+            number: document.getElementById('playerNumber').value,
+            name: document.getElementById('playerName').value
+        };
+        console.log('Saving jersey design:', design);
+        alert('Jersey design saved!');
+    }
+
+    // Initial drawing
+    drawCustomizedJersey();
+</script>
+
+<style>
+    .jersey-preview {
+        min-height: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .customization-panel {
+        min-height: 500px;
+    }
+
+    .form-control {
+        border: 1px solid #dee2e6;
+        padding: 0.5rem;
+    }
+
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    #jerseyFileName, #logoFileName {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
