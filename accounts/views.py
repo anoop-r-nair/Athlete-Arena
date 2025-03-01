@@ -821,6 +821,10 @@ def performance_data(request):
     return render(request, 'accounts/performance_data.html')
 
 
+def addplayingdetails(request):
+    return render(request, 'accounts/addplayingdetails.html')
+
+
 
     
 

@@ -9,39 +9,30 @@
         </div>
         <div class="card-body">
             <form id="performanceForm">
+                <div class="mb-3">
+                    <label for="playerSelect" class="form-label">Select Player</label>
+                    <select class="form-control" id="playerSelect" required>
+                        <option value="">Select a player...</option>
+                        <!-- Players will be populated here -->
+                    </select>
+                </div>
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Player</th>
-                            <th>Position</th>
-                            <th>Club</th>
-                            <th>Age</th>
-                            <th>Matches</th>
-                            <th>Goals</th>
-                            <th>Assists</th>
-                            <th>Pass Accur</th>
-                            <th>Tackles</th>
-                            <th>Performance</th>
+                            <th>Total Matches</th>
+                            <th>Total Goals</th>
+                            <th>Total Assists</th>
+                            <th>Avg Pass Accuracy</th>
+                            <th>Performance Rating</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="text" class="form-control" id="playerName" required></td>
-                            <td>
-                                <select class="form-control" id="position" required>
-                                    <option value="Forward">Forward</option>
-                                    <option value="Midfielder">Midfielder</option>
-                                    <option value="Defender">Defender</option>
-                                    <option value="Goalkeeper">Goalkeeper</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" id="club" required></td>
-                            <td><input type="number" class="form-control" id="age" min="15" max="45" required></td>
-                            <td><input type="number" class="form-control" id="matches" min="0" required></td>
-                            <td><input type="number" class="form-control" id="goals" min="0" required></td>
-                            <td><input type="number" class="form-control" id="assists" min="0" required></td>
-                            <td><input type="number" class="form-control" id="passAccuracy" min="0" max="100" required></td>
-                            <td><input type="number" class="form-control" id="tackles" min="0" required></td>
+                            <td id="totalMatches">0</td>
+                            <td id="totalGoals">0</td>
+                            <td id="totalAssists">0</td>
+                            <td id="avgPassAccuracy">0%</td>
                             <td><div class="performance-rating" id="performanceRating">0.0</div></td>
                         </tr>
                     </tbody>
@@ -52,137 +43,319 @@
                 </div>
             </form>
 
-            <!-- Example Players -->
+            <!-- Match History Table -->
+            <!-- <div class="mt-4">
+                <h5>Player Match History</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Match #</th>
+                                <th>Venue</th>
+                                <th>Goals</th>
+                                <th>Assists</th>
+                                <th>Pass Accuracy</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchHistory">
+                            <!-- Match history will be populated here -->
+                        <!-- </tbody>
+                    </table>
+                </div>
+            </div> --> -->
+
+            <!-- Add this section after the Match History Table -->
             <div class="mt-4">
-                <h5>Top Players Performance</h5>
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <td>Messi</td>
-                            <td>Forward</td>
-                            <td>PSG</td>
-                            <td>35</td>
-                            <td>30</td>
-                            <td>25</td>
-                            <td>15</td>
-                            <td>88%</td>
-                            <td>10</td>
-                            <td>9.5</td>
-                        </tr>
-                        <tr>
-                            <td>Ronaldo</td>
-                            <td>Forward</td>
-                            <td>Al-Nassr</td>
-                            <td>38</td>
-                            <td>28</td>
-                            <td>20</td>
-                            <td>10</td>
-                            <td>85%</td>
-                            <td>8</td>
-                            <td>9.2</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h5>Player Statistics Summary</h5>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div></div>
+                    <button class="btn btn-success" onclick="downloadPlayerStats()">
+                        <i class="fas fa-download"></i> Download Statistics
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Player Name</th>
+                                <th>Position</th>
+                                <th>Club</th>
+                                <th>Age</th>
+                                <th>Total Matches</th>
+                                <th>Total Goals</th>
+                                <th>Total Assists</th>
+                                <th>Avg Pass Accuracy</th>
+                                <th>Total Tackles</th>
+                                <th>Performance Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playerStatsTable">
+                            <!-- Player stats will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Add this before the closing </div> of card-body -->
             <div id="saveStatus" class="alert mt-3" style="display: none;"></div>
         </div>
     </div>
 </div>
 
-<!-- Add Firebase SDK before your script -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
 <script>
 // Firebase configuration
 const firebaseConfig = {
-            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
-            authDomain: "athletarena.firebaseapp.com",
-            projectId: "athletarena",
-            storageBucket: "athletarena.appspot.com",
-            messagingSenderId: "1016152202031",
-            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
-            measurementId: "G-RC780HJPZ6"
-        };
+    apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+    authDomain: "athletarena.firebaseapp.com",
+    projectId: "athletarena",
+    storageBucket: "athletarena.appspot.com",
+    messagingSenderId: "1016152202031",
+    appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+    measurementId: "G-RC780HJPZ6"
+};
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-document.getElementById('performanceForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Get all input values
-    const playerName = document.getElementById('playerName').value;
-    const position = document.getElementById('position').value;
-    const club = document.getElementById('club').value;
-    const age = parseInt(document.getElementById('age').value);
-    const matches = parseFloat(document.getElementById('matches').value);
-    const goals = parseFloat(document.getElementById('goals').value);
-    const assists = parseFloat(document.getElementById('assists').value);
-    const passAccuracy = parseFloat(document.getElementById('passAccuracy').value);
-    const tackles = parseFloat(document.getElementById('tackles').value);
-    
-    // Calculate performance rating
+// Load players into select dropdown
+async function loadPlayers() {
+    try {
+        const playerSelect = document.getElementById('playerSelect');
+        const players = new Set();
+
+        const snapshot = await db.collection('addplayingdetails').get();
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            players.add(data.playerName);
+        });
+
+        players.forEach(player => {
+            const option = document.createElement('option');
+            option.value = player;
+            option.textContent = player;
+            playerSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error loading players:", error);
+    }
+}
+
+// Load player's match history
+async function loadPlayerMatches(playerName) {
+    try {
+        const snapshot = await db.collection('addplayingdetails')
+            .where('playerName', '==', playerName)
+            .orderBy('matchDate', 'desc')
+            .get();
+
+        const matchHistory = document.getElementById('matchHistory');
+        matchHistory.innerHTML = '';
+
+        let totalMatches = 0;
+        let totalGoals = 0;
+        let totalAssists = 0;
+        let totalPassAccuracy = 0;
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            
+            // Update totals
+            totalMatches++;
+            totalGoals += data.goals;
+            totalAssists += data.assists;
+            totalPassAccuracy += parseFloat(data.passAccuracy) || 0;
+
+            // Add row to match history
+            const row = `
+                <tr>
+                    <td>${data.matchDate}</td>
+                    <td>${data.matchNumber}</td>
+                    <td>${data.matchPlace}</td>
+                    <td>${data.goals}</td>
+                    <td>${data.assists}</td>
+                    <td>${data.passAccuracy}%</td>
+                    <td>${data.totalPoints}</td>
+                </tr>
+            `;
+            matchHistory.innerHTML += row;
+        });
+
+        // Update summary statistics
+        document.getElementById('totalMatches').textContent = totalMatches;
+        document.getElementById('totalGoals').textContent = totalGoals;
+        document.getElementById('totalAssists').textContent = totalAssists;
+        document.getElementById('avgPassAccuracy').textContent = 
+            `${(totalPassAccuracy / totalMatches).toFixed(1)}%`;
+
+        // Calculate performance rating
+        calculatePerformanceRating(totalMatches, totalGoals, totalAssists, totalPassAccuracy / totalMatches);
+
+        await loadAllPlayerStats();
+    } catch (error) {
+        console.error("Error loading player matches:", error);
+    }
+}
+
+function calculatePerformanceRating(matches, goals, assists, avgPassAccuracy) {
     let rating = 0;
     
-    // Goals contribution (max 3 points)
+    // Goals contribution (max 4 points)
     const goalRatio = goals / matches;
-    rating += Math.min(goalRatio * 3, 3);
+    rating += Math.min(goalRatio * 4, 4);
     
-    // Assists contribution (max 2 points)
+    // Assists contribution (max 3 points)
     const assistRatio = assists / matches;
-    rating += Math.min(assistRatio * 2, 2);
+    rating += Math.min(assistRatio * 3, 3);
     
     // Pass accuracy contribution (max 3 points)
-    rating += (passAccuracy / 100) * 3;
-    
-    // Tackles contribution (max 2 points)
-    const tackleRatio = tackles / matches;
-    rating += Math.min(tackleRatio * 2, 2);
+    rating += (avgPassAccuracy / 100) * 3;
     
     // Display the result
     const finalRating = rating.toFixed(1);
     document.getElementById('performanceRating').textContent = finalRating;
+}
 
-    // Save to Firebase
-    const playerData = {
-        playerName: playerName,
-        position: position,
-        club: club,
-        age: age,
-        matches: matches,
-        goals: goals,
-        assists: assists,
-        passAccuracy: passAccuracy,
-        tackles: tackles,
-        performanceRating: parseFloat(finalRating),
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    };
+// Load all player statistics
+async function loadAllPlayerStats() {
+    try {
+        const snapshot = await db.collection('addplayingdetails').get();
+        const playerStats = {};
 
-    // Save to Firestore
-    db.collection("performancecalculator").add(playerData)
-        .then((docRef) => {
-            showSaveStatus('Data saved successfully!', 'success');
-        })
-        .catch((error) => {
-            showSaveStatus('Error saving data: ' + error.message, 'danger');
+        // Calculate totals for each player
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const playerName = data.playerName;
+
+            if (!playerStats[playerName]) {
+                playerStats[playerName] = {
+                    position: data.position || 'N/A',
+                    club: data.club || 'N/A',
+                    age: data.age || 'N/A',
+                    totalMatches: 0,
+                    totalGoals: 0,
+                    totalAssists: 0,
+                    totalPassAccuracy: 0,
+                    totalTackles: 0,
+                    totalPoints: 0
+                };
+            }
+
+            playerStats[playerName].totalMatches++;
+            playerStats[playerName].totalGoals += data.goals;
+            playerStats[playerName].totalAssists += data.assists;
+            playerStats[playerName].totalPassAccuracy += parseFloat(data.passAccuracy) || 0;
+            playerStats[playerName].totalTackles += data.tackles || 0;
+            playerStats[playerName].totalPoints += data.totalPoints;
         });
+
+        // Display player statistics
+        const statsTableBody = document.getElementById('playerStatsTable');
+        statsTableBody.innerHTML = '';
+
+        for (const [playerName, stats] of Object.entries(playerStats)) {
+            const avgPassAccuracy = (stats.totalPassAccuracy / stats.totalMatches).toFixed(1);
+            const performanceRating = calculateOverallPerformanceRating(
+                stats.totalMatches,
+                stats.totalGoals,
+                stats.totalAssists,
+                parseFloat(avgPassAccuracy)
+            );
+
+            const row = `
+                <tr>
+                    <td>${playerName}</td>
+                    <td>${stats.position}</td>
+                    <td>${stats.club}</td>
+                    <td>${stats.age}</td>
+                    <td>${stats.totalMatches}</td>
+                    <td>${stats.totalGoals}</td>
+                    <td>${stats.totalAssists}</td>
+                    <td>${avgPassAccuracy}%</td>
+                    <td>${stats.totalTackles}</td>
+                    <td class="performance-rating">${performanceRating}</td>
+                </tr>
+            `;
+            statsTableBody.innerHTML += row;
+        }
+
+    } catch (error) {
+        console.error("Error loading player statistics:", error);
+    }
+}
+
+function calculateOverallPerformanceRating(matches, goals, assists, avgPassAccuracy) {
+    let rating = 0;
+    
+    // Goals per match contribution (max 4 points)
+    const goalRatio = goals / matches;
+    rating += Math.min(goalRatio * 4, 4);
+    
+    // Assists per match contribution (max 3 points)
+    const assistRatio = assists / matches;
+    rating += Math.min(assistRatio * 3, 3);
+    
+    // Pass accuracy contribution (max 3 points)
+    rating += (avgPassAccuracy / 100) * 3;
+    
+    return rating.toFixed(1);
+}
+
+// Event Listeners
+document.getElementById('playerSelect').addEventListener('change', function(e) {
+    if (e.target.value) {
+        loadPlayerMatches(e.target.value);
+    }
 });
 
-// Function to show save status
-function showSaveStatus(message, type) {
-    const statusDiv = document.getElementById('saveStatus');
-    statusDiv.textContent = message;
-    statusDiv.className = `alert alert-${type} mt-3`;
-    statusDiv.style.display = 'block';
+document.getElementById('performanceForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const playerName = document.getElementById('playerSelect').value;
+    if (playerName) {
+        await loadPlayerMatches(playerName);
+        await loadAllPlayerStats();
+    }
+});
+
+// Load both individual and all player stats when page loads
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadPlayers();
+    await loadAllPlayerStats();
+});
+
+function downloadPlayerStats() {
+    // Create CSV header with the requested fields
+    let csv = 'Player,Position,Club,Age,Matches,Goals,Assists,Pass Accuracy,Tackles,Performance_Rating\n';
     
-    // Hide the message after 3 seconds
-    setTimeout(() => {
-        statusDiv.style.display = 'none';
-    }, 3000);
+    // Get all rows from the player stats table
+    const rows = document.getElementById('playerStatsTable').getElementsByTagName('tr');
+    
+    // Convert each row to CSV format
+    Array.from(rows).forEach(row => {
+        const cells = row.getElementsByTagName('td');
+        if (cells.length) {
+            const rowData = Array.from(cells).map(cell => {
+                // Remove any commas from the cell content to avoid CSV formatting issues
+                return cell.textContent.trim().replace(/,/g, '');
+            });
+            csv += rowData.join(',') + '\n';
+        }
+    });
+    
+    // Create and trigger download
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'player_statistics.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 </script>
 
@@ -213,16 +386,22 @@ function showSaveStatus(message, type) {
     margin-bottom: 2rem;
 }
 
-.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
+.performance-rating {
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
 }
 
-.alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
 }
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}

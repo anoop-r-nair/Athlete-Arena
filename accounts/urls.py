@@ -114,5 +114,6 @@ urlpatterns = [
     path('performancecalculator/',views.performancecalculator, name='performancecalculator'),
     path('performancedashboard/',views.performancedashboard, name='performancedashboard'),
     path('performance_data/',views.performance_data, name='performance_data'),
+    path('addplayingdetails/',views.addplayingdetails, name='addplayingdetails'),
 ]
 
