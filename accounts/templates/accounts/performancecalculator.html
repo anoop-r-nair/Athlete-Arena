@@ -10,61 +10,13 @@
         <div class="card-body">
             <form id="performanceForm">
                 <div class="mb-3">
-                    <label for="playerSelect" class="form-label">Select Player</label>
-                    <select class="form-control" id="playerSelect" required>
-                        <option value="">Select a player...</option>
+                    <!-- <label for="playerSelect" class="form-label">Select Player</label> -->
+                    <select class="form-control" id="playerSelect" required hidden>
+                        <!-- <option value="">Select a player...</option> -->
                         <!-- Players will be populated here -->
                     </select>
                 </div>
-
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Total Matches</th>
-                            <th>Total Goals</th>
-                            <th>Total Assists</th>
-                            <th>Avg Pass Accuracy</th>
-                            <th>Performance Rating</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td id="totalMatches">0</td>
-                            <td id="totalGoals">0</td>
-                            <td id="totalAssists">0</td>
-                            <td id="avgPassAccuracy">0%</td>
-                            <td><div class="performance-rating" id="performanceRating">0.0</div></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">Calculate Performance</button>
-                </div>
             </form>
-
-            <!-- Match History Table -->
-            <!-- <div class="mt-4">
-                <h5>Player Match History</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Match #</th>
-                                <th>Venue</th>
-                                <th>Goals</th>
-                                <th>Assists</th>
-                                <th>Pass Accuracy</th>
-                                <th>Points</th>
-                            </tr>
-                        </thead>
-                        <tbody id="matchHistory">
-                            <!-- Match history will be populated here -->
-                        <!-- </tbody>
-                    </table>
-                </div>
-            </div> --> -->
 
             <!-- Add this section after the Match History Table -->
             <div class="mt-4">
