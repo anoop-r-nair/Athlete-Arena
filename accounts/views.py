@@ -824,9 +824,15 @@ def performance_data(request):
 def addplayingdetails(request):
     return render(request, 'accounts/addplayingdetails.html')
 
+def viewinjuryrepots(request):
+    return render(request, 'accounts/viewinjuryrepots.html')
 
+def uploadreport(request):
+    return render(request, 'accounts/uploadreport.html')  
 
-    
+def viewmedicalreport(request):
+    return render(request, 'accounts/viewmedicalreport.html')     
+
 
 
 

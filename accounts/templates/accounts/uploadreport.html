@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF | Athlete Arena</title>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4; /* Light background color */
+        }
+        h2 {
+            color: #333; /* Darker text color for the heading */
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            border: 2px dashed #007bff; /* Dashed border for file input */
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff; /* White background for file input */
+            transition: border-color 0.3s;
+        }
+        input[type="file"]:hover {
+            border-color: #0056b3; /* Change border color on hover */
+        }
+        button {
+            background-color: #007bff; /* Primary button color */
+            color: white; /* White text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker button color on hover */
+        }
+        progress {
+            width: 80%;
+            margin-top: 10px;
+            height: 20px; /* Increased height for better visibility */
+        }
+        #uploadStatus {
+            margin-top: 10px;
+            font-weight: bold; /* Bold text for upload status */
+            color: #333; /* Dark text color for status */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Upload PDF Files</h2>
+    
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <button onclick="uploadPDF()">Upload PDF</button>
+
+    <progress id="uploadProgress" value="0" max="100" style="display:none;"></progress>
+
+    <p id="uploadStatus"></p>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+        const storageRef = storage.ref("uploads/");
+        const uploadProgress = document.getElementById("uploadProgress");
+        const uploadStatus = document.getElementById("uploadStatus");
+
+        function uploadPDF() {
+            const fileInput = document.getElementById("pdfFile");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a PDF file.");
+                return;
+            }
+
+            const fileName = file.name; // Keep the original filename
+            const fileRef = storageRef.child(fileName);
+            const uploadTask = fileRef.put(file);
+
+            uploadProgress.style.display = "block";
+
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploadProgress.value = progress;
+                    uploadStatus.textContent = `Uploading: ${Math.round(progress)}%`;
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    uploadStatus.textContent = "Upload failed!";
+                },
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        uploadStatus.textContent = "Upload successful!";
+                        alert(`PDF uploaded successfully! File URL: ${downloadURL}`);
+                        fileInput.value = ""; // Clear file input
+                        uploadProgress.style.display = "none";
+                    });
+                }
+            );
+        }
+    </script>
+
+</body>
+</html>

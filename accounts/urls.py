@@ -115,5 +115,8 @@ urlpatterns = [
     path('performancedashboard/',views.performancedashboard, name='performancedashboard'),
     path('performance_data/',views.performance_data, name='performance_data'),
     path('addplayingdetails/',views.addplayingdetails, name='addplayingdetails'),
+    path('viewinjuryrepots/',views.viewinjuryrepots, name='viewinjuryrepots'),
+    path('uploadreport/',views.uploadreport, name='uploadreport'),
+    path('viewmedicalreport/',views.viewmedicalreport, name='viewmedicalreport'),
 ]
 

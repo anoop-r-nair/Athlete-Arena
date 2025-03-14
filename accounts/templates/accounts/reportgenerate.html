@@ -636,9 +636,11 @@
                 const imgProps = pdf.getImageProperties(imgData);
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                
+
+                // Get patient's name for the PDF filename
+                const patientName = document.getElementById('reportPatientName').innerText || 'medical_certificate';
                 pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('medical_certificate.pdf');
+                pdf.save(`${patientName}_medical_certificate.pdf`); // Use patient's name for the filename
 
                 // Restore the display states
                 downloadBtn.style.display = 'block';

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View PDFs | Athlete Arena</title>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        iframe {
+            width: 80%;
+            height: 500px;
+            border: 1px solid #ccc;
+            display: none;
+            margin-top: 20px;
+        }
+        select, button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>View PDF Files</h2>
+    
+    <label for="pdfSelect">Select a PDF:</label>
+    <select id="pdfSelect">
+        <option value="">-- Loading files... --</option>
+    </select>
+    
+    <button onclick="viewSelectedPDF()">View PDF</button>
+
+    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+        const storageRef = storage.ref("uploads/");
+        const pdfSelect = document.getElementById("pdfSelect");
+        const pdfViewer = document.getElementById("pdfViewer");
+
+        function loadPDFFiles() {
+            storageRef.listAll()
+            .then((result) => {
+                pdfSelect.innerHTML = ""; // Clear previous options
+
+                if (result.items.length === 0) {
+                    pdfSelect.innerHTML = "<option value=''>No PDFs found</option>";
+                    return;
+                }
+
+                result.items.forEach((fileRef) => {
+                    fileRef.getDownloadURL().then((url) => {
+                        const option = document.createElement("option");
+                        option.value = url;
+                        option.textContent = fileRef.name; // Show filename in dropdown
+                        pdfSelect.appendChild(option);
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching PDFs:", error);
+                pdfSelect.innerHTML = "<option value=''>Error loading files</option>";
+            });
+        }
+
+        function viewSelectedPDF() {
+            const selectedURL = pdfSelect.value;
+            if (!selectedURL) {
+                alert("Please select a PDF file.");
+                return;
+            }
+            pdfViewer.src = selectedURL;
+            pdfViewer.style.display = "block"; // Show iframe
+        }
+
+        // Load available PDFs on page load
+        window.onload = loadPDFFiles;
+    </script>
+
+</body>
+</html>
