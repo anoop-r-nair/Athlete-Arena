@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Staff Registration</title>
+    <title>Add Medical Staff Profile | Athlet Arena</title>
     <style>
         * {
             margin: 0;
@@ -70,7 +70,7 @@
         .form-container h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #2980b9;
+            color:#2980b9;
         }
 
         .form-group {
@@ -84,8 +84,7 @@
             color: #2980b9;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -93,15 +92,25 @@
             font-size: 1rem;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #2980b9;
-            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 4px#2980b9(0, 191, 165, 0.5);
+        }
+
+        /* Add flex container to align first name and last name in one row */
+        .form-group.flex-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .form-group.flex-group input {
+            width: 25rem;
         }
 
         button[type="submit"] {
-            background-color: #2980b9;
+            background-color:#2980b9;
             color: #fff;
             padding: 12px 20px;
             border: none;
@@ -121,7 +130,7 @@
         }
 
         footer {
-            background-color: #2980b9;
+            background-color:#2980b9;
             color: #fff;
             text-align: center;
             padding: 10px;
@@ -148,6 +157,10 @@
             nav ul li a {
                 font-size: 0.9rem;
             }
+
+            .form-group.flex-group input {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -167,70 +180,47 @@
 
     <main class="main">
         <div class="form-container">
-            <h2>Register as Medical Staff</h2>
-            <form id="medicalStaffForm" onsubmit="registerMedicalStaff(); return false;">
-                <div class="form-group">
-                    <label for="staffName">Name:</label>
-                    <input type="text" id="staffName" placeholder="Enter your name" required>
+            <h2>Add Medical Staff Profile</h2>
+            <form id="add-profile-form" onsubmit="addProfile(); return false;">
+                <div class="form-group flex-group">
+                    <div>
+                        <label for="firstname">First Name:</label>
+                        <input type="text" id="firstname" placeholder="Enter first name" required>
+                    </div>
+                    <div>
+                        <label for="lastname">Last Name:</label>
+                        <input type="text" id="lastname" placeholder="Enter last name" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="staffEmail">Email:</label>
-                    <input type="email" id="staffEmail" placeholder="Enter your email" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Enter email" required>
                 </div>
                 <div class="form-group">
-                    <label for="staffPhone">Phone:</label>
-                    <input type="text" id="staffPhone" placeholder="Enter your phone number" required>
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" placeholder="Enter phone number" required>
                 </div>
                 <div class="form-group">
-                    <label for="staffAddress">Address:</label>
-                    <input type="text" id="staffAddress" placeholder="Enter your address" required>
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" placeholder="Enter address" required>
                 </div>
                 <div class="form-group">
-                    <label for="staffExperience">Experience (Years):</label>
-                    <input type="number" id="staffExperience" placeholder="Years of experience" required>
+                    <label for="experience">Experience (Years):</label>
+                    <input type="number" id="experience" placeholder="Years of experience" required>
                 </div>
                 <div class="form-group">
-                    <label for="staffLicense">License Number:</label>
-                    <input type="text" id="staffLicense" placeholder="Enter your license number" required>
+                    <label for="profileImage">Profile Image:</label>
+                    <input type="file" id="profileImage" accept="image/*" required>
                 </div>
                 <div class="form-group">
-                    <label for="staffQualification">Qualification:</label>
-                    <select id="staffQualification" required>
-                        <option value="" disabled selected>Select your qualification</option>
-                        <option value="MBBS">MBBS</option>
-                        <option value="MD">MD</option>
-                        <option value="BDS">BDS</option>
-                        <option value="MS">MS</option>
-                        <option value="MSc Nursing">MSc Nursing</option>
-                        <option value="DNB">DNB</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    <label for="resume">Upload Resume:</label>
+                    <input type="file" id="resume" accept=".pdf,.doc,.docx" required>
                 </div>
                 <div class="form-group">
-                    <label for="staffSpecialization">Specialization:</label>
-                    <select id="staffSpecialization" required>
-                        <option value="" disabled selected>Select your specialization</option>
-                        <option value="Cardiology">Cardiology</option>
-                        <option value="Dermatology">Dermatology</option>
-                        <option value="Pediatrics">Pediatrics</option>
-                        <option value="Orthopedics">Orthopedics</option>
-                        <option value="Neurology">Neurology</option>
-                        <option value="General Practice">General Practice</option>
-                        <option value="Psychiatry">Psychiatry</option>
-                        <option value="Surgery">Surgery</option>
-                        <option value="Radiology">Radiology</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    <label for="certificate">Upload certificate:</label>
+                    <input type="file" id="certificate" accept=".pdf,.doc,.docx" required>
                 </div>
-                <div class="form-group">
-                    <label for="staffProfileImage">Profile Image:</label>
-                    <input type="file" id="staffProfileImage" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label for="staffResume">Upload Resume:</label>
-                    <input type="file" id="staffResume" accept=".pdf,.doc,.docx" required>
-                </div>
-                <button type="submit">Register</button>
+                <button type="submit">Add Profile</button>
                 <p id="message"></p>
             </form>
         </div>
@@ -240,56 +230,155 @@
         <p>© 2024 Athlet Arena. All rights reserved.</p>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
     <script>
-        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+            authDomain: "athletarena.firebaseapp.com",
+            projectId: "athletarena",
+            storageBucket: "athletarena.appspot.com",
+            messagingSenderId: "1016152202031",
+            appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+            measurementId: "G-RC780HJPZ6"
         };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const storage = firebase.storage();
+        function addProfile() {
+    var email = document.getElementById("email").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var address = document.getElementById("address").value.trim();
+    var name = document.getElementById("firstname").value.trim() + ' ' + document.getElementById("lastname").value.trim(); // Combine first and last name
+    var experience = document.getElementById("experience").value;
+    var profileImage = document.getElementById("profileImage").files[0];
+    var resume = document.getElementById("resume").files[0];
+    var certificate = document.getElementById("certificate").files[0]; // Get the certificate file
+    var messageElement = document.getElementById("message");
 
-        function registerMedicalStaff() {
-            const name = document.getElementById("staffName").value.trim();
-            const email = document.getElementById("staffEmail").value.trim();
-            const phone = document.getElementById("staffPhone").value.trim();
-            const address = document.getElementById("staffAddress").value.trim();
-            const experience = document.getElementById("staffExperience").value;
-            const license = document.getElementById("staffLicense").value.trim();
-            const qualification = document.getElementById("staffQualification").value;
-            const specialization = document.getElementById("staffSpecialization").value;
-            const profileImage = document.getElementById("staffProfileImage").files[0];
-            const resume = document.getElementById("staffResume").files[0];
-            const messageElement = document.getElementById("message");
+    messageElement.style.color = "red";
+    messageElement.innerHTML = "";
 
-            // Save the medical staff details to Firestore
-            db.collection("medicalStaff").add({
-                name: name,
-                email: email,
-                phone: phone,
-                address: address,
-                experience: experience,
-                license: license,
-                qualification: qualification,
-                specialization: specialization,
-                // You may want to handle file uploads separately
-            })
-            .then(() => {
-                messageElement.innerHTML = "Registration successful!";
-            })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-                messageElement.innerHTML = "Error during registration. Please try again.";
-            });
+    if (!email || !phone || !address || !name || !experience || !profileImage || !resume || !certificate) {
+        messageElement.innerHTML = "Please fill in all the fields.";
+        return;
+    }
+
+    var phonePattern = /^[6-9]\d{9}$/;
+    if (!phonePattern.test(phone)) {
+        messageElement.innerHTML = "Enter the valid phone.";
+        return;
+    }
+
+    var namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(name)) {
+        messageElement.innerHTML = "Name must contain only letters and spaces.";
+        return;
+    }
+
+    // Validate Profile Image
+    if (profileImage) {
+        var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+        if (!validImageTypes.includes(profileImage.type)) {
+            messageElement.innerHTML = "Profile Image must be a valid image file (JPEG, PNG, GIF, BMP, WebP).";
+            return;
         }
+
+        var maxSizeInBytes = 5 * 1024 * 1024;
+        if (profileImage.size > maxSizeInBytes) {
+            messageElement.innerHTML = "Profile Image size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    // Validate Resume
+    if (resume) {
+        var validResumeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!validResumeTypes.includes(resume.type)) {
+            messageElement.innerHTML = "Resume must be a PDF or Word document.";
+            return;
+        }
+
+        var maxResumeSizeInBytes = 5 * 1024 * 1024;
+        if (resume.size > maxResumeSizeInBytes) {
+            messageElement.innerHTML = "Resume file size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    // Validate Certificate
+    if (certificate) {
+        var validCertificateTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!validCertificateTypes.includes(certificate.type)) {
+            messageElement.innerHTML = "Certificate must be a PDF or Word document.";
+            return;
+        }
+
+        var maxCertificateSizeInBytes = 5 * 1024 * 1024;
+        if (certificate.size > maxCertificateSizeInBytes) {
+            messageElement.innerHTML = "Certificate file size should not exceed 5MB.";
+            return;
+        }
+    }
+
+    var coachRef = db.collection("medicalStaff").doc(email);
+
+    coachRef.get().then((docSnapshot) => {
+        if (docSnapshot.exists) {
+            messageElement.innerHTML = "A medical staff with this email already exists.";
+            return;
+        }
+
+        var storageRef = storage.ref();
+        var profileImageRef = storageRef.child('medicalStaff_images/' + profileImage.name);
+        var resumeRef = storageRef.child('medicalStaff_resumes/' + resume.name);
+        var certificateRef = storageRef.child('medicalStaff_certificates/' + certificate.name); // Add reference for certificate
+
+        var uploadTasks = [
+            profileImageRef.put(profileImage),
+            resumeRef.put(resume),
+            certificateRef.put(certificate) // Add certificate upload to tasks
+        ];
+
+        Promise.all(uploadTasks)
+            .then((uploadResults) => {
+                return Promise.all(uploadResults.map((uploadResult) => uploadResult.ref.getDownloadURL()));
+            })
+            .then((downloadURLs) => {
+                var profileImageUrl = downloadURLs[0];
+                var resumeUrl = downloadURLs[1];
+                var certificateUrl = downloadURLs[2]; // Get certificate URL
+
+                coachRef.set({
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    name: name,
+                    experience: parseInt(experience),
+                    profileImageUrl: profileImageUrl,
+                    resumeUrl: resumeUrl,
+                    certificateUrl: certificateUrl // Store certificate URL
+                }).then(() => {
+                    messageElement.style.color = "green";
+                    messageElement.innerHTML = "Medical staff profile added successfully!";
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                    messageElement.innerHTML = "Failed to add medical staff profile.";
+                });
+            }).catch((error) => {
+                console.error("Error uploading files: ", error);
+                messageElement.innerHTML = "Error uploading files.";
+            });
+    }).catch((error) => {
+        console.error("Error checking medical staff existence: ", error);
+        messageElement.innerHTML = "Error checking medical staff existence.";
+    });
+}
+
     </script>
 </body>
 </html>

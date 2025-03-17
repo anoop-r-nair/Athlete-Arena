@@ -118,5 +118,9 @@ urlpatterns = [
     path('viewinjuryrepots/',views.viewinjuryrepots, name='viewinjuryrepots'),
     path('uploadreport/',views.uploadreport, name='uploadreport'),
     path('viewmedicalreport/',views.viewmedicalreport, name='viewmedicalreport'),
+    path('viewmedicalstaff/',views.viewmedicalstaff, name='viewmedicalstaff'),
+    path('approvedmedicalstaff/',views.approvedmedicalstaff, name='approvedmedicalstaff'),
+    path('viewmedicalstaffprofile/',views.viewmedicalstaffprofile, name='viewmedicalstaffprofile'),
+    path('addmedicalstaff/',views.addmedicalstaff, name='addmedicalstaff'),
 ]
 

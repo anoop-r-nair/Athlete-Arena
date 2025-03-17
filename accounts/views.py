@@ -994,6 +994,25 @@ def suggestion(request):
     return render(request, 'accounts/suggestion.html')
 
 
+def viewmedicalstaff(request):
+    return render(request, 'accounts/viewmedicalstaff.html')
+
+
+def approvedmedicalstaff(request):
+    return render(request, 'accounts/approvedmedicalstaff.html')
+
+
+def viewmedicalstaffprofile(request):
+    return render(request, 'accounts/viewmedicalstaffprofile.html')
+
+
+def addmedicalstaff(request):
+    return render(request, 'accounts/addmedicalstaff.html')    
+
+
+
+
+
 def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')

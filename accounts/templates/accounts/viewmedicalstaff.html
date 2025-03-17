@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Approval | Athlet Arena</title>
+
+    <!-- Styles and Fonts -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons button {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .action-buttons button:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="d-flex">
+    <nav class="sidebar flex-column">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="content">
+        <!-- <header>
+            <h2>Player Approval</h2>
+        </header> -->
+
+        <main class="container">
+            <h2>All Medical Staff Profiles</h2>
+
+            <table id="medical-staff-list" border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Position</th>
+                        <th>Experience</th>
+                        <th>Approved</th>
+                        <th>Resume</th>
+                        <th>Certificate</th>
+                        <th>Profile Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Medical staff rows will be inserted here -->
+                </tbody>
+            </table>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Athlet Arena. All rights reserved.</p>
+        </footer>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1/firebase-firestore.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDwnJsAjqn3kgtEiMZ2RyC19NY9hL1a-Ag",
+        authDomain: "athletarena.firebaseapp.com",
+        projectId: "athletarena",
+        storageBucket: "athletarena.appspot.com",
+        messagingSenderId: "1016152202031",
+        appId: "1:1016152202031:web:3123482b3362f095d1dfda",
+        measurementId: "G-RC780HJPZ6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function fetchMedicalStaffProfiles() {
+        const medicalStaffList = document.getElementById("medical-staff-list").getElementsByTagName("tbody")[0];
+
+        db.collection("medicalStaff").get()
+        .then((querySnapshot) => {
+            medicalStaffList.innerHTML = "";  // Clear existing rows
+
+            querySnapshot.forEach((doc) => {
+                const staff = doc.data();
+                const staffId = doc.id;
+
+                // Create a new row
+                const row = medicalStaffList.insertRow();
+
+                // Add staff details to the row
+                row.innerHTML = `
+                    <td>${staff.name}</td>
+                    <td>${staff.email}</td>
+                    <td>${staff.phone}</td>
+                    <td>${staff.position}</td>
+                    <td>${staff.experience} years</td>
+                    <td>
+                        ${staff.approved ? 'Approved' : `<button onclick="approveStaff('${staffId}')">Approve</button>`}
+                    </td>
+                    <td><a href="${staff.resumeUrl}" target="_blank">View Resume</a></td>
+                    <td><a href="${staff.certificateUrl}" target="_blank">View Certificate</a></td>
+                    <td><img src="${staff.profileImageUrl}" alt="Profile Image" style="width: 50px; height: 50px; border-radius: 50%;"></td>
+                `;
+            });
+        })
+        .catch((error) => {
+            console.error("Error fetching medical staff profiles: ", error);
+        });
+    }
+
+    function approveStaff(staffId) {
+        db.collection("medicalStaff").doc(staffId).update({
+            approved: true
+        })
+        .then(() => {
+            alert("Medical staff approved successfully!");
+            fetchMedicalStaffProfiles();  // Refresh the staff list
+        })
+        .catch((error) => {
+            console.error("Error approving medical staff: ", error);
+        });
+    }
+
+    window.onload = fetchMedicalStaffProfiles;
+</script>
+</body>
+</html>

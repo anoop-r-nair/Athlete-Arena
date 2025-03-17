@@ -242,7 +242,9 @@
                             } else if (userType === 'Coach') {
                                 window.location.href = '/accounts/coach_dashboard';  // Redirect to coach dashboard
                             } else if (userType === 'Admin') {
-                                window.location.href = '/accounts/admin_dashboard';  // Redirect to admin dashboard
+                                window.location.href = '/accounts/admin_dashboard';
+                            } else if (userType === 'Medical Staff') {
+                                window.location.href = '/accounts/medical_staff_dashboard';       // Redirect to admin dashboard
                             } else {
                                 document.getElementById("message").innerHTML = 'User type not recognized.';
                                 document.getElementById("message").style.display = "block";
